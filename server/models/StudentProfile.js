@@ -104,3 +104,4 @@ studentProfileSchema.methods.calculateCompletion = function () {
 };
 
 module.exports = mongoose.model('StudentProfile', studentProfileSchema);
+

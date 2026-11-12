@@ -48,3 +48,4 @@ export const getPlatformStatistics = async () => {
   const response = await api.get('/statistics');
   return response.data;
 };
+

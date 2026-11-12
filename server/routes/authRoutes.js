@@ -14,3 +14,4 @@ router.post('/logout', protect, logout);
 router.get('/me', protect, getMe);
 
 module.exports = router;
+

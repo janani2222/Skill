@@ -2,11 +2,14 @@ const User = require('../models/User');
 const StudentProfile = require('../models/StudentProfile');
 const Activity = require('../models/Activity');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const { isConnected } = require('../config/db');
+const { readDb, writeDb, generateId } = require('../config/localDb');
 
 // Generate JWT token helper
 const generateToken = (id, rememberMe = false) => {
   return jwt.sign(
-    { id },
+    { id: id.toString() },
     process.env.JWT_SECRET || 'skillbridge_super_secret_jwt_key_2026_secure',
     {
       expiresIn: rememberMe ? '30d' : process.env.JWT_EXPIRE || '7d',
@@ -16,7 +19,8 @@ const generateToken = (id, rememberMe = false) => {
 
 // Send token response with HTTP-only cookie and JSON data
 const sendTokenResponse = (user, statusCode, res, rememberMe = false) => {
-  const token = generateToken(user._id, rememberMe);
+  const userId = user._id || user.id;
+  const token = generateToken(userId, rememberMe);
 
   const cookieOptions = {
     expires: new Date(
@@ -34,12 +38,13 @@ const sendTokenResponse = (user, statusCode, res, rememberMe = false) => {
       success: true,
       token,
       user: {
-        id: user._id,
+        id: userId,
+        _id: userId,
         name: user.name,
         email: user.email,
         department: user.department,
         year: user.year,
-        role: user.role,
+        role: user.role || 'student',
       },
     });
 };
@@ -73,40 +78,106 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: 'A student with this college email is already registered.',
+    const cleanEmail = email.toLowerCase().trim();
+
+    // Check if MongoDB is connected
+    if (isConnected()) {
+      const existingUser = await User.findOne({ email: cleanEmail });
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: 'A student with this college email is already registered.',
+        });
+      }
+
+      const user = await User.create({
+        name: name.trim(),
+        email: cleanEmail,
+        password,
+        department,
+        year,
       });
+
+      // Initially empty skills and interests as required
+      await StudentProfile.create({
+        user: user._id,
+        aboutMe: '',
+        skills: [],
+        interests: [],
+        completionPercentage: 25,
+      });
+
+      await Activity.create({
+        user: user._id,
+        action: 'account_created',
+        title: 'Joined SkillBridge',
+        description: `Registered student account with ${user.department} (${user.year})`,
+      });
+
+      return sendTokenResponse(user, 201, res);
+    } else {
+      // Local persistent DB fallback
+      const db = readDb();
+      const existingUser = db.users.find((u) => u.email === cleanEmail);
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: 'A student with this college email is already registered.',
+        });
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const userId = generateId();
+
+      const newUser = {
+        _id: userId,
+        name: name.trim(),
+        email: cleanEmail,
+        password: hashedPassword,
+        department,
+        year,
+        role: 'student',
+        createdAt: new Date().toISOString(),
+      };
+
+      // Completely empty skills and interests initially
+      const newProfile = {
+        _id: generateId(),
+        user: userId,
+        collegeName: 'College Institute of Engineering & Technology',
+        degree: 'Bachelor of Technology (B.Tech)',
+        graduationYear: '2027',
+        location: 'Campus / Hostel',
+        aboutMe: '',
+        avatar: '',
+        skills: [],
+        interests: [],
+        socialLinks: {
+          github: '',
+          linkedin: '',
+          portfolio: '',
+        },
+        completionPercentage: 25,
+        createdAt: new Date().toISOString(),
+      };
+
+      const newActivity = {
+        _id: generateId(),
+        user: userId,
+        action: 'account_created',
+        title: 'Joined SkillBridge',
+        description: `Registered student account with ${newUser.department} (${newUser.year})`,
+        createdAt: new Date().toISOString(),
+      };
+
+      db.users.push(newUser);
+      db.studentprofiles.push(newProfile);
+      db.activities.push(newActivity);
+      writeDb(db);
+
+      return sendTokenResponse(newUser, 201, res);
     }
-
-    // Create user
-    const user = await User.create({
-      name: name.trim(),
-      email: email.toLowerCase().trim(),
-      password,
-      department,
-      year,
-    });
-
-    // Create associated student profile
-    const profile = await StudentProfile.create({
-      user: user._id,
-      aboutMe: `Hi, I am ${user.name}, currently in ${user.year} studying ${user.department}. Passionate about exploring technology and collaborating on innovative college projects!`,
-      completionPercentage: 25,
-    });
-
-    // Record initial activity
-    await Activity.create({
-      user: user._id,
-      action: 'account_created',
-      title: 'Joined SkillBridge',
-      description: `Registered student account with ${user.department} (${user.year})`,
-    });
-
-    sendTokenResponse(user, 201, res);
   } catch (error) {
     next(error);
   }
@@ -126,28 +197,46 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Check for user
-    const user = await User.findOne({ email: email.toLowerCase().trim() }).select(
-      '+password'
-    );
+    const cleanEmail = email.toLowerCase().trim();
 
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid credentials. Please verify your email and password.',
-      });
+    if (isConnected()) {
+      const user = await User.findOne({ email: cleanEmail }).select('+password');
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid credentials. Please verify your email and password.',
+        });
+      }
+
+      const isMatch = await user.matchPassword(password);
+      if (!isMatch) {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid credentials. Please verify your email and password.',
+        });
+      }
+
+      return sendTokenResponse(user, 200, res, rememberMe);
+    } else {
+      const db = readDb();
+      const user = db.users.find((u) => u.email === cleanEmail);
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid credentials. Please verify your email and password.',
+        });
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid credentials. Please verify your email and password.',
+        });
+      }
+
+      return sendTokenResponse(user, 200, res, rememberMe);
     }
-
-    // Check if password matches
-    const isMatch = await user.matchPassword(password);
-    if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid credentials. Please verify your email and password.',
-      });
-    }
-
-    sendTokenResponse(user, 200, res, rememberMe);
   } catch (error) {
     next(error);
   }
@@ -173,16 +262,45 @@ exports.logout = (req, res) => {
 // @access  Private
 exports.getMe = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id);
-    const profile = await StudentProfile.findOne({ user: req.user.id }).populate(
-      'skills'
-    );
+    const userId = req.user._id || req.user.id;
 
-    res.status(200).json({
-      success: true,
-      user,
-      profile,
-    });
+    if (isConnected()) {
+      const user = await User.findById(userId);
+      const profile = await StudentProfile.findOne({ user: userId }).populate('skills');
+      return res.status(200).json({
+        success: true,
+        user,
+        profile,
+      });
+    } else {
+      const db = readDb();
+      const user = db.users.find((u) => u._id === userId || u.id === userId);
+      const profile = db.studentprofiles.find((p) => p.user === userId);
+
+      if (profile) {
+        const populatedSkills = (profile.skills || []).map((skId) =>
+          db.skills.find((s) => s._id === skId || s.name === skId) || { _id: skId, name: skId }
+        );
+        const fullProfile = {
+          ...profile,
+          skills: populatedSkills,
+          user: user ? { name: user.name, email: user.email, department: user.department, year: user.year } : null,
+        };
+        const { password, ...safeUser } = user || {};
+        return res.status(200).json({
+          success: true,
+          user: safeUser,
+          profile: fullProfile,
+        });
+      }
+
+      const { password, ...safeUser } = user || {};
+      return res.status(200).json({
+        success: true,
+        user: safeUser,
+        profile: null,
+      });
+    }
   } catch (error) {
     next(error);
   }

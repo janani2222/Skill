@@ -1,0 +1,152 @@
+{
+  "users": [
+    {
+      "_id": "6af5553f6bee38b37646447e",
+      "name": "Janani",
+      "email": "727824tucs137@skct.edu.in",
+      "password": "$2a$10$1mFNlEte8pcJHE06hL8DGO4u8dJe5uwUdoungr91/dBXsMoOhus6e",
+      "department": "Computer Science and Engineering",
+      "year": "Third Year",
+      "role": "student",
+      "createdAt": "2026-11-12T05:57:19.305Z"
+    },
+    {
+      "_id": "6af555ee6bee38b376464481",
+      "name": "Jasiya",
+      "email": "727824tucs138@skct.edu.in",
+      "password": "$2a$10$kTiBXUcVGDCs2k2ZT9pPS.Yd7I6cPLYsHplNrKxSGdTrS/HWwai7m",
+      "department": "Computer Science and Engineering",
+      "year": "Third Year",
+      "role": "student",
+      "createdAt": "2026-11-12T06:00:14.202Z"
+    },
+    {
+      "_id": "6af55bcbb70370c86dd06486",
+      "name": "Kavya S",
+      "email": "kavya@skct.edu.in",
+      "password": "$2a$10$pAc9XPGuew6Jg5AN/Casp.oEaQ21tGlcH8Sp2IxggTukJCsZrlfD.",
+      "department": "Computer Science and Engineering",
+      "year": "Second Year",
+      "role": "student",
+      "createdAt": "2026-11-12T06:25:15.702Z"
+    }
+  ],
+  "studentprofiles": [
+    {
+      "_id": "6af5553f6bee38b37646447f",
+      "user": "6af5553f6bee38b37646447e",
+      "collegeName": "College Institute of Engineering & Technology",
+      "degree": "Bachelor of Technology (B.Tech)",
+      "graduationYear": "2027",
+      "location": "Campus / Hostel",
+      "aboutMe": "",
+      "avatar": "",
+      "skills": [],
+      "interests": [],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 25,
+      "createdAt": "2026-11-12T05:57:19.305Z"
+    },
+    {
+      "_id": "6af555ee6bee38b376464482",
+      "user": "6af555ee6bee38b376464481",
+      "collegeName": "College Institute of Engineering & Technology",
+      "degree": "Bachelor of Technology (B.Tech)",
+      "graduationYear": "2027",
+      "location": "Campus / Hostel",
+      "aboutMe": "",
+      "avatar": "",
+      "skills": [],
+      "interests": [],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 25,
+      "createdAt": "2026-11-12T06:00:14.202Z"
+    },
+    {
+      "_id": "6af55bcbb70370c86dd06487",
+      "user": "6af55bcbb70370c86dd06486",
+      "collegeName": "SKCT Coimbatore",
+      "degree": "B.Tech Computer Science",
+      "graduationYear": "2028",
+      "location": "Coimbatore, Tamil Nadu",
+      "aboutMe": "Passionate full-stack student developer building college projects.",
+      "avatar": "",
+      "skills": [
+        "6af55bf2b70370c86dd0648a"
+      ],
+      "interests": [
+        "Web Development",
+        "Cloud Computing"
+      ],
+      "socialLinks": {
+        "github": "https://github.com/kavya",
+        "linkedin": "https://linkedin.com/in/kavya",
+        "portfolio": "https://kavya.dev"
+      },
+      "completionPercentage": 90,
+      "createdAt": "2026-11-12T06:25:15.703Z"
+    }
+  ],
+  "skills": [
+    {
+      "_id": "6af55bf2b70370c86dd06489",
+      "name": "Java",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af55bf2b70370c86dd0648a",
+      "name": "React",
+      "category": "Technical"
+    }
+  ],
+  "activities": [
+    {
+      "_id": "6af5553f6bee38b376464480",
+      "user": "6af5553f6bee38b37646447e",
+      "action": "account_created",
+      "title": "Joined SkillBridge",
+      "description": "Registered student account with Computer Science and Engineering (Third Year)",
+      "createdAt": "2026-11-12T05:57:19.305Z"
+    },
+    {
+      "_id": "6af555ee6bee38b376464483",
+      "user": "6af555ee6bee38b376464481",
+      "action": "account_created",
+      "title": "Joined SkillBridge",
+      "description": "Registered student account with Computer Science and Engineering (Third Year)",
+      "createdAt": "2026-11-12T06:00:14.202Z"
+    },
+    {
+      "_id": "6af55bcbb70370c86dd06488",
+      "user": "6af55bcbb70370c86dd06486",
+      "action": "account_created",
+      "title": "Joined SkillBridge",
+      "description": "Registered student account with Computer Science and Engineering (Second Year)",
+      "createdAt": "2026-11-12T06:25:15.703Z"
+    },
+    {
+      "_id": "6af55bf2b70370c86dd0648b",
+      "user": "6af55bcbb70370c86dd06486",
+      "action": "profile_updated",
+      "title": "Profile Updated",
+      "description": "Updated profile details, skills, and portfolio information",
+      "createdAt": "2026-11-12T06:25:54.219Z"
+    },
+    {
+      "_id": "6af55c05b70370c86dd0648c",
+      "user": "6af55bcbb70370c86dd06486",
+      "action": "profile_updated",
+      "title": "Profile Updated",
+      "description": "Updated profile details, skills, and portfolio information",
+      "createdAt": "2026-11-12T06:26:13.511Z"
+    }
+  ]
+}

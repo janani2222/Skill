@@ -31,3 +31,4 @@ Thumbs.db
 # Uploaded student images in dev
 server/uploads/*
 !server/uploads/.gitkeep
+

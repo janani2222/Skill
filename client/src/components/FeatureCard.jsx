@@ -15,3 +15,4 @@ const FeatureCard = ({ icon: Icon, title, description, stepNumber, variant = 'wh
 };
 
 export default FeatureCard;
+

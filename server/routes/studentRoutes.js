@@ -19,3 +19,4 @@ router.delete('/me/skills/:skillId', protect, removeSkill);
 router.get('/me/activities', protect, getActivities);
 
 module.exports = router;
+

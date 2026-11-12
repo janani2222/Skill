@@ -21,3 +21,4 @@ const StatCard = ({ icon: Icon, title, value, subtitle, badgeText, badgeColor = 
 };
 
 export default StatCard;
+

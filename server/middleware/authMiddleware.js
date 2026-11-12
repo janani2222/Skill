@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { isConnected } = require('../config/db');
+const { readDb } = require('../config/localDb');
 
 const protect = async (req, res, next) => {
   let token;
@@ -26,13 +28,25 @@ const protect = async (req, res, next) => {
       token,
       process.env.JWT_SECRET || 'skillbridge_super_secret_jwt_key_2026_secure'
     );
-    req.user = await User.findById(decoded.id).select('-password');
+
+    if (isConnected()) {
+      req.user = await User.findById(decoded.id).select('-password');
+    } else {
+      const db = readDb();
+      const localUser = db.users.find((u) => u._id === decoded.id || u.id === decoded.id);
+      if (localUser) {
+        const { password, ...safeUser } = localUser;
+        req.user = safeUser;
+      }
+    }
+
     if (!req.user) {
       return res.status(401).json({
         success: false,
         message: 'The user belonging to this token no longer exists.',
       });
     }
+
     next();
   } catch (error) {
     return res.status(401).json({

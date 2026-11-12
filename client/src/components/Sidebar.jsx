@@ -84,6 +84,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
           <NavLink
             to="/profile"
+            state={{ openEdit: true }}
             className="sidebar-link"
             onClick={onClose}
           >
@@ -125,3 +126,4 @@ const Sidebar = ({ isOpen, onClose }) => {
 };
 
 export default Sidebar;
+

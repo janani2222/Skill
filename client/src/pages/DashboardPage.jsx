@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import TopNav from '../components/TopNav';
 import StatCard from '../components/StatCard';
@@ -26,6 +26,7 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const loadData = async () => {
     try {
@@ -82,8 +83,8 @@ const DashboardPage = () => {
               </p>
             </div>
             <div className="welcome-actions">
-              <Link to="/profile" className="btn-gold">
-                View My Profile <ArrowRight size={16} />
+              <Link to="/profile" state={{ openEdit: true }} className="btn-gold">
+                <FileEdit size={16} /> Edit Profile
               </Link>
             </div>
           </div>
@@ -107,7 +108,7 @@ const DashboardPage = () => {
                   : 'Great job! Your student profile is 100% complete and ready for collaboration.'}
               </p>
             </div>
-            <Link to="/profile" className="btn-outline-gold">
+            <Link to="/profile" state={{ openEdit: true }} className="btn-outline-gold">
               Complete Profile
             </Link>
           </div>
@@ -154,8 +155,8 @@ const DashboardPage = () => {
             <div className="dash-panel">
               <div className="dash-panel-title">
                 <span>Student Academic Portfolio</span>
-                <Link to="/profile" className="btn-outline-gold" style={{ padding: '6px 14px', fontSize: '0.78rem' }}>
-                  <FileEdit size={14} /> Edit
+                <Link to="/profile" state={{ openEdit: true }} className="btn-outline-gold" style={{ padding: '6px 14px', fontSize: '0.8rem' }}>
+                  <FileEdit size={14} /> Edit Profile
                 </Link>
               </div>
 
@@ -190,7 +191,7 @@ const DashboardPage = () => {
               <div className="info-about-section">
                 <span className="info-label">About Me</span>
                 <p style={{ marginTop: '6px', color: '#172638', fontSize: '0.92rem', lineHeight: '1.6' }}>
-                  {profile?.aboutMe || 'No introductory statement added yet. Click Edit to add your bio!'}
+                  {profile?.aboutMe || 'No introduction added yet.'}
                 </p>
               </div>
 
@@ -199,16 +200,16 @@ const DashboardPage = () => {
                 <span className="info-label">Technical Skills</span>
                 <div className="skills-tags-cluster">
                   {profile?.skills && profile.skills.length > 0 ? (
-                    profile.skills.map((s) => (
-                      <span key={s._id || s.name} className="skill-tag-pill">
+                    profile.skills.map((s, idx) => (
+                      <span key={s._id || s.name || idx} className="skill-tag-pill">
                         <Code2 size={13} color="#B99545" /> {s.name || s}
                       </span>
                     ))
                   ) : (
                     <p style={{ fontSize: '0.88rem', color: '#9CA3AF' }}>
-                      No skills added yet.{' '}
-                      <Link to="/profile" style={{ color: '#B99545', fontWeight: 600 }}>
-                        Add your first skill
+                      No technical skills added yet.{' '}
+                      <Link to="/profile" state={{ openEdit: true }} style={{ color: '#B99545', fontWeight: 600 }}>
+                        Add skills
                       </Link>
                     </p>
                   )}
@@ -227,7 +228,7 @@ const DashboardPage = () => {
                     ))
                   ) : (
                     <p style={{ fontSize: '0.88rem', color: '#9CA3AF' }}>
-                      No interests specified yet.
+                      No academic interests added yet.
                     </p>
                   )}
                 </div>
@@ -248,7 +249,7 @@ const DashboardPage = () => {
                       <ExternalLink size={13} /> GitHub Profile
                     </a>
                   ) : (
-                    <span style={{ fontSize: '0.85rem', color: '#9CA3AF' }}>GitHub: Not added</span>
+                    <span style={{ fontSize: '0.85rem', color: '#9CA3AF' }}>GitHub: Not linked</span>
                   )}
 
                   {profile?.socialLinks?.linkedin ? (
@@ -262,7 +263,21 @@ const DashboardPage = () => {
                       <ExternalLink size={13} /> LinkedIn
                     </a>
                   ) : (
-                    <span style={{ fontSize: '0.85rem', color: '#9CA3AF' }}>LinkedIn: Not added</span>
+                    <span style={{ fontSize: '0.85rem', color: '#9CA3AF' }}>LinkedIn: Not linked</span>
+                  )}
+
+                  {profile?.socialLinks?.portfolio ? (
+                    <a
+                      href={profile.socialLinks.portfolio.startsWith('http') ? profile.socialLinks.portfolio : `https://${profile.socialLinks.portfolio}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn-outline-gold"
+                      style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                    >
+                      <ExternalLink size={13} /> Personal Portfolio
+                    </a>
+                  ) : (
+                    <span style={{ fontSize: '0.85rem', color: '#9CA3AF' }}>Portfolio: Not linked</span>
                   )}
                 </div>
               </div>
@@ -274,10 +289,10 @@ const DashboardPage = () => {
               <div className="dash-panel">
                 <h3 className="dash-panel-title">Quick Actions</h3>
                 <div className="quick-actions-grid">
-                  <Link to="/profile" className="action-card-btn">
+                  <Link to="/profile" state={{ openEdit: true }} className="action-card-btn">
                     <div className="action-btn-left">
                       <FileEdit size={18} color="#B99545" />
-                      <span>Update Profile Details</span>
+                      <span>Edit Profile Details</span>
                     </div>
                     <ArrowRight size={16} />
                   </Link>
@@ -285,15 +300,15 @@ const DashboardPage = () => {
                   <Link to="/profile" className="action-card-btn">
                     <div className="action-btn-left">
                       <User size={18} color="#B99545" />
-                      <span>View Full Profile</span>
+                      <span>View My Profile</span>
                     </div>
                     <ArrowRight size={16} />
                   </Link>
 
-                  <Link to="/profile" className="action-card-btn">
+                  <Link to="/profile" state={{ openEdit: true }} className="action-card-btn">
                     <div className="action-btn-left">
                       <PlusCircle size={18} color="#B99545" />
-                      <span>Add Technical Skills</span>
+                      <span>Manage Technical Skills</span>
                     </div>
                     <ArrowRight size={16} />
                   </Link>

@@ -12,3 +12,4 @@ router.get('/statistics', getPlatformStats);
 router.get('/skills', getAllSkills);
 
 module.exports = router;
+

@@ -195,3 +195,4 @@ npm run dev
 | `GET` | `/api/dashboard` | Get student dashboard stats, completion %, and feed | Private |
 | `GET` | `/api/statistics` | Get public platform statistics for Landing Page | Public |
 | `GET` | `/api/skills` | Get all skills / seed default skills | Public |
+
