@@ -1,0 +1,199 @@
+:root {
+  --primary-navy: #10243B;
+  --secondary-navy: #182F4B;
+  --dark-navy: #0B192A;
+  --antique-gold: #B99545;
+  --light-gold: #D1B36A;
+  --gold-hover: #9E7D35;
+  --bg-cream: #F8F7F3;
+  --white: #FFFFFF;
+  --main-text: #172638;
+  --secondary-text: #667085;
+  --border-light: #E4E0D7;
+  --border-card: #ECEAE4;
+  --card-shadow: 0 4px 20px rgba(16, 36, 59, 0.08);
+  --card-shadow-hover: 0 10px 30px rgba(16, 36, 59, 0.14);
+  
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --transition: all 0.25s ease-in-out;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--main-text);
+  background-color: var(--bg-cream);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  color: var(--main-text);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+p {
+  color: var(--secondary-text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+button {
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: var(--transition);
+}
+
+input, select, textarea {
+  font-family: var(--font-sans);
+  outline: none;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--antique-gold);
+  box-shadow: 0 0 0 3px rgba(185, 149, 69, 0.15);
+}
+
+/* Common University Button Styles */
+.btn-gold {
+  background-color: var(--antique-gold);
+  color: #FFFFFF;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-size: 0.85rem;
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.btn-gold:hover {
+  background-color: var(--gold-hover);
+  box-shadow: 0 4px 12px rgba(185, 149, 69, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-outline-gold {
+  background-color: transparent;
+  color: var(--antique-gold);
+  border: 1.5px solid var(--antique-gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-size: 0.85rem;
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.btn-outline-gold:hover {
+  background-color: var(--antique-gold);
+  color: #FFFFFF;
+}
+
+.btn-navy {
+  background-color: var(--primary-navy);
+  color: #FFFFFF;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.btn-navy:hover {
+  background-color: var(--secondary-navy);
+  transform: translateY(-1px);
+}
+
+/* Badge styles */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.badge-gold {
+  background: rgba(185, 149, 69, 0.15);
+  color: var(--antique-gold);
+  border: 1px solid rgba(185, 149, 69, 0.3);
+}
+
+.badge-navy {
+  background: rgba(16, 36, 59, 0.08);
+  color: var(--primary-navy);
+}
+
+/* Gold accent line */
+.gold-divider {
+  width: 50px;
+  height: 3px;
+  background-color: var(--antique-gold);
+  margin: 12px 0 20px;
+}
+
+.gold-divider.center {
+  margin: 12px auto 20px;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #EFEFEF;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C4C4C4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--antique-gold);
+}
