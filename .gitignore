@@ -32,3 +32,8 @@ Thumbs.db
 server/uploads/*
 !server/uploads/.gitkeep
 
+node_modules/
+.env
+.env.*
+!.env.example
+uploads/

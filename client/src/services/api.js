@@ -1,24 +1,14 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor to attach JWT token if present in localStorage as backup
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('skillbridge_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// Authentication is carried by the server's HTTP-only session cookie.
 
 // Response interceptor
 api.interceptors.response.use(

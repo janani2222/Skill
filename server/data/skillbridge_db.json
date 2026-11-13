@@ -29,6 +29,136 @@
       "year": "Second Year",
       "role": "student",
       "createdAt": "2026-11-12T06:25:15.702Z"
+    },
+    {
+      "_id": "6af57f13b70370c86dd06490",
+      "name": "Jai Krishna",
+      "email": "727824tucs135@skct.edu.in",
+      "password": "$2a$10$eowwP1g1byGZ7Wp0H6sgYebtZcd0ttD7pKMQdu0SFqEnn9dslTae6",
+      "department": "Computer Science and Engineering",
+      "year": "Third Year",
+      "role": "student",
+      "createdAt": "2026-11-12T08:55:47.419Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2a9",
+      "name": "Aarav Menon",
+      "email": "demo1@skillbridge.local",
+      "password": "$2a$10$UKfrePhrHupe/lRXEI8hf.4aPH.aQeM2hujl/MJXO1dcXJiNKdDY.",
+      "department": "Computer Science and Engineering",
+      "year": "Second Year",
+      "role": "student",
+      "isDemo": true,
+      "createdAt": "2026-11-12T09:58:19.504Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2ae",
+      "name": "Meera Iyer",
+      "email": "demo2@skillbridge.local",
+      "password": "$2a$10$UKfrePhrHupe/lRXEI8hf.4aPH.aQeM2hujl/MJXO1dcXJiNKdDY.",
+      "department": "Information Technology",
+      "year": "Third Year",
+      "role": "student",
+      "isDemo": true,
+      "createdAt": "2026-11-11T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2b3",
+      "name": "Rohan Das",
+      "email": "demo3@skillbridge.local",
+      "password": "$2a$10$UKfrePhrHupe/lRXEI8hf.4aPH.aQeM2hujl/MJXO1dcXJiNKdDY.",
+      "department": "Artificial Intelligence and Data Science",
+      "year": "Third Year",
+      "role": "student",
+      "isDemo": true,
+      "createdAt": "2026-11-10T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2b8",
+      "name": "Ananya Rao",
+      "email": "demo4@skillbridge.local",
+      "password": "$2a$10$UKfrePhrHupe/lRXEI8hf.4aPH.aQeM2hujl/MJXO1dcXJiNKdDY.",
+      "department": "Electronics and Communication Engineering",
+      "year": "Fourth Year",
+      "role": "student",
+      "isDemo": true,
+      "createdAt": "2026-11-09T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2be",
+      "name": "Vikram Shah",
+      "email": "demo5@skillbridge.local",
+      "password": "$2a$10$UKfrePhrHupe/lRXEI8hf.4aPH.aQeM2hujl/MJXO1dcXJiNKdDY.",
+      "department": "Mechanical Engineering",
+      "year": "Second Year",
+      "role": "student",
+      "isDemo": true,
+      "createdAt": "2026-11-08T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2c3",
+      "name": "Diya Nair",
+      "email": "demo6@skillbridge.local",
+      "password": "$2a$10$UKfrePhrHupe/lRXEI8hf.4aPH.aQeM2hujl/MJXO1dcXJiNKdDY.",
+      "department": "Computer Science and Engineering",
+      "year": "Fourth Year",
+      "role": "student",
+      "isDemo": true,
+      "createdAt": "2026-11-07T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2c8",
+      "name": "Kabir Singh",
+      "email": "demo7@skillbridge.local",
+      "password": "$2a$10$UKfrePhrHupe/lRXEI8hf.4aPH.aQeM2hujl/MJXO1dcXJiNKdDY.",
+      "department": "Information Technology",
+      "year": "First Year",
+      "role": "student",
+      "isDemo": true,
+      "createdAt": "2026-11-06T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2cd",
+      "name": "Ishita Bose",
+      "email": "demo8@skillbridge.local",
+      "password": "$2a$10$UKfrePhrHupe/lRXEI8hf.4aPH.aQeM2hujl/MJXO1dcXJiNKdDY.",
+      "department": "Civil Engineering",
+      "year": "Third Year",
+      "role": "student",
+      "isDemo": true,
+      "createdAt": "2026-11-05T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2d2",
+      "name": "Aditya Kulkarni",
+      "email": "demo9@skillbridge.local",
+      "password": "$2a$10$UKfrePhrHupe/lRXEI8hf.4aPH.aQeM2hujl/MJXO1dcXJiNKdDY.",
+      "department": "Computer Science and Engineering",
+      "year": "Third Year",
+      "role": "student",
+      "isDemo": true,
+      "createdAt": "2026-11-04T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2d8",
+      "name": "Sara Thomas",
+      "email": "demo10@skillbridge.local",
+      "password": "$2a$10$UKfrePhrHupe/lRXEI8hf.4aPH.aQeM2hujl/MJXO1dcXJiNKdDY.",
+      "department": "Artificial Intelligence and Data Science",
+      "year": "Second Year",
+      "role": "student",
+      "isDemo": true,
+      "createdAt": "2026-11-03T09:58:19.505Z"
+    },
+    {
+      "_id": "6af698e6f740f3f62d061296",
+      "name": "Dany",
+      "email": "jananikrishnasamy21@gmail.com",
+      "password": "$2a$10$ZO47s7NDZJDkQEMsNXZoceIPaAYqM9f2yXWwjfmNEYiscjK7qUlSi",
+      "department": "Computer Science and Engineering",
+      "year": "Third Year",
+      "role": "student",
+      "createdAt": "2026-11-13T04:58:14.480Z"
     }
   ],
   "studentprofiles": [
@@ -54,20 +184,25 @@
     {
       "_id": "6af555ee6bee38b376464482",
       "user": "6af555ee6bee38b376464481",
-      "collegeName": "College Institute of Engineering & Technology",
+      "collegeName": "Sri Krishna College of Technology",
       "degree": "Bachelor of Technology (B.Tech)",
-      "graduationYear": "2027",
-      "location": "Campus / Hostel",
-      "aboutMe": "",
+      "graduationYear": "2028",
+      "location": "Coimbatore",
+      "aboutMe": "I am a computer science student.",
       "avatar": "",
-      "skills": [],
-      "interests": [],
+      "skills": [
+        "6af55bf2b70370c86dd06489",
+        "6af55cebb70370c86dd0648d"
+      ],
+      "interests": [
+        "Full Stack development"
+      ],
       "socialLinks": {
         "github": "",
         "linkedin": "",
         "portfolio": ""
       },
-      "completionPercentage": 25,
+      "completionPercentage": 80,
       "createdAt": "2026-11-12T06:00:14.202Z"
     },
     {
@@ -93,6 +228,315 @@
       },
       "completionPercentage": 90,
       "createdAt": "2026-11-12T06:25:15.703Z"
+    },
+    {
+      "_id": "6af57f13b70370c86dd06491",
+      "user": "6af57f13b70370c86dd06490",
+      "collegeName": "College Institute of Engineering & Technology",
+      "degree": "Bachelor of Technology (B.Tech)",
+      "graduationYear": "2028",
+      "location": "Coimbatore",
+      "aboutMe": "",
+      "avatar": "/uploads/avatar-6af57f13b70370c86dd06490-1794563271736-360500075.jpg",
+      "skills": [
+        "6af55bf2b70370c86dd06489",
+        "6af55cebb70370c86dd0648d"
+      ],
+      "interests": [],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 55,
+      "createdAt": "2026-11-12T08:55:47.420Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2ac",
+      "user": "6af58dbba698b3923e46f2a9",
+      "collegeName": "SkillBridge University",
+      "degree": "Bachelor of Technology",
+      "graduationYear": "2027",
+      "location": "Campus / Hostel",
+      "aboutMe": "A motivated student exploring web development and collaborative project work.",
+      "avatar": "",
+      "skills": [
+        "6af55bf2b70370c86dd0648a",
+        "6af58dbba698b3923e46f2aa",
+        "6af58dbba698b3923e46f2ab"
+      ],
+      "interests": [
+        "Web Development",
+        "Open Source"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 80,
+      "createdAt": "2026-11-12T09:58:19.504Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2b1",
+      "user": "6af58dbba698b3923e46f2ae",
+      "collegeName": "SkillBridge University",
+      "degree": "Bachelor of Technology",
+      "graduationYear": "2028",
+      "location": "Campus / Hostel",
+      "aboutMe": "A motivated student exploring data science and collaborative project work.",
+      "avatar": "",
+      "skills": [
+        "6af55cebb70370c86dd0648d",
+        "6af58dbba698b3923e46f2af",
+        "6af58dbba698b3923e46f2b0"
+      ],
+      "interests": [
+        "Data Science",
+        "Cloud Computing"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 80,
+      "createdAt": "2026-11-11T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2b6",
+      "user": "6af58dbba698b3923e46f2b3",
+      "collegeName": "SkillBridge University",
+      "degree": "Bachelor of Technology",
+      "graduationYear": "2027",
+      "location": "Campus / Hostel",
+      "aboutMe": "A motivated student exploring artificial intelligence and collaborative project work.",
+      "avatar": "",
+      "skills": [
+        "6af55cebb70370c86dd0648d",
+        "6af58dbba698b3923e46f2b4",
+        "6af58dbba698b3923e46f2b5"
+      ],
+      "interests": [
+        "Artificial Intelligence",
+        "Research"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 80,
+      "createdAt": "2026-11-10T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2bc",
+      "user": "6af58dbba698b3923e46f2b8",
+      "collegeName": "SkillBridge University",
+      "degree": "Bachelor of Technology",
+      "graduationYear": "2028",
+      "location": "Campus / Hostel",
+      "aboutMe": "A motivated student exploring robotics and collaborative project work.",
+      "avatar": "",
+      "skills": [
+        "6af58dbba698b3923e46f2b9",
+        "6af58dbba698b3923e46f2ba",
+        "6af58dbba698b3923e46f2bb"
+      ],
+      "interests": [
+        "Robotics",
+        "Smart Hardware"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 80,
+      "createdAt": "2026-11-09T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2c1",
+      "user": "6af58dbba698b3923e46f2be",
+      "collegeName": "SkillBridge University",
+      "degree": "Bachelor of Technology",
+      "graduationYear": "2027",
+      "location": "Campus / Hostel",
+      "aboutMe": "A motivated student exploring automation and collaborative project work.",
+      "avatar": "",
+      "skills": [
+        "6af55cebb70370c86dd0648d",
+        "6af58dbba698b3923e46f2bf",
+        "6af58dbba698b3923e46f2c0"
+      ],
+      "interests": [
+        "Automation",
+        "Product Design"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 80,
+      "createdAt": "2026-11-08T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2c6",
+      "user": "6af58dbba698b3923e46f2c3",
+      "collegeName": "SkillBridge University",
+      "degree": "Bachelor of Technology",
+      "graduationYear": "2028",
+      "location": "Campus / Hostel",
+      "aboutMe": "A motivated student exploring backend development and collaborative project work.",
+      "avatar": "",
+      "skills": [
+        "6af55bf2b70370c86dd06489",
+        "6af58dbba698b3923e46f2c4",
+        "6af58dbba698b3923e46f2c5"
+      ],
+      "interests": [
+        "Backend Development",
+        "Distributed Systems"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 80,
+      "createdAt": "2026-11-07T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2cb",
+      "user": "6af58dbba698b3923e46f2c8",
+      "collegeName": "SkillBridge University",
+      "degree": "Bachelor of Technology",
+      "graduationYear": "2027",
+      "location": "Campus / Hostel",
+      "aboutMe": "A motivated student exploring mobile development and collaborative project work.",
+      "avatar": "",
+      "skills": [
+        "6af58dbba698b3923e46f2c9",
+        "6af55bf2b70370c86dd0648a",
+        "6af58dbba698b3923e46f2ca"
+      ],
+      "interests": [
+        "Mobile Development",
+        "UX Design"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 80,
+      "createdAt": "2026-11-06T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2d0",
+      "user": "6af58dbba698b3923e46f2cd",
+      "collegeName": "SkillBridge University",
+      "degree": "Bachelor of Technology",
+      "graduationYear": "2028",
+      "location": "Campus / Hostel",
+      "aboutMe": "A motivated student exploring sustainable cities and collaborative project work.",
+      "avatar": "",
+      "skills": [
+        "6af55cebb70370c86dd0648d",
+        "6af58dbba698b3923e46f2ce",
+        "6af58dbba698b3923e46f2cf"
+      ],
+      "interests": [
+        "Sustainable Cities",
+        "Climate Technology"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 80,
+      "createdAt": "2026-11-05T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2d6",
+      "user": "6af58dbba698b3923e46f2d2",
+      "collegeName": "SkillBridge University",
+      "degree": "Bachelor of Technology",
+      "graduationYear": "2027",
+      "location": "Campus / Hostel",
+      "aboutMe": "A motivated student exploring cloud computing and collaborative project work.",
+      "avatar": "",
+      "skills": [
+        "6af58dbba698b3923e46f2d3",
+        "6af58dbba698b3923e46f2d4",
+        "6af58dbba698b3923e46f2d5"
+      ],
+      "interests": [
+        "Cloud Computing",
+        "DevOps"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 80,
+      "createdAt": "2026-11-04T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2db",
+      "user": "6af58dbba698b3923e46f2d8",
+      "collegeName": "SkillBridge University",
+      "degree": "Bachelor of Technology",
+      "graduationYear": "2028",
+      "location": "Campus / Hostel",
+      "aboutMe": "A motivated student exploring machine learning and collaborative project work.",
+      "avatar": "",
+      "skills": [
+        "6af55cebb70370c86dd0648d",
+        "6af58dbba698b3923e46f2d9",
+        "6af58dbba698b3923e46f2da"
+      ],
+      "interests": [
+        "Machine Learning",
+        "Healthcare Technology"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 80,
+      "createdAt": "2026-11-03T09:58:19.505Z"
+    },
+    {
+      "_id": "6af698e6f740f3f62d061297",
+      "user": "6af698e6f740f3f62d061296",
+      "collegeName": "Sri Krishna College of Technology",
+      "degree": "Bachelor of Technology (B.Tech)",
+      "graduationYear": "2028",
+      "location": "Coimbatore",
+      "aboutMe": "",
+      "avatar": "/uploads/avatar-6af698e6f740f3f62d061296-1794564392866-324258905.jpg",
+      "skills": [
+        "6af55bf2b70370c86dd06489",
+        "6af55bf2b70370c86dd0648a",
+        "6af55cebb70370c86dd0648d",
+        "6af69948f740f3f62d061299"
+      ],
+      "interests": [
+        "Full stack development",
+        "software testing"
+      ],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 70,
+      "createdAt": "2026-11-13T04:58:14.480Z"
     }
   ],
   "skills": [
@@ -104,6 +548,126 @@
     {
       "_id": "6af55bf2b70370c86dd0648a",
       "name": "React",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af55cebb70370c86dd0648d",
+      "name": "Python",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2aa",
+      "name": "Node.js",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2ab",
+      "name": "MongoDB",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2af",
+      "name": "Django",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2b0",
+      "name": "PostgreSQL",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2b4",
+      "name": "TensorFlow",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2b5",
+      "name": "OpenAI",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2b9",
+      "name": "C++",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2ba",
+      "name": "Embedded Systems",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2bb",
+      "name": "IoT",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2bf",
+      "name": "CAD",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2c0",
+      "name": "Arduino",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2c4",
+      "name": "Spring Boot",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2c5",
+      "name": "MySQL",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2c9",
+      "name": "JavaScript",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2ca",
+      "name": "Firebase",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2ce",
+      "name": "GIS",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2cf",
+      "name": "Data Analysis",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2d3",
+      "name": "Go",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2d4",
+      "name": "Docker",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2d5",
+      "name": "Kubernetes",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2d9",
+      "name": "Pandas",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2da",
+      "name": "Machine Learning",
+      "category": "Technical"
+    },
+    {
+      "_id": "6af69948f740f3f62d061299",
+      "name": "springboot",
       "category": "Technical"
     }
   ],
@@ -147,6 +711,687 @@
       "title": "Profile Updated",
       "description": "Updated profile details, skills, and portfolio information",
       "createdAt": "2026-11-12T06:26:13.511Z"
+    },
+    {
+      "_id": "6af55cebb70370c86dd0648e",
+      "user": "6af555ee6bee38b376464481",
+      "action": "profile_updated",
+      "title": "Profile Updated",
+      "description": "Updated profile details, skills, and portfolio information",
+      "createdAt": "2026-11-12T06:30:03.659Z"
+    },
+    {
+      "_id": "6af55d3db70370c86dd0648f",
+      "user": "6af555ee6bee38b376464481",
+      "action": "profile_updated",
+      "title": "Profile Updated",
+      "description": "Updated profile details, skills, and portfolio information",
+      "createdAt": "2026-11-12T06:31:25.882Z"
+    },
+    {
+      "_id": "6af57f13b70370c86dd06492",
+      "user": "6af57f13b70370c86dd06490",
+      "action": "account_created",
+      "title": "Joined SkillBridge",
+      "description": "Registered student account with Computer Science and Engineering (Third Year)",
+      "createdAt": "2026-11-12T08:55:47.420Z"
+    },
+    {
+      "_id": "6af698e6f740f3f62d061298",
+      "user": "6af698e6f740f3f62d061296",
+      "action": "account_created",
+      "title": "Joined SkillBridge",
+      "description": "Registered student account with Computer Science and Engineering (Third Year)",
+      "createdAt": "2026-11-13T04:58:14.480Z"
+    },
+    {
+      "_id": "6af69948f740f3f62d06129a",
+      "user": "6af698e6f740f3f62d061296",
+      "action": "profile_updated",
+      "title": "Profile Updated",
+      "description": "Updated profile details, skills, and portfolio information",
+      "createdAt": "2026-11-13T04:59:52.695Z"
+    },
+    {
+      "_id": "6af6dcc7bb4043f6bd449853",
+      "user": "6af57f13b70370c86dd06490",
+      "action": "avatar_updated",
+      "title": "Profile Picture Updated",
+      "description": "Uploaded a new university profile photo",
+      "createdAt": "2026-11-13T09:47:51.827Z"
+    },
+    {
+      "_id": "6af6dcfabb4043f6bd449854",
+      "user": "6af57f13b70370c86dd06490",
+      "action": "profile_updated",
+      "title": "Profile Updated",
+      "description": "Updated profile details, skills, and portfolio information",
+      "createdAt": "2026-11-13T09:48:42.963Z"
+    },
+    {
+      "_id": "6af6e128bb4043f6bd449858",
+      "user": "6af698e6f740f3f62d061296",
+      "action": "avatar_updated",
+      "title": "Profile Picture Updated",
+      "description": "Uploaded a new university profile photo",
+      "createdAt": "2026-11-13T10:06:32.930Z"
     }
-  ]
+  ],
+  "projects": [
+    {
+      "_id": "6af58dbba698b3923e46f2ad",
+      "owner": "6af58dbba698b3923e46f2a9",
+      "title": "React Web Development Lab",
+      "description": "A student project focused on web development using practical engineering workflows.",
+      "category": "Web Development",
+      "technologies": [
+        "React",
+        "Node.js",
+        "MongoDB"
+      ],
+      "role": "Project Developer",
+      "teamMembers": [],
+      "startDate": "2026-06-01",
+      "completionDate": "",
+      "status": "Completed",
+      "thumbnail": "",
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "media": [],
+      "isDemo": true,
+      "createdAt": "2026-11-12T09:58:19.504Z",
+      "updatedAt": "2026-11-12T09:58:19.504Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2b2",
+      "owner": "6af58dbba698b3923e46f2ae",
+      "title": "Python Data Science Lab",
+      "description": "A student project focused on data science using practical engineering workflows.",
+      "category": "Web Development",
+      "technologies": [
+        "Python",
+        "Django",
+        "PostgreSQL"
+      ],
+      "role": "Project Developer",
+      "teamMembers": [],
+      "startDate": "2026-06-01",
+      "completionDate": "",
+      "status": "In Progress",
+      "thumbnail": "",
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "media": [],
+      "isDemo": true,
+      "createdAt": "2026-11-11T09:58:19.505Z",
+      "updatedAt": "2026-11-11T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2b7",
+      "owner": "6af58dbba698b3923e46f2b3",
+      "title": "Python Artificial Intelligence Lab",
+      "description": "A student project focused on artificial intelligence using practical engineering workflows.",
+      "category": "Artificial Intelligence",
+      "technologies": [
+        "Python",
+        "TensorFlow",
+        "OpenAI"
+      ],
+      "role": "Project Developer",
+      "teamMembers": [],
+      "startDate": "2026-06-01",
+      "completionDate": "",
+      "status": "Completed",
+      "thumbnail": "",
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "media": [],
+      "isDemo": true,
+      "createdAt": "2026-11-10T09:58:19.505Z",
+      "updatedAt": "2026-11-10T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2bd",
+      "owner": "6af58dbba698b3923e46f2b8",
+      "title": "C++ Robotics Lab",
+      "description": "A student project focused on robotics using practical engineering workflows.",
+      "category": "Web Development",
+      "technologies": [
+        "C++",
+        "Embedded Systems",
+        "IoT"
+      ],
+      "role": "Project Developer",
+      "teamMembers": [],
+      "startDate": "2026-06-01",
+      "completionDate": "",
+      "status": "In Progress",
+      "thumbnail": "",
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "media": [],
+      "isDemo": true,
+      "createdAt": "2026-11-09T09:58:19.505Z",
+      "updatedAt": "2026-11-09T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2c2",
+      "owner": "6af58dbba698b3923e46f2be",
+      "title": "Python Automation Lab",
+      "description": "A student project focused on automation using practical engineering workflows.",
+      "category": "Web Development",
+      "technologies": [
+        "Python",
+        "CAD",
+        "Arduino"
+      ],
+      "role": "Project Developer",
+      "teamMembers": [],
+      "startDate": "2026-06-01",
+      "completionDate": "",
+      "status": "Completed",
+      "thumbnail": "",
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "media": [],
+      "isDemo": true,
+      "createdAt": "2026-11-08T09:58:19.505Z",
+      "updatedAt": "2026-11-08T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2c7",
+      "owner": "6af58dbba698b3923e46f2c3",
+      "title": "Java Backend Development Lab",
+      "description": "A student project focused on backend development using practical engineering workflows.",
+      "category": "Web Development",
+      "technologies": [
+        "Java",
+        "Spring Boot",
+        "MySQL"
+      ],
+      "role": "Project Developer",
+      "teamMembers": [],
+      "startDate": "2026-06-01",
+      "completionDate": "",
+      "status": "In Progress",
+      "thumbnail": "",
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "media": [],
+      "isDemo": true,
+      "createdAt": "2026-11-07T09:58:19.505Z",
+      "updatedAt": "2026-11-07T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2cc",
+      "owner": "6af58dbba698b3923e46f2c8",
+      "title": "JavaScript Mobile Development Lab",
+      "description": "A student project focused on mobile development using practical engineering workflows.",
+      "category": "Web Development",
+      "technologies": [
+        "JavaScript",
+        "React",
+        "Firebase"
+      ],
+      "role": "Project Developer",
+      "teamMembers": [],
+      "startDate": "2026-06-01",
+      "completionDate": "",
+      "status": "Completed",
+      "thumbnail": "",
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "media": [],
+      "isDemo": true,
+      "createdAt": "2026-11-06T09:58:19.505Z",
+      "updatedAt": "2026-11-06T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2d1",
+      "owner": "6af58dbba698b3923e46f2cd",
+      "title": "Python Sustainable Cities Lab",
+      "description": "A student project focused on sustainable cities using practical engineering workflows.",
+      "category": "Web Development",
+      "technologies": [
+        "Python",
+        "GIS",
+        "Data Analysis"
+      ],
+      "role": "Project Developer",
+      "teamMembers": [],
+      "startDate": "2026-06-01",
+      "completionDate": "",
+      "status": "In Progress",
+      "thumbnail": "",
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "media": [],
+      "isDemo": true,
+      "createdAt": "2026-11-05T09:58:19.505Z",
+      "updatedAt": "2026-11-05T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2d7",
+      "owner": "6af58dbba698b3923e46f2d2",
+      "title": "Go Cloud Computing Lab",
+      "description": "A student project focused on cloud computing using practical engineering workflows.",
+      "category": "Web Development",
+      "technologies": [
+        "Go",
+        "Docker",
+        "Kubernetes"
+      ],
+      "role": "Project Developer",
+      "teamMembers": [],
+      "startDate": "2026-06-01",
+      "completionDate": "",
+      "status": "Completed",
+      "thumbnail": "",
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "media": [],
+      "isDemo": true,
+      "createdAt": "2026-11-04T09:58:19.505Z",
+      "updatedAt": "2026-11-04T09:58:19.505Z"
+    },
+    {
+      "_id": "6af58dbba698b3923e46f2dc",
+      "owner": "6af58dbba698b3923e46f2d8",
+      "title": "Python Machine Learning Lab",
+      "description": "A student project focused on machine learning using practical engineering workflows.",
+      "category": "Web Development",
+      "technologies": [
+        "Python",
+        "Pandas",
+        "Machine Learning"
+      ],
+      "role": "Project Developer",
+      "teamMembers": [],
+      "startDate": "2026-06-01",
+      "completionDate": "",
+      "status": "In Progress",
+      "thumbnail": "",
+      "githubUrl": "",
+      "liveDemoUrl": "",
+      "media": [],
+      "isDemo": true,
+      "createdAt": "2026-11-03T09:58:19.505Z",
+      "updatedAt": "2026-11-03T09:58:19.505Z"
+    },
+    {
+      "_id": "6af59039635f8cd7be7acc5e",
+      "owner": "6af57f13b70370c86dd06490",
+      "title": "job portal",
+      "description": "website for searching jobs",
+      "category": "Web Development",
+      "technologies": [
+        "mern stack"
+      ],
+      "role": "Full Stack Developer",
+      "teamMembers": [],
+      "startDate": "2026-11-12",
+      "completionDate": "2026-11-30",
+      "status": "Planning",
+      "thumbnail": "",
+      "githubUrl": "https://github.com/jaikrishnaa-135",
+      "liveDemoUrl": "https://github.com/jaikrishnaa-135/JOBPORTAL.git",
+      "media": [
+        {
+          "_id": "6af591dd635f8cd7be7acc5f",
+          "filePath": "/uploads/projects/proj-image__3__png-1794478557683-17098741.png",
+          "fileName": "image (3).png",
+          "fileType": "image",
+          "description": "",
+          "uploadedAt": "2026-11-12T10:15:57.781Z"
+        }
+      ],
+      "createdAt": "2026-11-12T10:08:57.954Z",
+      "updatedAt": "2026-11-13T05:21:03.572Z",
+      "currentMembers": 2,
+      "progress": 0
+    }
+  ],
+  "projectmembers": [
+    {
+      "_id": "6af5d7b402f0ac4776ee2df1",
+      "project": "6af59039635f8cd7be7acc5e",
+      "student": "6af555ee6bee38b376464481",
+      "role": "Full Stack Developer",
+      "joinedAt": "2026-11-12T15:13:56.362Z"
+    },
+    {
+      "_id": "6af5e03ce4d93964ab18db22",
+      "project": "6af59039635f8cd7be7acc5e",
+      "student": "6af555ee6bee38b376464481",
+      "role": "Full Stack Developer",
+      "joinedAt": "2026-11-12T15:50:20.869Z"
+    }
+  ],
+  "joinrequests": [
+    {
+      "_id": "6af5d75aa48815f218a4d4e6",
+      "project": "6af59039635f8cd7be7acc5e",
+      "applicant": "6af555ee6bee38b376464481",
+      "message": "I am also a full stack developer and i can help with the website",
+      "skills": "",
+      "experience": "",
+      "portfolioUrl": "",
+      "status": "Accepted",
+      "createdAt": "2026-11-12T15:12:26.305Z"
+    },
+    {
+      "_id": "6af5e022b09c573dc8d026a9",
+      "project": "6af59039635f8cd7be7acc5e",
+      "applicant": "6af555ee6bee38b376464481",
+      "message": "bhbybun",
+      "skills": "",
+      "experience": "",
+      "portfolioUrl": "",
+      "status": "Accepted",
+      "createdAt": "2026-11-12T15:49:54.873Z"
+    }
+  ],
+  "notifications": [
+    {
+      "_id": "6af5d75aa48815f218a4d4e7",
+      "recipient": "6af57f13b70370c86dd06490",
+      "sender": "6af555ee6bee38b376464481",
+      "project": "6af59039635f8cd7be7acc5e",
+      "message": "Jasiya has requested to join your project job portal.",
+      "type": "join_request",
+      "isRead": false,
+      "createdAt": "2026-11-12T15:12:26.305Z"
+    },
+    {
+      "_id": "6af5d7b402f0ac4776ee2df2",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": "6af59039635f8cd7be7acc5e",
+      "message": "Congratulations! Your request to join job portal has been accepted by the project owner.",
+      "type": "request_accepted",
+      "isRead": true,
+      "createdAt": "2026-11-12T15:13:56.362Z"
+    },
+    {
+      "_id": "6af5e022b09c573dc8d026aa",
+      "recipient": "6af57f13b70370c86dd06490",
+      "sender": "6af555ee6bee38b376464481",
+      "project": "6af59039635f8cd7be7acc5e",
+      "message": "Jasiya has requested to join your project job portal.",
+      "type": "join_request",
+      "isRead": false,
+      "createdAt": "2026-11-12T15:49:54.873Z"
+    },
+    {
+      "_id": "6af5e03ce4d93964ab18db23",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": "6af59039635f8cd7be7acc5e",
+      "message": "Congratulations! Your request to join job portal has been accepted by the project owner.",
+      "type": "request_accepted",
+      "isRead": true,
+      "createdAt": "2026-11-12T15:50:20.869Z"
+    },
+    {
+      "_id": "6af69e1f16a0a63a4840fb86",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": "6af59039635f8cd7be7acc5e",
+      "message": "Jai Krishna assigned you: create a feature called explore events",
+      "type": "task_assigned",
+      "isRead": false,
+      "createdAt": "2026-11-13T05:20:31.877Z"
+    },
+    {
+      "_id": "6af69e3f16a0a63a4840fb87",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": "6af59039635f8cd7be7acc5e",
+      "message": "Project status changed to Planning",
+      "type": "status",
+      "isRead": false,
+      "createdAt": "2026-11-13T05:21:03.572Z"
+    },
+    {
+      "_id": "6af69e3f16a0a63a4840fb88",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": "6af59039635f8cd7be7acc5e",
+      "message": "Project status changed to Planning",
+      "type": "status",
+      "isRead": false,
+      "createdAt": "2026-11-13T05:21:03.572Z"
+    },
+    {
+      "_id": "6af69e4f16a0a63a4840fb8a",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": "6af59039635f8cd7be7acc5e",
+      "message": "Jai Krishna posted a project update",
+      "type": "progress",
+      "isRead": false,
+      "createdAt": "2026-11-13T05:21:19.808Z"
+    },
+    {
+      "_id": "6af69e4f16a0a63a4840fb8b",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": "6af59039635f8cd7be7acc5e",
+      "message": "Jai Krishna posted a project update",
+      "type": "progress",
+      "isRead": false,
+      "createdAt": "2026-11-13T05:21:19.808Z"
+    },
+    {
+      "_id": "6af6ba3d80ecfbfbd9f94788",
+      "recipient": "6af57f13b70370c86dd06490",
+      "sender": "6af555ee6bee38b376464481",
+      "project": "6af59039635f8cd7be7acc5e",
+      "conversation": "6af6b240666902503d079f2a",
+      "message": "Jasiya sent you a message in job portal.",
+      "type": "chat",
+      "isRead": false,
+      "createdAt": "2026-11-13T07:20:29.564Z"
+    },
+    {
+      "_id": "6af6ba5480ecfbfbd9f9478a",
+      "recipient": "6af57f13b70370c86dd06490",
+      "sender": "6af555ee6bee38b376464481",
+      "project": "6af59039635f8cd7be7acc5e",
+      "conversation": "6af6b240666902503d079f2a",
+      "message": "Jasiya sent you a message in job portal.",
+      "type": "chat",
+      "isRead": false,
+      "createdAt": "2026-11-13T07:20:52.880Z"
+    },
+    {
+      "_id": "6af6bb0780ecfbfbd9f9478c",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": "6af59039635f8cd7be7acc5e",
+      "conversation": "6af6b240666902503d079f2a",
+      "message": "Jai Krishna sent you a message in job portal.",
+      "type": "chat",
+      "isRead": false,
+      "createdAt": "2026-11-13T07:23:51.039Z"
+    },
+    {
+      "_id": "6af6cfee35114e5b1e008c08",
+      "recipient": "6af5553f6bee38b37646447e",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": null,
+      "conversation": "6af6cfdfe2b8ecff23858589",
+      "message": "Jai Krishna sent you a message.",
+      "type": "direct_message",
+      "isRead": false,
+      "createdAt": "2026-11-13T08:53:02.219Z"
+    },
+    {
+      "_id": "6af6d00645b79b0b28a3a33c",
+      "recipient": "6af5553f6bee38b37646447e",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": null,
+      "conversation": "6af6cfdfe2b8ecff23858589",
+      "message": "Jai Krishna sent you a message.",
+      "type": "direct_message",
+      "isRead": false,
+      "createdAt": "2026-11-13T08:53:26.437Z"
+    },
+    {
+      "_id": "6af6e1e6bb4043f6bd44985b",
+      "recipient": "6af5553f6bee38b37646447e",
+      "sender": "6af698e6f740f3f62d061296",
+      "project": null,
+      "conversation": "6af6e1e2bb4043f6bd449859",
+      "message": "Dany sent you a message.",
+      "type": "direct_message",
+      "isRead": false,
+      "createdAt": "2026-11-13T10:09:42.286Z"
+    }
+  ],
+  "chatrooms": [
+    {
+      "_id": "6af6b240666902503d079f2a",
+      "project": "6af59039635f8cd7be7acc5e",
+      "name": "job portal Group Chat",
+      "members": [
+        "6af57f13b70370c86dd06490",
+        "6af555ee6bee38b376464481"
+      ],
+      "createdAt": "2026-11-13T06:46:24.209Z",
+      "type": "group",
+      "updatedAt": "2026-11-13T07:23:51.039Z"
+    },
+    {
+      "_id": "6af6cfdfe2b8ecff23858589",
+      "type": "direct",
+      "project": null,
+      "name": "Jai Krishna and Janani",
+      "members": [
+        "6af5553f6bee38b37646447e",
+        "6af57f13b70370c86dd06490"
+      ],
+      "createdAt": "2026-11-13T08:52:47.833Z",
+      "updatedAt": "2026-11-13T08:53:26.437Z"
+    },
+    {
+      "_id": "6af6e1e2bb4043f6bd449859",
+      "type": "direct",
+      "project": null,
+      "name": "Dany and Janani",
+      "members": [
+        "6af5553f6bee38b37646447e",
+        "6af698e6f740f3f62d061296"
+      ],
+      "createdAt": "2026-11-13T10:09:38.235Z",
+      "updatedAt": "2026-11-13T10:09:42.286Z"
+    }
+  ],
+  "chatmessages": [
+    {
+      "_id": "6af6ba3d80ecfbfbd9f94787",
+      "room": "6af6b240666902503d079f2a",
+      "sender": "6af555ee6bee38b376464481",
+      "message": "hiee",
+      "attachment": null,
+      "readBy": [
+        "6af555ee6bee38b376464481",
+        "6af57f13b70370c86dd06490"
+      ],
+      "deliveredAt": "2026-11-13T07:20:29.564Z",
+      "createdAt": "2026-11-13T07:20:29.564Z"
+    },
+    {
+      "_id": "6af6ba5480ecfbfbd9f94789",
+      "room": "6af6b240666902503d079f2a",
+      "sender": "6af555ee6bee38b376464481",
+      "message": "what u doing",
+      "attachment": null,
+      "readBy": [
+        "6af555ee6bee38b376464481",
+        "6af57f13b70370c86dd06490"
+      ],
+      "deliveredAt": "2026-11-13T07:20:52.880Z",
+      "createdAt": "2026-11-13T07:20:52.880Z"
+    },
+    {
+      "_id": "6af6bb0780ecfbfbd9f9478b",
+      "room": "6af6b240666902503d079f2a",
+      "sender": "6af57f13b70370c86dd06490",
+      "message": "suma iruken",
+      "attachment": null,
+      "readBy": [
+        "6af57f13b70370c86dd06490"
+      ],
+      "deliveredAt": "2026-11-13T07:23:51.039Z",
+      "createdAt": "2026-11-13T07:23:51.039Z"
+    },
+    {
+      "_id": "6af6cfee35114e5b1e008c07",
+      "room": "6af6cfdfe2b8ecff23858589",
+      "sender": "6af57f13b70370c86dd06490",
+      "message": "hiee",
+      "attachment": null,
+      "readBy": [
+        "6af57f13b70370c86dd06490"
+      ],
+      "deliveredAt": "2026-11-13T08:53:02.219Z",
+      "createdAt": "2026-11-13T08:53:02.219Z"
+    },
+    {
+      "_id": "6af6d00645b79b0b28a3a33a",
+      "room": "6af6cfdfe2b8ecff23858589",
+      "sender": "6af57f13b70370c86dd06490",
+      "message": "this is it",
+      "attachment": {
+        "_id": "6af6d00645b79b0b28a3a33b",
+        "filePath": "/uploads/chat/chat-1794560006431-918141936.png",
+        "fileName": "image (3).png",
+        "mimeType": "image/png",
+        "uploadedAt": "2026-11-13T08:53:26.437Z"
+      },
+      "readBy": [
+        "6af57f13b70370c86dd06490"
+      ],
+      "deliveredAt": "2026-11-13T08:53:26.437Z",
+      "createdAt": "2026-11-13T08:53:26.437Z"
+    },
+    {
+      "_id": "6af6e1e6bb4043f6bd44985a",
+      "room": "6af6e1e2bb4043f6bd449859",
+      "sender": "6af698e6f740f3f62d061296",
+      "message": "hieee",
+      "attachment": null,
+      "readBy": [
+        "6af698e6f740f3f62d061296"
+      ],
+      "deliveredAt": "2026-11-13T10:09:42.286Z",
+      "createdAt": "2026-11-13T10:09:42.286Z"
+    }
+  ],
+  "projecttasks": [
+    {
+      "_id": "6af69e1f16a0a63a4840fb85",
+      "project": "6af59039635f8cd7be7acc5e",
+      "title": "create a feature called explore events",
+      "description": "",
+      "assignee": "6af555ee6bee38b376464481",
+      "createdBy": "6af57f13b70370c86dd06490",
+      "deadline": "2026-11-25",
+      "status": "Not Started",
+      "createdAt": "2026-11-13T05:20:31.877Z",
+      "updatedAt": "2026-11-13T05:21:40.854Z"
+    }
+  ],
+  "projectmilestones": [],
+  "progressupdates": [
+    {
+      "_id": "6af69e4f16a0a63a4840fb89",
+      "project": "6af59039635f8cd7be7acc5e",
+      "author": "6af57f13b70370c86dd06490",
+      "message": "planning process completed",
+      "createdAt": "2026-11-13T05:21:19.808Z"
+    }
+  ],
+  "adminlogs": []
 }

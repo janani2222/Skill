@@ -9,16 +9,21 @@ import {
   LogOut,
   Shield,
   ExternalLink,
+  Compass,
+  BriefcaseBusiness,
+  Presentation,
+  SearchCheck,
+  MessageCircle,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Sidebar = ({ isOpen, onClose }) => {
-  const { logout, user } = useAuth();
+  const { logout, user, profile } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
-    navigate('/login');
+    navigate('/');
   };
 
   return (
@@ -57,6 +62,23 @@ const Sidebar = ({ isOpen, onClose }) => {
           </NavLink>
 
           <NavLink
+            to="/discover"
+            className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+            onClick={onClose}
+          ><Compass size={20} /><span>Discover Students</span><div className="gold-active-bar" /></NavLink>
+
+          <NavLink
+            to="/projects"
+            className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+            onClick={onClose}
+          ><BriefcaseBusiness size={20} /><span>My Projects</span><div className="gold-active-bar" /></NavLink>
+
+          <NavLink to="/current-projects" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} onClick={onClose}>
+            <Presentation size={20} /><span>Current Projects</span><div className="gold-active-bar" />
+          </NavLink>
+          <NavLink to="/explore" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} onClick={onClose}><SearchCheck size={20}/><span>Explore Projects</span><div className="gold-active-bar" /></NavLink>
+
+          <NavLink
             to="/profile"
             className={({ isActive }) =>
               `sidebar-link ${isActive ? 'active' : ''}`
@@ -68,17 +90,15 @@ const Sidebar = ({ isOpen, onClose }) => {
             <div className="gold-active-bar" />
           </NavLink>
 
-          <div className="sidebar-link disabled" title="Available in Phase 2">
-            <FolderGit2 size={20} />
-            <span>My Projects</span>
-            <span className="sidebar-badge">Phase 2</span>
-          </div>
-
-          <div className="sidebar-link disabled" title="Available in Phase 2">
+          <NavLink to="/notifications" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} onClick={onClose}>
             <Bell size={20} />
             <span>Notifications</span>
-            <span className="sidebar-badge">Phase 2</span>
-          </div>
+            <div className="gold-active-bar" />
+          </NavLink>
+          <NavLink to="/messages" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} onClick={onClose}>
+            <MessageCircle size={20} /><span>Messages</span><div className="gold-active-bar" />
+          </NavLink>
+          {user?.role === 'admin' && <NavLink to="/admin" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} onClick={onClose}><Shield size={20}/><span>Admin Dashboard</span><div className="gold-active-bar"/></NavLink>}
 
           <span className="sidebar-category">PREFERENCES</span>
 
@@ -107,7 +127,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         <div className="sidebar-footer">
           <div className="sidebar-user-card">
             <div className="sidebar-user-avatar">
-              {user?.name ? user.name.charAt(0).toUpperCase() : 'S'}
+              <img src={profile?.avatar || '/avatars/professional-neutral.svg'} alt="" onError={(event) => { event.currentTarget.src = '/avatars/professional-neutral.svg'; }} />
             </div>
             <div className="sidebar-user-details">
               <p className="sidebar-user-name">{user?.name || 'Student'}</p>

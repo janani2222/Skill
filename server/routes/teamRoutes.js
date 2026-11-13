@@ -1,0 +1,16 @@
+const router = require('express').Router();
+const { protect } = require('../middleware/authMiddleware');
+const c = require('../controllers/teamController');
+const upload = require('../middleware/uploadMiddleware');
+router.use(protect);
+router.get('/tasks/my', c.myTasks);
+router.get('/projects/:id', c.team);
+router.post('/projects/:id/tasks', c.createTask);
+router.patch('/tasks/:taskId', c.updateTask);
+router.post('/tasks/:taskId/attachments', upload.uploadTaskAttachment.single('file'), c.uploadTaskAttachment);
+router.delete('/projects/:id/members/:studentId', c.removeMember);
+router.post('/projects/:id/milestones', c.createMilestone);
+router.patch('/milestones/:milestoneId', c.updateMilestone);
+router.post('/projects/:id/updates', c.createUpdate);
+router.patch('/projects/:id/status', c.updateStatus);
+module.exports = router;

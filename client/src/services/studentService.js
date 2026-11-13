@@ -19,6 +19,11 @@ export const uploadAvatarImage = async (formData) => {
   return response.data;
 };
 
+export const updateMyAvatar = async (avatar) => {
+  const response = await api.put('/students/me/avatar', { avatar });
+  return response.data;
+};
+
 export const fetchAllSkills = async () => {
   const response = await api.get('/skills');
   return response.data;

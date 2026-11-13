@@ -24,10 +24,10 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || 'skillbridge_super_secret_jwt_key_2026_secure'
-    );
+    const secret = process.env.JWT_SECRET || (process.env.NODE_ENV === 'production' ? null : 'skillbridge_super_secret_jwt_key_2026_secure');
+    if (!secret) return res.status(500).json({ success: false, message: 'Authentication is not configured.' });
+    const decoded = jwt.verify(token, secret);
+    req.sessionExpiresAt = Number(decoded.exp) * 1000;
 
     if (isConnected()) {
       req.user = await User.findById(decoded.id).select('-password');
@@ -46,6 +46,7 @@ const protect = async (req, res, next) => {
         message: 'The user belonging to this token no longer exists.',
       });
     }
+    if (req.user.active === false) return res.status(403).json({ success: false, message: 'This account has been deactivated.' });
 
     next();
   } catch (error) {

@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Bell, Menu, User as UserIcon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getNotifications } from '../services/phase2Service';
 
 const TopNav = ({ onToggleSidebar }) => {
   const { user, profile } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+  useEffect(() => { let active=true; const load=()=>getNotifications().then(d=>{if(active)setUnreadCount((d.notifications||[]).filter(n=>!n.isRead).length);}).catch(()=>{}); load(); const timer=setInterval(load,15000); return()=>{active=false;clearInterval(timer);}; },[]);
 
   return (
     <header className="dashboard-topnav">
@@ -29,22 +32,20 @@ const TopNav = ({ onToggleSidebar }) => {
 
       <div className="topnav-right">
         {/* Notification bell */}
-        <div className="topnav-bell-wrapper" title="Phase 1: No unread notifications">
-          <button className="topnav-icon-btn">
+        <Link to="/notifications" className="topnav-bell-wrapper" title="Notifications">
+          <button className="topnav-icon-btn" type="button">
             <Bell size={20} />
-            <span className="notification-dot" />
+            {unreadCount>0&&<span className="notification-count">{unreadCount>99?'99+':unreadCount}</span>}
           </button>
-        </div>
+        </Link>
 
         {/* Profile Pill */}
         <Link to="/profile" className="topnav-profile-pill">
           <div className="profile-pill-avatar">
             {profile?.avatar ? (
-              <img src={profile.avatar} alt={user?.name} />
+              <img src={profile.avatar} alt={user?.name} onError={(event) => { event.currentTarget.src = '/avatars/professional-neutral.svg'; }} />
             ) : (
-              <div className="avatar-placeholder">
-                {user?.name ? user.name.charAt(0).toUpperCase() : 'S'}
-              </div>
+              <img src="/avatars/professional-neutral.svg" alt="" />
             )}
           </div>
           <div className="profile-pill-meta">

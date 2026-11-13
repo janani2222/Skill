@@ -17,7 +17,6 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false,
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -30,6 +29,7 @@ const LoginPage = () => {
   const location = useLocation();
 
   const from = location.state?.from?.pathname || '/dashboard';
+  const fromState = location.state?.from?.state;
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -56,12 +56,11 @@ const LoginPage = () => {
       await login({
         email: formData.email,
         password: formData.password,
-        rememberMe: formData.rememberMe,
       });
 
       setSuccessMsg('Authentication successful! Loading dashboard...');
       setTimeout(() => {
-        navigate(from, { replace: true });
+        navigate(from, { replace: true, state: fromState });
       }, 1000);
     } catch (err) {
       setErrorMsg(
@@ -199,16 +198,8 @@ const LoginPage = () => {
               </div>
 
               {/* Remember Me & Forgot Password */}
-              <div className="form-checkbox-row">
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    name="rememberMe"
-                    checked={formData.rememberMe}
-                    onChange={handleChange}
-                  />
-                  <span>Remember me for 30 days</span>
-                </label>
+                <div className="form-checkbox-row">
+                  <span>Session expires automatically after 24 hours</span>
 
                 <a
                   href="#!"

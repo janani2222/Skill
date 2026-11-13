@@ -1,0 +1,12 @@
+const router = require('express').Router();
+const { protect } = require('../middleware/authMiddleware');
+const admin = require('../middleware/adminMiddleware');
+const c = require('../controllers/teamController');
+router.use(protect, admin);
+router.get('/overview', c.adminOverview);
+router.get('/students', c.adminStudents);
+router.get('/projects', c.adminProjects);
+router.patch('/students/:id/active', c.adminToggleStudent);
+router.delete('/students/:id', c.adminDeleteStudent);
+router.delete('/projects/:id', c.adminDeleteProject);
+module.exports = router;

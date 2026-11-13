@@ -6,8 +6,9 @@ mongoose.set('bufferCommands', false);
 let isMongoConnected = false;
 
 const connectDB = async () => {
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/skillbridge_db';
   try {
+    if (process.env.NODE_ENV === 'production' && !process.env.MONGODB_URI) throw new Error('MONGODB_URI must be configured in production.');
+    const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/skillbridge_db';
     const conn = await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 2000,
     });

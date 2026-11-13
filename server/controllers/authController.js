@@ -7,25 +7,26 @@ const { isConnected } = require('../config/db');
 const { readDb, writeDb, generateId } = require('../config/localDb');
 
 // Generate JWT token helper
-const generateToken = (id, rememberMe = false) => {
+const generateToken = (id) => {
+  const secret = process.env.JWT_SECRET || (process.env.NODE_ENV === 'production' ? null : 'skillbridge_super_secret_jwt_key_2026_secure');
+  if (!secret) throw new Error('JWT_SECRET must be configured in production.');
   return jwt.sign(
     { id: id.toString() },
-    process.env.JWT_SECRET || 'skillbridge_super_secret_jwt_key_2026_secure',
+    secret,
     {
-      expiresIn: rememberMe ? '30d' : process.env.JWT_EXPIRE || '7d',
+      expiresIn: '24h',
     }
   );
 };
 
 // Send token response with HTTP-only cookie and JSON data
-const sendTokenResponse = (user, statusCode, res, rememberMe = false) => {
+const sendTokenResponse = (user, statusCode, res) => {
   const userId = user._id || user.id;
-  const token = generateToken(userId, rememberMe);
+  const token = generateToken(userId);
 
   const cookieOptions = {
-    expires: new Date(
-      Date.now() + (rememberMe ? 30 : 7) * 24 * 60 * 60 * 1000
-    ),
+    maxAge: 24 * 60 * 60 * 1000,
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -36,7 +37,7 @@ const sendTokenResponse = (user, statusCode, res, rememberMe = false) => {
     .cookie('token', token, cookieOptions)
     .json({
       success: true,
-      token,
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000,
       user: {
         id: userId,
         _id: userId,
@@ -96,6 +97,7 @@ exports.register = async (req, res, next) => {
         password,
         department,
         year,
+        role: (process.env.ADMIN_EMAILS || '').split(',').map((x) => x.trim().toLowerCase()).includes(cleanEmail) ? 'admin' : 'student',
       });
 
       // Initially empty skills and interests as required
@@ -137,7 +139,7 @@ exports.register = async (req, res, next) => {
         password: hashedPassword,
         department,
         year,
-        role: 'student',
+        role: (process.env.ADMIN_EMAILS || '').split(',').map((x) => x.trim().toLowerCase()).includes(cleanEmail) ? 'admin' : 'student',
         createdAt: new Date().toISOString(),
       };
 
@@ -188,7 +190,7 @@ exports.register = async (req, res, next) => {
 // @access  Public
 exports.login = async (req, res, next) => {
   try {
-    const { email, password, rememberMe } = req.body;
+    const { email, password } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({
@@ -207,6 +209,7 @@ exports.login = async (req, res, next) => {
           message: 'Invalid credentials. Please verify your email and password.',
         });
       }
+      if (user.active === false) return res.status(403).json({ success: false, message: 'This account has been deactivated.' });
 
       const isMatch = await user.matchPassword(password);
       if (!isMatch) {
@@ -216,7 +219,7 @@ exports.login = async (req, res, next) => {
         });
       }
 
-      return sendTokenResponse(user, 200, res, rememberMe);
+      return sendTokenResponse(user, 200, res);
     } else {
       const db = readDb();
       const user = db.users.find((u) => u.email === cleanEmail);
@@ -226,6 +229,7 @@ exports.login = async (req, res, next) => {
           message: 'Invalid credentials. Please verify your email and password.',
         });
       }
+      if (user.active === false) return res.status(403).json({ success: false, message: 'This account has been deactivated.' });
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
@@ -235,7 +239,7 @@ exports.login = async (req, res, next) => {
         });
       }
 
-      return sendTokenResponse(user, 200, res, rememberMe);
+      return sendTokenResponse(user, 200, res);
     }
   } catch (error) {
     next(error);
@@ -271,6 +275,7 @@ exports.getMe = async (req, res, next) => {
         success: true,
         user,
         profile,
+        expiresAt: req.sessionExpiresAt,
       });
     } else {
       const db = readDb();
@@ -291,6 +296,7 @@ exports.getMe = async (req, res, next) => {
           success: true,
           user: safeUser,
           profile: fullProfile,
+          expiresAt: req.sessionExpiresAt,
         });
       }
 
@@ -299,6 +305,7 @@ exports.getMe = async (req, res, next) => {
         success: true,
         user: safeUser,
         profile: null,
+        expiresAt: req.sessionExpiresAt,
       });
     }
   } catch (error) {

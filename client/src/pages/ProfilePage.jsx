@@ -1,928 +1,424 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  AlertCircle, ArrowUpRight, CalendarDays, Camera, Check, CheckCircle2,
+  Code2, ExternalLink, Github, Globe, GraduationCap, MapPin, Pencil,
+  Plus, Save, Sparkles, UserRound, X, Building2, Linkedin,
+} from 'lucide-react';
+import {
+  siAndroid, siAngular, siArduino, siApachekafka, siBootstrap, siC, siCplusplus,
+  siCss, siD3, siDart, siDjango, siDocker, siElasticsearch, siExpress, siFastapi,
+  siFigma, siFirebase, siFlask, siFlutter, siGit, siGithub, siGitlab, siGo,
+  siGooglecloud, siGraphql, siHtml5, siJenkins, siJest, siJavascript, siJquery, siJupyter,
+  siJulia, siKeras, siKotlin, siKubernetes, siLinux, siMongodb, siMysql, siNodedotjs,
+  siNextdotjs, siNumpy, siOpencv, siOpenjdk, siPandas, siPhp, siPostgresql,
+  siPostman, siPython, siPytorch, siR, siRabbitmq, siRaspberrypi, siReact,
+  siRedis, siRuby, siRust, siScikitlearn, siSpringboot, siSqlite, siSvelte,
+  siSupabase, siSwift, siTailwindcss, siTensorflow, siTerraform, siTypescript,
+  siUnity, siUnrealengine, siVite, siVuedotjs, siWebpack,
+} from 'simple-icons';
 import Sidebar from '../components/Sidebar';
 import TopNav from '../components/TopNav';
-import {
-  User,
-  GraduationCap,
-  MapPin,
-  Calendar,
-  Code2,
-  Sparkles,
-  Github,
-  Linkedin,
-  Globe,
-  X,
-  Plus,
-  CheckCircle2,
-  AlertCircle,
-  ExternalLink,
-} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getMyProfile, updateMyProfile } from '../services/studentService';
+import { getMyProfile, updateMyAvatar, updateMyProfile, uploadAvatarImage, fetchAllSkills } from '../services/studentService';
 
-const DEPARTMENTS = [
-  'Computer Science and Engineering',
-  'Artificial Intelligence and Data Science',
-  'Information Technology',
-  'Electronics and Communication Engineering',
-  'Electrical and Electronics Engineering',
-  'Mechanical Engineering',
-  'Civil Engineering',
-  'Other',
+const DEPARTMENTS = ['Computer Science and Engineering', 'Artificial Intelligence and Data Science', 'Information Technology', 'Electronics and Communication Engineering', 'Electrical and Electronics Engineering', 'Mechanical Engineering', 'Civil Engineering', 'Other'];
+const YEARS = ['First Year', 'Second Year', 'Third Year', 'Fourth Year'];
+const DEFAULT_AVATAR = '/avatars/professional-neutral.svg';
+const DEFAULT_AVATARS = [
+  { src: '/avatars/professional-neutral.svg', label: 'Classic' },
+  { src: '/avatars/professional-blue.svg', label: 'Blue' },
+  { src: '/avatars/professional-gold.svg', label: 'Gold' },
 ];
 
-const YEARS = ['First Year', 'Second Year', 'Third Year', 'Fourth Year'];
+const TECHNOLOGIES = [
+  ['Java', 'java'], ['JavaScript', 'javascript'], ['jQuery', 'jquery'], ['Jenkins', 'jenkins'], ['Jest', 'jest'], ['Julia', 'julia'], ['C', 'c'], ['C++', 'cplusplus'], ['C#', 'csharp'], ['Python', 'python'], ['PHP', 'php'], ['PostgreSQL', 'postgresql'], ['PyTorch', 'pytorch'], ['Pandas', 'pandas'], ['NumPy', 'numpy'], ['React', 'react'], ['Angular', 'angular'], ['Vue.js', 'vuejs'], ['Svelte', 'svelte'], ['Next.js', 'nextjs'], ['Node.js', 'nodejs'], ['Express.js', 'express'], ['Spring Boot', 'spring'], ['Django', 'django'], ['Flask', 'flask'], ['FastAPI', 'fastapi'], ['HTML5', 'html5'], ['CSS3', 'css3'], ['Tailwind CSS', 'tailwindcss'], ['Bootstrap', 'bootstrap'], ['TypeScript', 'typescript'], ['Go', 'go'], ['Rust', 'rust'], ['Ruby', 'ruby'], ['Kotlin', 'kotlin'], ['Swift', 'swift'], ['Dart', 'dart'], ['Flutter', 'flutter'], ['Android', 'android'], ['MySQL', 'mysql'], ['MongoDB', 'mongodb'], ['Redis', 'redis'], ['SQLite', 'sqlite'], ['Firebase', 'firebase'], ['Supabase', 'supabase'], ['Oracle', 'oracle'], ['Microsoft SQL Server', 'microsoftsqlserver'], ['TensorFlow', 'tensorflow'], ['Keras', 'keras'], ['scikit-learn', 'scikitlearn'], ['OpenCV', 'opencv'], ['Jupyter', 'jupyter'], ['AWS', 'amazonwebservices'], ['Azure', 'azure'], ['Google Cloud', 'googlecloud'], ['Docker', 'docker'], ['Kubernetes', 'kubernetes'], ['Terraform', 'terraform'], ['Git', 'git'], ['GitHub', 'github'], ['GitLab', 'gitlab'], ['Linux', 'linux'], ['Figma', 'figma'], ['Postman', 'postman'], ['Vite', 'vite'], ['Webpack', 'webpack'], ['GraphQL', 'graphql'], ['D3.js', 'd3js'], ['Unity', 'unity'], ['Unreal Engine', 'unrealengine'], ['Apache Kafka', 'apachekafka'], ['RabbitMQ', 'rabbitmq'], ['Elasticsearch', 'elasticsearch'], ['Power BI', 'powerbi'], ['Tableau', 'tableau'], ['R', 'r'], ['MATLAB', 'matlab'], ['Arduino', 'arduino'], ['Raspberry Pi', 'raspberrypi'],
+].map(([name, slug]) => ({ name, slug, category: 'Technology' }));
 
-const ProfilePage = () => {
+const BRAND_ICONS = {
+  java: siOpenjdk, javascript: siJavascript, jquery: siJquery, jenkins: siJenkins, jest: siJest, julia: siJulia,
+  c: siC, cplusplus: siCplusplus, python: siPython, php: siPhp, postgresql: siPostgresql, pytorch: siPytorch,
+  pandas: siPandas, numpy: siNumpy, react: siReact, angular: siAngular, vuejs: siVuedotjs, svelte: siSvelte,
+  nextjs: siNextdotjs, nodejs: siNodedotjs, express: siExpress, spring: siSpringboot, django: siDjango,
+  flask: siFlask, fastapi: siFastapi, html5: siHtml5, css3: siCss, tailwindcss: siTailwindcss,
+  bootstrap: siBootstrap, typescript: siTypescript, go: siGo, rust: siRust, ruby: siRuby, kotlin: siKotlin,
+  swift: siSwift, dart: siDart, flutter: siFlutter, android: siAndroid, mysql: siMysql, mongodb: siMongodb,
+  redis: siRedis, sqlite: siSqlite, firebase: siFirebase, supabase: siSupabase, tensorflow: siTensorflow,
+  keras: siKeras, scikitlearn: siScikitlearn, opencv: siOpencv, jupyter: siJupyter, googlecloud: siGooglecloud,
+  docker: siDocker, kubernetes: siKubernetes, git: siGit, github: siGithub, gitlab: siGitlab, linux: siLinux,
+  figma: siFigma, postman: siPostman, vite: siVite, webpack: siWebpack, graphql: siGraphql, d3js: siD3,
+  unity: siUnity, unrealengine: siUnrealengine, apachekafka: siApachekafka, rabbitmq: siRabbitmq,
+  elasticsearch: siElasticsearch, r: siR, arduino: siArduino, raspberrypi: siRaspberrypi,
+};
+
+const cleanSkills = (skills = []) => skills.map((item) => typeof item === 'string' ? { name: item, category: 'Technology' } : { ...item, name: item.name || '' }).filter((item) => item.name);
+const profileUrl = (value = '') => value ? (value.startsWith('http') ? value : `https://${value}`) : '';
+
+function TechnologyLogo({ name, size = 23 }) {
+  const skill = TECHNOLOGIES.find((item) => item.name.toLowerCase() === String(name).toLowerCase());
+  const icon = skill ? BRAND_ICONS[skill.slug] : null;
+  if (!icon) return <Code2 size={size} aria-hidden="true"/>;
+  return <svg className="profile-tech-logo" aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill={`#${icon.hex}`}><path d={icon.path}/></svg>;
+}
+
+function PencilButton({ label, onClick }) {
+  return <button type="button" className="profile-edit-icon" aria-label={`Edit ${label}`} title={`Edit ${label}`} onClick={onClick}><Pencil size={17}/></button>;
+}
+
+export default function ProfilePage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Edit Modal State
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editFormData, setEditFormData] = useState({
-    name: '',
-    department: 'Computer Science and Engineering',
-    year: 'First Year',
-    collegeName: '',
-    degree: '',
-    graduationYear: '',
-    location: '',
-    aboutMe: '',
-    skills: [],
-    interests: [],
-    github: '',
-    linkedin: '',
-    portfolio: '',
-  });
-
-  // Local input states for adding tags inside the modal
+  const [loadError, setLoadError] = useState('');
+  const [editorSection, setEditorSection] = useState('');
+  const [avatarOpen, setAvatarOpen] = useState(false);
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState('');
+  const [avatarPosition, setAvatarPosition] = useState({ x: 50, y: 50 });
+  const [selectedDefault, setSelectedDefault] = useState('');
+  const [avatarSaving, setAvatarSaving] = useState(false);
+  const [avatarError, setAvatarError] = useState('');
+  const [editData, setEditData] = useState(null);
   const [skillInput, setSkillInput] = useState('');
   const [interestInput, setInterestInput] = useState('');
-  const [validationErrors, setValidationErrors] = useState({});
-  const [statusMsg, setStatusMsg] = useState({ text: '', type: '' });
-  const [modalSaving, setModalSaving] = useState(false);
-
+  const [knownSkills, setKnownSkills] = useState([]);
+  const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [notice, setNotice] = useState({ text: '', type: '' });
+  const [cropImageUrl, setCropImageUrl] = useState('');
+  const fileInputRef = useRef(null);
   const { user, refreshUser, updateUserState, updateProfileState } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Load student profile from backend
   const loadProfile = async () => {
+    setLoading(true);
+    setLoadError('');
     try {
-      const res = await getMyProfile();
-      if (res.success && res.profile) {
-        setProfileData(res.profile);
-        initFormData(res.profile, user);
-      }
-    } catch (err) {
-      console.error('Failed to load profile:', err);
+      const response = await getMyProfile();
+      if (!response.success || !response.profile) throw new Error(response.message || 'Profile could not be loaded.');
+      setProfileData(response.profile);
+      updateProfileState(response.profile);
+      setEditData(buildForm(response.profile, user));
+    } catch (error) {
+      setLoadError(error.message || 'Profile could not be loaded.');
     } finally {
       setLoading(false);
     }
   };
 
-  const initFormData = (profile, currentUser) => {
-    // Extract skills as objects with names or strings
-    const currentSkills = (profile?.skills || []).map((s) =>
-      typeof s === 'string' ? { name: s, category: 'Technical' } : { name: s.name || '', category: s.category || 'Technical', _id: s._id }
-    );
+  const buildForm = (profile, currentUser) => ({
+    name: currentUser?.name || profile?.user?.name || '',
+    department: currentUser?.department || profile?.user?.department || '',
+    year: currentUser?.year || profile?.user?.year || '',
+    collegeName: profile?.collegeName || '',
+    degree: profile?.degree || '',
+    graduationYear: profile?.graduationYear || '',
+    location: profile?.location || '',
+    aboutMe: profile?.aboutMe || '',
+    skills: cleanSkills(profile?.skills),
+    interests: [...(profile?.interests || [])],
+    github: profile?.socialLinks?.github || '',
+    linkedin: profile?.socialLinks?.linkedin || '',
+    portfolio: profile?.socialLinks?.portfolio || '',
+  });
 
-    setEditFormData({
-      name: currentUser?.name || profile?.user?.name || '',
-      department: currentUser?.department || profile?.user?.department || 'Computer Science and Engineering',
-      year: currentUser?.year || profile?.user?.year || 'First Year',
-      collegeName: profile?.collegeName || 'College Institute of Engineering & Technology',
-      degree: profile?.degree || 'Bachelor of Technology (B.Tech)',
-      graduationYear: profile?.graduationYear || '2027',
-      location: profile?.location || 'Campus / Hostel',
-      aboutMe: profile?.aboutMe || '',
-      skills: currentSkills,
-      interests: profile?.interests ? [...profile.interests] : [],
-      github: profile?.socialLinks?.github || '',
-      linkedin: profile?.socialLinks?.linkedin || '',
-      portfolio: profile?.socialLinks?.portfolio || '',
-    });
-    setValidationErrors({});
-    setSkillInput('');
-    setInterestInput('');
-  };
-
+  useEffect(() => { loadProfile(); }, [user?._id || user?.id]);
   useEffect(() => {
-    loadProfile();
-  }, [user]);
-
-  // Open modal if navigated from Dashboard "Edit Profile"
+    fetchAllSkills().then((response) => setKnownSkills(response.skills || [])).catch(() => setKnownSkills([]));
+  }, []);
   useEffect(() => {
     if (location.state?.openEdit && profileData) {
-      initFormData(profileData, user);
-      setIsEditModalOpen(true);
-      // Clear state so modal doesn't reopen unexpectedly
+      openEditor('all');
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location.state, profileData]);
-
-  // Prevent background scrolling when modal is active
   useEffect(() => {
-    if (isEditModalOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+    if (avatarFile) {
+      const url = URL.createObjectURL(avatarFile);
+      setCropImageUrl(url);
+      return () => URL.revokeObjectURL(url);
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isEditModalOpen]);
+    setCropImageUrl('');
+    return undefined;
+  }, [avatarFile]);
+  useEffect(() => {
+    const isModalOpen = !!editorSection || avatarOpen;
+    document.body.style.overflow = isModalOpen ? 'hidden' : '';
+    const onKeyDown = (event) => { if (event.key === 'Escape') { setEditorSection(''); closeAvatarEditor(); } };
+    if (isModalOpen) window.addEventListener('keydown', onKeyDown);
+    return () => { document.body.style.overflow = ''; window.removeEventListener('keydown', onKeyDown); };
+  }, [editorSection, avatarOpen]);
 
-  // Add a skill tag inside the modal
-  const handleAddSkillTag = (e) => {
-    if (e) e.preventDefault();
-    const trimmed = skillInput.trim();
-    if (!trimmed) return;
+  const openEditor = (section = 'all') => {
+    setEditData(buildForm(profileData, user));
+    setSkillInput(''); setInterestInput(''); setFormError(''); setEditorSection(section);
+  };
+  const closeEditor = () => { setEditorSection(''); setFormError(''); };
+  const changeField = (key, value) => setEditData((current) => ({ ...current, [key]: value }));
+  const visibleSections = (section) => editorSection === 'all' || editorSection === section;
 
-    // Check duplicate
-    const exists = editFormData.skills.some(
-      (s) => s.name.toLowerCase() === trimmed.toLowerCase()
-    );
+  const suggestions = useMemo(() => {
+    const combined = [...TECHNOLOGIES, ...knownSkills.map((skill) => ({ name: skill.name, category: skill.category || 'Technology' }))];
+    const unique = [...new Map(combined.map((item) => [item.name.toLowerCase(), item])).values()];
+    const query = skillInput.trim().toLowerCase();
+    if (!query) return [];
+    const existing = new Set((editData?.skills || []).map((item) => item.name.toLowerCase()));
+    return unique.filter((item) => item.name.toLowerCase().startsWith(query) && !existing.has(item.name.toLowerCase())).slice(0, 8);
+  }, [skillInput, knownSkills, editData?.skills]);
 
-    if (exists) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        skillInput: `"${trimmed}" is already added.`,
-      }));
-      return;
-    }
-
-    setEditFormData((prev) => ({
-      ...prev,
-      skills: [...prev.skills, { name: trimmed, category: 'Technical' }],
-    }));
+  const addSkill = (candidate) => {
+    const name = (candidate?.name || skillInput).trim();
+    if (!name || editData.skills.some((item) => item.name.toLowerCase() === name.toLowerCase())) return;
+    const known = [...TECHNOLOGIES, ...knownSkills].find((item) => item.name.toLowerCase() === name.toLowerCase());
+    setEditData((current) => ({ ...current, skills: [...current.skills, { name: known?.name || name, category: known?.category || 'Technology' }] }));
     setSkillInput('');
-    setValidationErrors((prev) => ({ ...prev, skillInput: '' }));
+  };
+  const removeSkill = (name) => setEditData((current) => ({ ...current, skills: current.skills.filter((item) => item.name !== name) }));
+  const addInterest = () => {
+    const value = interestInput.trim();
+    if (!value || editData.interests.some((item) => item.toLowerCase() === value.toLowerCase())) return;
+    setEditData((current) => ({ ...current, interests: [...current.interests, value] })); setInterestInput('');
   };
 
-  // Remove a skill tag inside the modal
-  const handleRemoveSkillTag = (indexToRemove) => {
-    setEditFormData((prev) => ({
-      ...prev,
-      skills: prev.skills.filter((_, idx) => idx !== indexToRemove),
-    }));
-  };
-
-  // Add an academic interest tag inside the modal
-  const handleAddInterestTag = (e) => {
-    if (e) e.preventDefault();
-    const trimmed = interestInput.trim();
-    if (!trimmed) return;
-
-    // Check duplicate
-    const exists = editFormData.interests.some(
-      (i) => i.toLowerCase() === trimmed.toLowerCase()
-    );
-
-    if (exists) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        interestInput: `"${trimmed}" is already added.`,
-      }));
-      return;
+  const validateEdit = () => {
+    const errors = [];
+    if (visibleSections('basic')) {
+      if (!editData.name.trim() || editData.name.trim().length > 80) errors.push('Enter a name between 1 and 80 characters.');
+      if (!DEPARTMENTS.includes(editData.department)) errors.push('Choose a valid department.');
+      if (!YEARS.includes(editData.year)) errors.push('Choose a valid academic year.');
     }
-
-    setEditFormData((prev) => ({
-      ...prev,
-      interests: [...prev.interests, trimmed],
-    }));
-    setInterestInput('');
-    setValidationErrors((prev) => ({ ...prev, interestInput: '' }));
-  };
-
-  // Remove an interest tag inside the modal
-  const handleRemoveInterestTag = (indexToRemove) => {
-    setEditFormData((prev) => ({
-      ...prev,
-      interests: prev.interests.filter((_, idx) => idx !== indexToRemove),
-    }));
-  };
-
-  // Validation function
-  const validateForm = () => {
-    const errors = {};
-    if (!editFormData.name.trim()) {
-      errors.name = 'Full name is required.';
+    if (visibleSections('education')) {
+      if (editData.collegeName.length > 140 || editData.degree.length > 100 || editData.location.length > 120) errors.push('College, degree, or campus information is too long.');
+      if (editData.graduationYear && (!/^\d{4}$/.test(editData.graduationYear) || Number(editData.graduationYear) < 2000 || Number(editData.graduationYear) > 2040)) errors.push('Enter a graduation year between 2000 and 2040.');
     }
-
-    if (editFormData.graduationYear) {
-      const yearNum = parseInt(editFormData.graduationYear, 10);
-      if (isNaN(yearNum) || yearNum < 2000 || yearNum > 2040) {
-        errors.graduationYear = 'Please enter a valid 4-digit graduation year (e.g., 2027).';
+    if (visibleSections('about') && editData.aboutMe.length > 1000) errors.push('About Me must be 1,000 characters or fewer.');
+    if (visibleSections('social')) {
+      for (const [label, raw] of [['GitHub', editData.github], ['LinkedIn', editData.linkedin], ['Portfolio', editData.portfolio]]) {
+        if (raw && !isValidWebUrl(raw)) errors.push(`${label} must be a valid http or https URL.`);
       }
     }
-
-    const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/i;
-
-    if (editFormData.github && !urlRegex.test(editFormData.github.trim())) {
-      errors.github = 'Please enter a valid GitHub URL.';
-    }
-
-    if (editFormData.linkedin && !urlRegex.test(editFormData.linkedin.trim())) {
-      errors.linkedin = 'Please enter a valid LinkedIn URL.';
-    }
-
-    if (editFormData.portfolio && !urlRegex.test(editFormData.portfolio.trim())) {
-      errors.portfolio = 'Please enter a valid portfolio URL.';
-    }
-
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    setFormError(errors[0] || '');
+    return errors.length === 0;
   };
-
-  // Save changes handler
-  const handleSaveProfile = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    setModalSaving(true);
-    setStatusMsg({ text: '', type: '' });
-
+  const saveProfile = async (event) => {
+    event.preventDefault();
+    if (!validateEdit()) return;
+    const payload = {};
+    if (visibleSections('basic')) Object.assign(payload, { name: editData.name.trim(), department: editData.department, year: editData.year });
+    if (visibleSections('education')) Object.assign(payload, { collegeName: editData.collegeName.trim(), degree: editData.degree.trim(), graduationYear: editData.graduationYear.trim(), location: editData.location.trim() });
+    if (visibleSections('about')) payload.aboutMe = editData.aboutMe.trim();
+    if (visibleSections('skills')) payload.skills = editData.skills.map(({ name, category }) => ({ name, category }));
+    if (visibleSections('interests')) payload.interests = editData.interests;
+    if (visibleSections('social')) payload.socialLinks = { github: editData.github.trim(), linkedin: editData.linkedin.trim(), portfolio: editData.portfolio.trim() };
+    setSaving(true); setFormError('');
     try {
-      const payload = {
-        name: editFormData.name.trim(),
-        department: editFormData.department,
-        year: editFormData.year,
-        collegeName: editFormData.collegeName.trim(),
-        degree: editFormData.degree.trim(),
-        graduationYear: editFormData.graduationYear.trim(),
-        location: editFormData.location.trim(),
-        aboutMe: editFormData.aboutMe.trim(),
-        skills: editFormData.skills.map((s) => s.name),
-        interests: editFormData.interests,
-        socialLinks: {
-          github: editFormData.github.trim(),
-          linkedin: editFormData.linkedin.trim(),
-          portfolio: editFormData.portfolio.trim(),
-        },
-      };
-
-      const res = await updateMyProfile(payload);
-      if (res.success) {
-        setProfileData(res.profile);
-        if (res.profile?.user) {
-          updateUserState(res.profile.user);
-        }
-        updateProfileState(res.profile);
-        setIsEditModalOpen(false);
-        setStatusMsg({
-          text: 'Profile updated successfully!',
-          type: 'success',
-        });
-        await refreshUser();
-      }
-    } catch (err) {
-      setStatusMsg({
-        text: err.message || 'Failed to update profile.',
-        type: 'error',
-      });
-    } finally {
-      setModalSaving(false);
-    }
+      const response = await updateMyProfile(payload);
+      if (!response.success) throw new Error(response.message || 'Your changes could not be saved.');
+      setProfileData(response.profile);
+      updateProfileState(response.profile);
+      if (response.profile?.user) updateUserState(response.profile.user);
+      setEditorSection('');
+      setNotice({ text: 'Your profile changes have been saved.', type: 'success' });
+      await refreshUser();
+    } catch (error) {
+      setFormError(error.message || 'Your changes could not be saved.');
+    } finally { setSaving(false); }
   };
 
-  // Cancel handler: close and discard
-  const handleCancelEdit = () => {
-    initFormData(profileData, user);
-    setIsEditModalOpen(false);
-    setValidationErrors({});
+  const openAvatarEditor = () => {
+    setAvatarFile(null); setAvatarPreview(''); setAvatarPosition({ x: 50, y: 50 });
+    setSelectedDefault(DEFAULT_AVATARS.some((item) => item.src === profileData?.avatar) ? profileData.avatar : '');
+    setAvatarError(''); setAvatarOpen(true);
+  };
+  const closeAvatarEditor = () => { setAvatarOpen(false); setAvatarFile(null); setAvatarError(''); };
+  const selectAvatarFile = (file) => {
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) { setAvatarError('Choose a JPG, PNG, or WebP image.'); return; }
+    if (file.size > 5 * 1024 * 1024) { setAvatarError('The image must be 5 MB or smaller.'); return; }
+    setAvatarError(''); setSelectedDefault(''); setAvatarFile(file); setAvatarPosition({ x: 50, y: 50 });
+  };
+  const persistAvatar = async (avatar) => {
+    const response = await updateMyAvatar(avatar);
+    if (!response.success) throw new Error(response.message || 'Profile photo could not be saved.');
+    setProfileData((current) => ({ ...current, avatar: response.avatar || '' }));
+    updateProfileState({ ...profileData, avatar: response.avatar || '' });
+    await refreshUser();
+  };
+  const cropAndUpload = async () => {
+    if (!avatarFile || !cropImageUrl) return;
+    const image = new Image(); image.src = cropImageUrl;
+    await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; });
+    const side = Math.min(image.naturalWidth, image.naturalHeight);
+    const sourceX = (image.naturalWidth - side) * avatarPosition.x / 100;
+    const sourceY = (image.naturalHeight - side) * avatarPosition.y / 100;
+    const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 512;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Your browser could not prepare the cropped photo.');
+    context.drawImage(image, sourceX, sourceY, side, side, 0, 0, 512, 512);
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+    if (!blob) throw new Error('The selected photo could not be processed.');
+    const formData = new FormData(); formData.append('avatar', blob, 'profile-photo.jpg');
+    const response = await uploadAvatarImage(formData);
+    if (!response.success) throw new Error(response.message || 'Profile photo could not be saved.');
+    setProfileData((current) => ({ ...current, avatar: response.avatar }));
+    updateProfileState({ ...profileData, avatar: response.avatar });
+    await refreshUser();
+  };
+  const saveAvatar = async () => {
+    setAvatarSaving(true); setAvatarError('');
+    try {
+      if (avatarFile) await cropAndUpload();
+      else await persistAvatar(selectedDefault || '');
+      setAvatarOpen(false); setAvatarFile(null);
+      setNotice({ text: 'Profile photo updated.', type: 'success' });
+    } catch (error) { setAvatarError(error.message || 'Profile photo could not be saved.'); }
+    finally { setAvatarSaving(false); }
+  };
+  const removeAvatar = async () => {
+    setAvatarSaving(true); setAvatarError('');
+    try { await persistAvatar(''); setAvatarOpen(false); setNotice({ text: 'Profile photo removed.', type: 'success' }); }
+    catch (error) { setAvatarError(error.message || 'Profile photo could not be removed.'); }
+    finally { setAvatarSaving(false); }
   };
 
-  const currentSkills = profileData?.skills || [];
+  const currentUser = profileData?.user || user || {};
+  const currentSkills = cleanSkills(profileData?.skills);
   const currentInterests = profileData?.interests || [];
+  const avatar = profileData?.avatar || DEFAULT_AVATAR;
 
-  return (
-    <div className="dashboard-layout">
-      {/* Sidebar */}
-      <Sidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
-
-      <div className="dashboard-main">
-        {/* Topnav */}
-        <TopNav onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-
-        <main className="profile-page-content">
-          {/* Status Alert Notification */}
-          {statusMsg.text && (
-            <div
-              className={`auth-alert ${
-                statusMsg.type === 'error' ? 'auth-alert-error' : 'auth-alert-success'
-              }`}
-              style={{ marginBottom: '22px' }}
-            >
-              {statusMsg.type === 'error' ? (
-                <AlertCircle size={18} />
-              ) : (
-                <CheckCircle2 size={18} />
-              )}
-              <span>{statusMsg.text}</span>
-              <button
-                onClick={() => setStatusMsg({ text: '', type: '' })}
-                style={{ marginLeft: 'auto', background: 'transparent', cursor: 'pointer' }}
-              >
-                <X size={16} />
-              </button>
-            </div>
-          )}
-
-          {/* 1. PROFILE HEADER CARD (CLEAN & READ-ONLY) */}
-          <div className="profile-hero-card">
-            <div className="profile-cover-gradient" />
-            <div className="profile-header-body">
-              <div className="profile-avatar-group">
-                <div className="profile-avatar-wrapper">
-                  {profileData?.avatar ? (
-                    <img src={profileData.avatar} alt={user?.name || 'Student'} />
-                  ) : (
-                    <div className="profile-avatar-initials">
-                      {user?.name ? user.name.charAt(0).toUpperCase() : 'S'}
-                    </div>
-                  )}
-                </div>
-
-                <div className="profile-meta-header">
-                  <h1 className="profile-student-name">{user?.name}</h1>
-                  <div className="profile-student-dept">
-                    <span>{user?.department}</span>
-                    <span>&bull;</span>
-                    <span>{user?.year}</span>
-                    <span>&bull;</span>
-                    <span className="profile-institution-tag">
-                      {profileData?.collegeName || 'College Institute of Engineering & Technology'}
-                    </span>
-                    {profileData?.location && (
-                      <>
-                        <span>&bull;</span>
-                        <span>{profileData.location}</span>
-                      </>
-                    )}
-                  </div>
-                </div>
+  return <div className="dashboard-layout">
+    <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)}/>
+    <div className="dashboard-main">
+      <TopNav onToggleSidebar={() => setSidebarOpen((open) => !open)}/>
+      <main className="profile-page-content">
+        {notice.text && <div className={`profile-notice ${notice.type}`} role="status">{notice.type === 'error' ? <AlertCircle size={18}/> : <CheckCircle2 size={18}/>}<span>{notice.text}</span><button onClick={() => setNotice({ text: '', type: '' })} aria-label="Dismiss"><X size={16}/></button></div>}
+        {loading ? <div className="profile-loading" role="status">Loading your profile…</div> : loadError ? <div className="profile-load-error" role="alert"><AlertCircle/><p>{loadError}</p><button className="btn-gold" onClick={loadProfile}>Try again</button></div> : <>
+          <section className="profile-hero-card" aria-label="Student profile">
+            <div className="profile-hero-photo"/>
+            <div className="profile-hero-inner">
+              <div className="profile-avatar-wrapper">
+                <img src={avatar} alt={`${currentUser.name || 'Student'} profile`} onError={(event) => { event.currentTarget.src = DEFAULT_AVATAR; }}/>
+                <button type="button" className="profile-camera-button" onClick={openAvatarEditor} aria-label="Change profile photo"><Camera size={18}/></button>
+              </div>
+              <div className="profile-meta-header">
+                <h1 className="profile-student-name">{currentUser.name || 'Student'}</h1>
+                <p className="profile-student-dept"><span>{currentUser.department}</span>{currentUser.department && currentUser.year && <i/>}<span>{currentUser.year}</span></p>
+                <p className="profile-hero-detail"><Building2 size={16}/><span>{profileData.collegeName || 'College not added yet'}</span></p>
+                <p className="profile-hero-detail"><MapPin size={16}/><span>{profileData.location || 'Campus / Hostel not added yet'}</span></p>
+              </div>
+              <div className="profile-hero-actions">
+                <button type="button" className="profile-button profile-button-outline" onClick={openAvatarEditor}><Camera size={17}/>Change Profile</button>
+                <button type="button" className="profile-button profile-button-gold" onClick={() => openEditor('all')}><Pencil size={16}/>Edit Profile</button>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* 2. MAIN PROFILE TWO-COLUMN CONTENT */}
           <div className="profile-grid-layout">
-            {/* Left Column: About Me, Education, Technical Skills */}
             <div className="profile-column-left">
-              {/* A. ABOUT ME */}
-              <div className="profile-section-card">
-                <div className="profile-section-header">
-                  <h3 className="profile-section-title">
-                    <User className="profile-section-icon" size={20} />
-                    About Me
-                  </h3>
-                </div>
-                {profileData?.aboutMe && profileData.aboutMe.trim() ? (
-                  <p className="about-me-text">{profileData.aboutMe}</p>
-                ) : (
-                  <p className="profile-empty-state">No introduction added yet.</p>
-                )}
-              </div>
-
-              {/* B. EDUCATION */}
-              <div className="profile-section-card">
-                <div className="profile-section-header">
-                  <h3 className="profile-section-title">
-                    <GraduationCap className="profile-section-icon" size={20} />
-                    Education
-                  </h3>
-                </div>
-
+              <section className="profile-section-card">
+                <SectionHeading icon={<UserRound size={21}/>} title="About Me" onEdit={() => openEditor('about')}/>
+                <p className={profileData.aboutMe ? 'about-me-text' : 'profile-empty-state'}>{profileData.aboutMe || 'Add a short introduction about your interests and goals.'}</p>
+              </section>
+              <section className="profile-section-card">
+                <SectionHeading icon={<GraduationCap size={22}/>} title="Education" onEdit={() => openEditor('education')}/>
                 <div className="education-card-box">
-                  <h4 className="edu-college-name">
-                    {profileData?.collegeName || 'College Institute of Engineering & Technology'}
-                  </h4>
-                  <p className="edu-degree">
-                    {profileData?.degree || 'Bachelor of Technology (B.Tech)'} &bull; {user?.department}
-                  </p>
-                  <div className="edu-meta-row">
-                    <span>
-                      <Calendar size={14} style={{ display: 'inline', marginRight: '4px' }} />
-                      Class of {profileData?.graduationYear || '2027'} ({user?.year})
-                    </span>
-                    <span>&bull;</span>
-                    <span>
-                      <MapPin size={14} style={{ display: 'inline', marginRight: '4px' }} />
-                      {profileData?.location || 'Campus / Hostel'}
-                    </span>
-                  </div>
+                  <h3 className="edu-college-name">{profileData.collegeName || 'College not added yet'}</h3>
+                  <p className="edu-degree">{profileData.degree || 'Degree not added yet'}{currentUser.department ? ` · ${currentUser.department}` : ''}</p>
+                  <div className="edu-meta-row"><span><CalendarDays size={15}/>{profileData.graduationYear ? `Class of ${profileData.graduationYear}` : 'Graduation year not added'}</span><span><MapPin size={15}/>{profileData.location || 'Campus / Hostel'}</span></div>
                 </div>
-              </div>
-
-              {/* C. TECHNICAL SKILLS (READ-ONLY, NO DEFAULTS) */}
-              <div className="profile-section-card">
-                <div className="profile-section-header">
-                  <h3 className="profile-section-title">
-                    <Code2 className="profile-section-icon" size={20} />
-                    Technical Skills
-                  </h3>
-                  {currentSkills.length > 0 && (
-                    <span className="badge badge-gold">
-                      {currentSkills.length} {currentSkills.length === 1 ? 'Skill' : 'Skills'}
-                    </span>
-                  )}
-                </div>
-
-                {currentSkills && currentSkills.length > 0 ? (
-                  <div className="skills-display-cluster">
-                    {currentSkills.map((s, idx) => (
-                      <span key={s._id || s.name || idx} className="skill-tag-read-only">
-                        <Code2 size={13} color="#B99545" />
-                        <span>{s.name || s}</span>
-                        {s.category && s.category !== 'Technical' && (
-                          <span className="skill-category-badge">{s.category}</span>
-                        )}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="profile-empty-state">No technical skills added yet.</p>
-                )}
-              </div>
+              </section>
+              <section className="profile-section-card">
+                <SectionHeading icon={<Code2 size={21}/>} title="Technical Skills" onEdit={() => openEditor('skills')} extra={currentSkills.length ? `${currentSkills.length} ${currentSkills.length === 1 ? 'skill' : 'skills'}` : ''}/>
+                {currentSkills.length ? <div className="profile-tech-grid">{currentSkills.map((skill, index) => <div className="profile-tech-card" key={skill._id || skill.name || index}><TechnologyLogo name={skill.name} size={24}/><span>{skill.name}</span></div>)}</div> : <p className="profile-empty-state">Add technologies you work with to help classmates find you.</p>}
+              </section>
             </div>
-
-            {/* Right Column: Academic Interests, Social & Portfolio Links */}
             <div className="profile-column-right">
-              {/* D. ACADEMIC INTERESTS */}
-              <div className="profile-section-card">
-                <div className="profile-section-header">
-                  <h3 className="profile-section-title">
-                    <Sparkles className="profile-section-icon" size={20} />
-                    Academic Interests
-                  </h3>
-                </div>
-
-                {currentInterests && currentInterests.length > 0 ? (
-                  <div className="skills-display-cluster">
-                    {currentInterests.map((interest, idx) => (
-                      <span key={idx} className="interest-tag-read-only">
-                        {interest}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="profile-empty-state">No academic interests added yet.</p>
-                )}
-              </div>
-
-              {/* E. SOCIAL & PORTFOLIO LINKS */}
-              <div className="profile-section-card">
-                <div className="profile-section-header">
-                  <h3 className="profile-section-title">
-                    <Globe className="profile-section-icon" size={20} />
-                    Social & Portfolios
-                  </h3>
-                </div>
-
+              <section className="profile-section-card">
+                <SectionHeading icon={<Sparkles size={21}/>} title="Academic Interests" onEdit={() => openEditor('interests')}/>
+                {currentInterests.length ? <div className="profile-interests">{currentInterests.map((interest, index) => <span className="interest-tag-read-only" key={`${interest}-${index}`}>{interest}</span>)}</div> : <p className="profile-empty-state">Add academic topics you are interested in.</p>}
+              </section>
+              <section className="profile-section-card">
+                <SectionHeading icon={<Globe size={21}/>} title="Social & Portfolios" onEdit={() => openEditor('social')}/>
                 <div className="social-links-list">
-                  {/* GitHub */}
-                  {profileData?.socialLinks?.github ? (
-                    <a
-                      href={
-                        profileData.socialLinks.github.startsWith('http')
-                          ? profileData.socialLinks.github
-                          : `https://${profileData.socialLinks.github}`
-                      }
-                      target="_blank"
-                      rel="noreferrer"
-                      className="social-link-item"
-                    >
-                      <div className="social-icon-wrapper">
-                        <Github size={18} />
-                      </div>
-                      <span className="social-url-text">
-                        {profileData.socialLinks.github}
-                      </span>
-                      <ExternalLink size={13} color="#9CA3AF" />
-                    </a>
-                  ) : (
-                    <div className="social-link-item unlinked">
-                      <div className="social-icon-wrapper">
-                        <Github size={18} />
-                      </div>
-                      <span className="social-url-text">GitHub: Not linked</span>
-                    </div>
-                  )}
-
-                  {/* LinkedIn */}
-                  {profileData?.socialLinks?.linkedin ? (
-                    <a
-                      href={
-                        profileData.socialLinks.linkedin.startsWith('http')
-                          ? profileData.socialLinks.linkedin
-                          : `https://${profileData.socialLinks.linkedin}`
-                      }
-                      target="_blank"
-                      rel="noreferrer"
-                      className="social-link-item"
-                    >
-                      <div className="social-icon-wrapper">
-                        <Linkedin size={18} />
-                      </div>
-                      <span className="social-url-text">
-                        {profileData.socialLinks.linkedin}
-                      </span>
-                      <ExternalLink size={13} color="#9CA3AF" />
-                    </a>
-                  ) : (
-                    <div className="social-link-item unlinked">
-                      <div className="social-icon-wrapper">
-                        <Linkedin size={18} />
-                      </div>
-                      <span className="social-url-text">LinkedIn: Not linked</span>
-                    </div>
-                  )}
-
-                  {/* Portfolio */}
-                  {profileData?.socialLinks?.portfolio ? (
-                    <a
-                      href={
-                        profileData.socialLinks.portfolio.startsWith('http')
-                          ? profileData.socialLinks.portfolio
-                          : `https://${profileData.socialLinks.portfolio}`
-                      }
-                      target="_blank"
-                      rel="noreferrer"
-                      className="social-link-item"
-                    >
-                      <div className="social-icon-wrapper">
-                        <Globe size={18} />
-                      </div>
-                      <span className="social-url-text">
-                        {profileData.socialLinks.portfolio}
-                      </span>
-                      <ExternalLink size={13} color="#9CA3AF" />
-                    </a>
-                  ) : (
-                    <div className="social-link-item unlinked">
-                      <div className="social-icon-wrapper">
-                        <Globe size={18} />
-                      </div>
-                      <span className="social-url-text">Portfolio: Not linked</span>
-                    </div>
-                  )}
+                  <SocialLink icon={<Github size={19}/>} label="GitHub" value={profileData.socialLinks?.github}/>
+                  <SocialLink icon={<Linkedin size={19}/>} label="LinkedIn" value={profileData.socialLinks?.linkedin}/>
+                  <SocialLink icon={<Globe size={19}/>} label="Portfolio" value={profileData.socialLinks?.portfolio}/>
                 </div>
-              </div>
+              </section>
             </div>
           </div>
-        </main>
-      </div>
+        </>}
+      </main>
+    </div>
 
-      {/* 3. EDIT PROFILE MODAL (FIXED SCROLLING & VISIBLE SAVE/CANCEL BUTTONS) */}
-      {isEditModalOpen && (
-        <div className="modal-backdrop" onClick={handleCancelEdit}>
-          <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
-            {/* Fixed Header */}
-            <div className="modal-header">
-              <div className="modal-title-group">
-                <h3>Edit Student Profile</h3>
-                <p>Update your academic details, technical skills, and portfolio.</p>
+    {editorSection && editData && <div className="profile-modal-backdrop" onClick={closeEditor}>
+      <section className="profile-edit-modal" role="dialog" aria-modal="true" aria-labelledby="profile-edit-title" onClick={(event) => event.stopPropagation()}>
+        <header className="profile-modal-header"><div><span className="profile-modal-eyebrow">SKILLBRIDGE PROFILE</span><h2 id="profile-edit-title">{editorSection === 'all' ? 'Edit Profile' : `Edit ${sectionTitle(editorSection)}`}</h2><p>Your changes are saved to your SkillBridge account.</p></div><button type="button" className="profile-modal-close" onClick={closeEditor} aria-label="Close"><X size={21}/></button></header>
+        <form onSubmit={saveProfile} className="profile-modal-form" noValidate>
+          <div className="profile-modal-body">
+            {visibleSections('basic') && <EditorSection title="Student details">
+              <div className="profile-form-grid">
+                <Field label="Full name"><input value={editData.name} maxLength={80} onChange={(event) => changeField('name', event.target.value)} autoComplete="name"/></Field>
+                <Field label="Department"><select value={editData.department} onChange={(event) => changeField('department', event.target.value)}><option value="">Select your department</option>{DEPARTMENTS.map((item) => <option key={item}>{item}</option>)}</select></Field>
+                <Field label="Academic year"><select value={editData.year} onChange={(event) => changeField('year', event.target.value)}><option value="">Select your year</option>{YEARS.map((item) => <option key={item}>{item}</option>)}</select></Field>
               </div>
-              <button
-                type="button"
-                className="modal-close-btn"
-                onClick={handleCancelEdit}
-                aria-label="Close modal"
-              >
-                <X size={22} />
-              </button>
-            </div>
-
-            {/* Form with Flex Scrolling Container */}
-            <form onSubmit={handleSaveProfile} className="modal-form">
-              <div className="modal-body">
-                {/* Row 1: Full Name & Department */}
-                <div className="form-grid-two">
-                  <div className="edit-field-group no-margin">
-                    <label className="edit-field-label">
-                      Full Name <span className="required-star">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={editFormData.name}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, name: e.target.value })
-                      }
-                      className={`edit-input ${validationErrors.name ? 'input-error' : ''}`}
-                      placeholder="e.g. Janani Raman"
-                    />
-                    {validationErrors.name && (
-                      <span className="field-validation-error">{validationErrors.name}</span>
-                    )}
-                  </div>
-
-                  <div className="edit-field-group no-margin">
-                    <label className="edit-field-label">Department</label>
-                    <select
-                      value={editFormData.department}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, department: e.target.value })
-                      }
-                      className="edit-input"
-                    >
-                      {DEPARTMENTS.map((dept) => (
-                        <option key={dept} value={dept}>
-                          {dept}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Row 2: Year of Study & Institution Name */}
-                <div className="form-grid-two">
-                  <div className="edit-field-group no-margin">
-                    <label className="edit-field-label">Year of Study</label>
-                    <select
-                      value={editFormData.year}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, year: e.target.value })
-                      }
-                      className="edit-input"
-                    >
-                      {YEARS.map((yr) => (
-                        <option key={yr} value={yr}>
-                          {yr}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="edit-field-group no-margin">
-                    <label className="edit-field-label">Institution / College Name</label>
-                    <input
-                      type="text"
-                      value={editFormData.collegeName}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, collegeName: e.target.value })
-                      }
-                      className="edit-input"
-                      placeholder="e.g. College of Technology"
-                    />
-                  </div>
-                </div>
-
-                {/* Row 3: Degree & Expected Graduation Year */}
-                <div className="form-grid-two">
-                  <div className="edit-field-group no-margin">
-                    <label className="edit-field-label">Degree</label>
-                    <input
-                      type="text"
-                      value={editFormData.degree}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, degree: e.target.value })
-                      }
-                      className="edit-input"
-                      placeholder="e.g. Bachelor of Technology (B.Tech)"
-                    />
-                  </div>
-
-                  <div className="edit-field-group no-margin">
-                    <label className="edit-field-label">Expected Graduation Year</label>
-                    <input
-                      type="text"
-                      value={editFormData.graduationYear}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, graduationYear: e.target.value })
-                      }
-                      className={`edit-input ${validationErrors.graduationYear ? 'input-error' : ''}`}
-                      placeholder="e.g. 2027"
-                    />
-                    {validationErrors.graduationYear && (
-                      <span className="field-validation-error">{validationErrors.graduationYear}</span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Row 4: Location / City */}
-                <div className="edit-field-group">
-                  <label className="edit-field-label">Location / City</label>
-                  <input
-                    type="text"
-                    value={editFormData.location}
-                    onChange={(e) =>
-                      setEditFormData({ ...editFormData, location: e.target.value })
-                    }
-                    className="edit-input"
-                    placeholder="e.g. Coimbatore, Tamil Nadu"
-                  />
-                </div>
-
-                {/* Row 5: Technical Skills (Interactive Tag Input) */}
-                <div className="edit-field-group">
-                  <label className="edit-field-label">Technical Skills</label>
-                  <div className="tag-input-row">
-                    <input
-                      type="text"
-                      placeholder="Add a technical skill (e.g. Java, React, Python)..."
-                      value={skillInput}
-                      onChange={(e) => {
-                        setSkillInput(e.target.value);
-                        setValidationErrors((prev) => ({ ...prev, skillInput: '' }));
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          handleAddSkillTag();
-                        }
-                      }}
-                      className="edit-input"
-                    />
-                    <button
-                      type="button"
-                      className="tag-add-btn"
-                      onClick={handleAddSkillTag}
-                    >
-                      <Plus size={16} /> Add
-                    </button>
-                  </div>
-                  {validationErrors.skillInput && (
-                    <span className="field-validation-error" style={{ marginBottom: '6px' }}>
-                      {validationErrors.skillInput}
-                    </span>
-                  )}
-                  <div className="editable-tags-cluster">
-                    {editFormData.skills && editFormData.skills.length > 0 ? (
-                      editFormData.skills.map((s, idx) => (
-                        <span key={idx} className="interactive-tag-badge">
-                          <Code2 size={12} color="#B99545" />
-                          <span>{s.name}</span>
-                          <button
-                            type="button"
-                            className="tag-delete-btn"
-                            onClick={() => handleRemoveSkillTag(idx)}
-                            aria-label={`Remove skill ${s.name}`}
-                          >
-                            <X size={12} />
-                          </button>
-                        </span>
-                      ))
-                    ) : (
-                      <span style={{ color: '#9CA3AF', fontSize: '0.84rem' }}>
-                        No skills added yet. Type a skill above and press Enter or Add.
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Row 6: Academic Interests (Interactive Tag Input) */}
-                <div className="edit-field-group">
-                  <label className="edit-field-label">Academic Interests</label>
-                  <div className="tag-input-row">
-                    <input
-                      type="text"
-                      placeholder="Add an interest (e.g. Web Development, AI, Cloud)..."
-                      value={interestInput}
-                      onChange={(e) => {
-                        setInterestInput(e.target.value);
-                        setValidationErrors((prev) => ({ ...prev, interestInput: '' }));
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          handleAddInterestTag();
-                        }
-                      }}
-                      className="edit-input"
-                    />
-                    <button
-                      type="button"
-                      className="tag-add-btn"
-                      onClick={handleAddInterestTag}
-                    >
-                      <Plus size={16} /> Add
-                    </button>
-                  </div>
-                  {validationErrors.interestInput && (
-                    <span className="field-validation-error" style={{ marginBottom: '6px' }}>
-                      {validationErrors.interestInput}
-                    </span>
-                  )}
-                  <div className="editable-tags-cluster">
-                    {editFormData.interests && editFormData.interests.length > 0 ? (
-                      editFormData.interests.map((interest, idx) => (
-                        <span key={idx} className="interactive-tag-badge interest-badge">
-                          <span>{interest}</span>
-                          <button
-                            type="button"
-                            className="tag-delete-btn"
-                            onClick={() => handleRemoveInterestTag(idx)}
-                            aria-label={`Remove interest ${interest}`}
-                          >
-                            <X size={12} />
-                          </button>
-                        </span>
-                      ))
-                    ) : (
-                      <span style={{ color: '#9CA3AF', fontSize: '0.84rem' }}>
-                        No interests added yet. Type an interest above and press Enter or Add.
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Row 7: About Me / Personal Bio */}
-                <div className="edit-field-group">
-                  <label className="edit-field-label">About Me / Personal Bio</label>
-                  <textarea
-                    rows={4}
-                    value={editFormData.aboutMe}
-                    onChange={(e) =>
-                      setEditFormData({ ...editFormData, aboutMe: e.target.value })
-                    }
-                    className="edit-input"
-                    style={{ resize: 'vertical' }}
-                    placeholder="Write a brief introduction about your academic focus, projects, and career aspirations..."
-                  />
-                </div>
-
-                {/* Row 8: GitHub & LinkedIn URLs */}
-                <div className="form-grid-two">
-                  <div className="edit-field-group no-margin">
-                    <label className="edit-field-label">GitHub Profile URL</label>
-                    <input
-                      type="text"
-                      value={editFormData.github}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, github: e.target.value })
-                      }
-                      className={`edit-input ${validationErrors.github ? 'input-error' : ''}`}
-                      placeholder="https://github.com/username"
-                    />
-                    {validationErrors.github && (
-                      <span className="field-validation-error">{validationErrors.github}</span>
-                    )}
-                  </div>
-
-                  <div className="edit-field-group no-margin">
-                    <label className="edit-field-label">LinkedIn Profile URL</label>
-                    <input
-                      type="text"
-                      value={editFormData.linkedin}
-                      onChange={(e) =>
-                        setEditFormData({ ...editFormData, linkedin: e.target.value })
-                      }
-                      className={`edit-input ${validationErrors.linkedin ? 'input-error' : ''}`}
-                      placeholder="https://linkedin.com/in/username"
-                    />
-                    {validationErrors.linkedin && (
-                      <span className="field-validation-error">{validationErrors.linkedin}</span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Row 9: Personal Portfolio URL */}
-                <div className="edit-field-group">
-                  <label className="edit-field-label">Personal Portfolio URL</label>
-                  <input
-                    type="text"
-                    value={editFormData.portfolio}
-                    onChange={(e) =>
-                      setEditFormData({ ...editFormData, portfolio: e.target.value })
-                    }
-                    className={`edit-input ${validationErrors.portfolio ? 'input-error' : ''}`}
-                    placeholder="https://myportfolio.dev"
-                  />
-                  {validationErrors.portfolio && (
-                    <span className="field-validation-error">{validationErrors.portfolio}</span>
-                  )}
-                </div>
+            </EditorSection>}
+            {visibleSections('education') && <EditorSection title="Education and campus">
+              <div className="profile-form-grid">
+                <Field label="College"><input value={editData.collegeName} maxLength={140} onChange={(event) => changeField('collegeName', event.target.value)}/></Field>
+                <Field label="Degree"><input value={editData.degree} maxLength={100} onChange={(event) => changeField('degree', event.target.value)}/></Field>
+                <Field label="Expected graduation year"><input inputMode="numeric" value={editData.graduationYear} maxLength={4} onChange={(event) => changeField('graduationYear', event.target.value.replace(/\D/g, ''))}/></Field>
+                <Field label="Campus / Hostel"><input value={editData.location} maxLength={120} onChange={(event) => changeField('location', event.target.value)}/></Field>
               </div>
+            </EditorSection>}
+            {visibleSections('about') && <EditorSection title="About me"><Field label="Introduction"><textarea rows={5} maxLength={1000} value={editData.aboutMe} onChange={(event) => changeField('aboutMe', event.target.value)} placeholder="Share a little about your academic interests, projects, or goals."/><small className="profile-character-count">{editData.aboutMe.length}/1000</small></Field></EditorSection>}
+            {visibleSections('skills') && <EditorSection title="Technical skills">
+              <Field label="Search and add technologies"><div className="profile-skill-search"><input value={skillInput} onChange={(event) => setSkillInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); addSkill(suggestions[0] || null); } }} placeholder="Try Java, Python, PostgreSQL…" autoComplete="off"/><button type="button" onClick={() => addSkill(null)} aria-label="Add skill"><Plus size={18}/></button></div></Field>
+              {suggestions.length > 0 && <div className="profile-skill-suggestions" role="listbox" aria-label="Skill suggestions">{suggestions.map((item) => <button key={item.name} type="button" role="option" onClick={() => addSkill(item)}><TechnologyLogo name={item.name} size={20}/><span>{item.name}</span><small>{item.category}</small><Plus size={15}/></button>)}</div>}
+              <div className="profile-selected-skills">{editData.skills.map((item) => <span className="profile-selected-skill" key={item.name}><TechnologyLogo name={item.name} size={20}/>{item.name}<button type="button" onClick={() => removeSkill(item.name)} aria-label={`Remove ${item.name}`}><X size={14}/></button></span>)}{!editData.skills.length && <p className="profile-empty-state">Selected skills will appear here.</p>}</div>
+            </EditorSection>}
+            {visibleSections('interests') && <EditorSection title="Academic interests">
+              <Field label="Add an interest"><div className="profile-skill-search"><input value={interestInput} maxLength={60} onChange={(event) => setInterestInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); addInterest(); } }} placeholder="For example, Cloud Computing"/><button type="button" onClick={addInterest} aria-label="Add interest"><Plus size={18}/></button></div></Field>
+              <div className="profile-selected-skills">{editData.interests.map((item) => <span className="profile-selected-skill interest" key={item}>{item}<button type="button" onClick={() => changeField('interests', editData.interests.filter((value) => value !== item))} aria-label={`Remove ${item}`}><X size={14}/></button></span>)}{!editData.interests.length && <p className="profile-empty-state">Add the subjects you would like to explore.</p>}</div>
+            </EditorSection>}
+            {visibleSections('social') && <EditorSection title="Social and portfolio links">
+              <Field label="GitHub"><input type="url" value={editData.github} onChange={(event) => changeField('github', event.target.value)} placeholder="https://github.com/username"/></Field>
+              <Field label="LinkedIn"><input type="url" value={editData.linkedin} onChange={(event) => changeField('linkedin', event.target.value)} placeholder="https://linkedin.com/in/username"/></Field>
+              <Field label="Portfolio"><input type="url" value={editData.portfolio} onChange={(event) => changeField('portfolio', event.target.value)} placeholder="https://your-portfolio.example"/></Field>
+            </EditorSection>}
+            {formError && <div className="profile-form-error" role="alert"><AlertCircle size={17}/>{formError}</div>}
+          </div>
+          <footer className="profile-modal-footer"><button type="button" className="profile-cancel-button" onClick={closeEditor} disabled={saving}>Cancel</button><button type="submit" className="profile-save-button" disabled={saving}>{saving ? <><span className="profile-spinner"/>Saving…</> : <><Save size={16}/>Save changes</>}</button></footer>
+        </form>
+      </section>
+    </div>}
 
-              {/* Fixed Footer with Visible Cancel and Save Changes Buttons */}
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn-modal-cancel"
-                  onClick={handleCancelEdit}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="btn-modal-save"
-                  disabled={modalSaving}
-                >
-                  {modalSaving ? 'Saving Changes...' : 'Save Changes'}
-                </button>
-              </div>
-            </form>
+    {avatarOpen && <div className="profile-modal-backdrop" onClick={closeAvatarEditor}>
+      <section className="profile-edit-modal avatar-editor-modal" role="dialog" aria-modal="true" aria-labelledby="avatar-editor-title" onClick={(event) => event.stopPropagation()}>
+        <header className="profile-modal-header"><div><span className="profile-modal-eyebrow">YOUR PROFILE PHOTO</span><h2 id="avatar-editor-title">Change profile photo</h2><p>Upload a photo or choose a professional avatar.</p></div><button type="button" className="profile-modal-close" onClick={closeAvatarEditor} aria-label="Close"><X size={21}/></button></header>
+        <div className="profile-avatar-modal-body">
+          <div className="profile-avatar-preview-wrap"><div className="profile-avatar-preview">{avatarFile && cropImageUrl ? <img src={cropImageUrl} alt="Selected photo preview" style={{ objectPosition: `${avatarPosition.x}% ${avatarPosition.y}%` }}/> : <img src={selectedDefault || avatar} alt="Profile photo preview"/>}</div><span>Preview</span></div>
+          <div className="profile-avatar-options">
+            <button type="button" className="profile-upload-button" onClick={() => fileInputRef.current?.click()}><Camera size={17}/>{avatarFile ? 'Choose a different photo' : 'Upload from device'}</button>
+            <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => selectAvatarFile(event.target.files?.[0])} hidden/>
+            {avatarFile && <div className="profile-crop-controls"><strong>Crop and reposition</strong><label>Horizontal position<input type="range" min="0" max="100" value={avatarPosition.x} onChange={(event) => setAvatarPosition((current) => ({ ...current, x: Number(event.target.value) }))}/></label><label>Vertical position<input type="range" min="0" max="100" value={avatarPosition.y} onChange={(event) => setAvatarPosition((current) => ({ ...current, y: Number(event.target.value) }))}/></label></div>}
+            {!avatarFile && <><strong className="profile-avatar-choice-label">Choose a default professional avatar</strong><div className="profile-avatar-choices">{DEFAULT_AVATARS.map((item) => <button type="button" key={item.src} className={selectedDefault === item.src ? 'selected' : ''} onClick={() => { setSelectedDefault(item.src); setAvatarFile(null); }} aria-pressed={selectedDefault === item.src}><img src={item.src} alt=""/><span>{item.label}</span>{selectedDefault === item.src && <Check size={14}/>}</button>)}</div></>}
+            {profileData?.avatar && <button type="button" className="profile-remove-avatar" onClick={removeAvatar} disabled={avatarSaving}>Remove current photo</button>}
           </div>
         </div>
-      )}
-    </div>
-  );
-};
+        {avatarError && <div className="profile-avatar-error" role="alert"><AlertCircle size={16}/>{avatarError}</div>}
+        <footer className="profile-modal-footer"><button type="button" className="profile-cancel-button" onClick={closeAvatarEditor} disabled={avatarSaving}>Cancel</button><button type="button" className="profile-save-button" onClick={saveAvatar} disabled={avatarSaving}>{avatarSaving ? <><span className="profile-spinner"/>Saving…</> : <><Save size={16}/>Save photo</>}</button></footer>
+      </section>
+    </div>}
+  </div>;
+}
 
-export default ProfilePage;
+function isValidWebUrl(value) {
+  try { const url = new URL(value.startsWith('http') ? value : `https://${value}`); return ['http:', 'https:'].includes(url.protocol) && !!url.hostname.includes('.'); } catch { return false; }
+}
+function sectionTitle(section) { return ({ basic: 'Student Details', education: 'Education', about: 'About Me', skills: 'Technical Skills', interests: 'Academic Interests', social: 'Social & Portfolios' })[section] || 'Profile'; }
+function SectionHeading({ icon, title, onEdit, extra }) { return <div className="profile-section-header"><h2 className="profile-section-title"><span className="profile-section-icon">{icon}</span>{title}</h2><div className="profile-section-actions">{extra && <span className="profile-section-count">{extra}</span>}<PencilButton label={title} onClick={onEdit}/></div></div>; }
+function SocialLink({ icon, label, value }) { return value ? <a href={profileUrl(value)} target="_blank" rel="noreferrer" className="social-link-item"><span className="social-icon-wrapper">{icon}</span><strong>{label}</strong><span className="social-url-text">{value}</span><ExternalLink size={15}/></a> : <div className="social-link-item unlinked"><span className="social-icon-wrapper">{icon}</span><strong>{label}</strong><span className="social-url-text">Not linked</span></div>; }
+function EditorSection({ title, children }) { return <section className="profile-editor-section"><h3>{title}</h3>{children}</section>; }
+function Field({ label, children }) { return <label className="profile-edit-field"><span>{label}</span>{children}</label>; }

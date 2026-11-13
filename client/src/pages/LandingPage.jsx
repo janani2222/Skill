@@ -26,6 +26,11 @@ const LandingPage = () => {
     departmentsConnected: 0,
   });
   const [loadingStats, setLoadingStats] = useState(true);
+  const [sessionExpiredMessage] = useState(() => {
+    const message = sessionStorage.getItem('skillbridge_session_expired_message');
+    if (message) sessionStorage.removeItem('skillbridge_session_expired_message');
+    return message;
+  });
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -46,12 +51,13 @@ const LandingPage = () => {
   return (
     <div className="landing-page">
       <Navbar />
+      {sessionExpiredMessage && <div className="session-expired-banner" role="alert">{sessionExpiredMessage}</div>}
 
       {/* 1. HERO SECTION (Mirroring Reference Design) */}
       <section
         className="university-hero"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1920&auto=format&fit=crop')`,
+          backgroundImage: `url('https://myjiostatic.cdn.jio.com/cms/assets/business/services/l_DigitalCampus.webp')`,
         }}
       >
         <div className="hero-overlay" />
@@ -63,7 +69,7 @@ const LandingPage = () => {
             teammates, and build groundbreaking academic and technical projects.
           </p>
           <div className="hero-buttons">
-            <Link to="/register" className="btn-gold">
+            <Link to="/dashboard" className="btn-gold">
               Get Started <ArrowRight size={18} />
             </Link>
             <a href="#how-it-works" className="btn-hero-learn">

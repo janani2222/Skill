@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Shield,
   User,
@@ -47,6 +47,7 @@ const RegisterPage = () => {
 
   const { register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -103,7 +104,7 @@ const RegisterPage = () => {
 
       setSuccessMsg('Registration successful! Redirecting to student dashboard...');
       setTimeout(() => {
-        navigate('/dashboard');
+          navigate(location.state?.from?.pathname || '/dashboard', { state: location.state?.from?.state, replace: true });
       }, 1500);
     } catch (err) {
       setErrorMsg(err.message || 'Registration failed. Please try again.');

@@ -12,7 +12,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/login');
+    navigate('/');
   };
 
   const isActive = (path) => location.pathname === path;
@@ -59,6 +59,7 @@ const Navbar = () => {
             <a href="#programs" className="nav-link">
               Programs
             </a>
+            <Link to="/public-projects" className={`nav-link ${location.pathname.startsWith('/public-projects') ? 'active' : ''}`}>Explore Projects</Link>
             <a href="#how-it-works" className="nav-link">
               How It Works
             </a>
@@ -131,7 +132,7 @@ const Navbar = () => {
                   Login
                 </Link>
                 <Link to="/register" className="btn-gold nav-cta-btn">
-                  Get Started
+                  Register
                 </Link>
               </div>
             )}
@@ -159,6 +160,7 @@ const Navbar = () => {
             <a href="#programs" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
               Programs
             </a>
+            <Link to="/public-projects" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Explore Projects</Link>
             <a href="#how-it-works" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>
               How It Works
             </a>
@@ -210,7 +212,7 @@ const Navbar = () => {
                   style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Get Started
+                  Register
                 </Link>
               </div>
             )}
