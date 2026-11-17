@@ -727,6 +727,7 @@ exports.getStudents = async (req, res, next) => {
     const currentUserId = String(req.user._id || req.user.id);
     if (isConnected()) {
       const users = await User.find({
+        role: { $ne: 'admin' },
         ...(department ? { department: { $regex: department, $options: 'i' } } : {}),
         ...(year ? { year: { $regex: year, $options: 'i' } } : {}),
       }).select('-password').sort({ createdAt: -1 }).lean();
@@ -745,7 +746,7 @@ exports.getStudents = async (req, res, next) => {
       return res.json({ success: true, students: search || skill || interest || department || year ? filtered : recommendations, recommendations: recommendations.slice(0, 6) });
     }
     const db = readDb();
-    const students = db.users.map((user) => {
+    const students = db.users.filter((user) => user.role !== 'admin').map((user) => {
       const profile = db.studentprofiles.find((item) => item.user === user._id) || { skills: [], interests: [], socialLinks: {} };
       const projects = (db.projects || []).filter((project) => String(project.owner) === String(user._id));
       return { user: { _id: user._id, name: user.name, email: user.email, department: user.department, year: user.year }, profile: { ...profile, skills: (profile.skills || []).map((id) => db.skills.find((item) => item._id === id) || { _id: id, name: id }) }, projects, projectCount: projects.length };
