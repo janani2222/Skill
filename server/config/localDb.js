@@ -1,8 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const mongoose = require('mongoose');
 
-const dataDir = path.join(__dirname, '..', 'data');
+const dataDir = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'skillbridge-data')
+  : path.join(__dirname, '..', 'data');
 const dbFile = path.join(dataDir, 'skillbridge_db.json');
 
 // Ensure data directory exists

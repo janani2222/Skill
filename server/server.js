@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorMiddleware');
+const uploadMiddleware = require('./middleware/uploadMiddleware');
 const seedAdmin = require('./scripts/seedAdmin');
 
 // Load environment variables
@@ -32,7 +33,7 @@ app.use(
 );
 
 // Serve uploaded profile images statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(uploadMiddleware.uploadDirectory));
 
 // Mount routes
 app.use('/api/auth', require('./routes/authRoutes'));

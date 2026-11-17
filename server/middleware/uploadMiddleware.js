@@ -1,9 +1,11 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
-// Ensure root uploads and project uploads directory exist
-const uploadDir = path.join(__dirname, '..', 'uploads');
+const uploadDir = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'skillbridge-uploads')
+  : path.join(__dirname, '..', 'uploads');
 const projectUploadDir = path.join(uploadDir, 'projects');
 const taskUploadDir = path.join(uploadDir, 'tasks');
 const chatUploadDir = path.join(uploadDir, 'chat');
@@ -93,6 +95,7 @@ const uploadProjectMedia = multer({
 });
 
 module.exports = upload;
+module.exports.uploadDirectory = uploadDir;
 module.exports.uploadProjectMedia = uploadProjectMedia;
 module.exports.uploadTaskAttachment = createAttachmentUpload(taskUploadDir, 'task');
 module.exports.uploadChatAttachment = createAttachmentUpload(chatUploadDir, 'chat');
