@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const connectDB = require('./config/db');
+const { isConnected } = require('./config/db');
 const errorHandler = require('./middleware/errorMiddleware');
 const uploadMiddleware = require('./middleware/uploadMiddleware');
 const seedAdmin = require('./scripts/seedAdmin');
@@ -13,7 +14,9 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 dotenv.config();
 
 // Connect to local MongoDB
-connectDB().then(() => seedAdmin()).catch((error) => console.error(`[SkillBridge] Admin seed failed: ${error.message}`));
+const databaseReady = connectDB()
+  .then(() => seedAdmin())
+  .catch((error) => console.error(`[SkillBridge] Admin seed failed: ${error.message}`));
 
 const app = express();
 
@@ -32,6 +35,18 @@ app.use(
   })
 );
 
+app.use('/api', async (req, res, next) => {
+  if (req.path === '/health' || process.env.NODE_ENV !== 'production') return next();
+  await databaseReady;
+  if (!isConnected()) {
+    return res.status(503).json({
+      success: false,
+      message: 'Database is unavailable. Check the production MongoDB configuration and try again.',
+    });
+  }
+  return next();
+});
+
 // Serve uploaded profile images statically
 app.use('/uploads', express.static(uploadMiddleware.uploadDirectory));
 
@@ -47,9 +62,13 @@ app.use('/api', require('./routes/dashboardRoutes'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
+  const databaseConnected = isConnected();
   res.status(200).json({
-    status: 'healthy',
-    message: 'SkillBridge API is running smoothly',
+    status: databaseConnected ? 'healthy' : 'degraded',
+    message: databaseConnected
+      ? 'SkillBridge API and database are running smoothly'
+      : 'SkillBridge API is running, but the database is unavailable',
+    database: databaseConnected ? 'connected' : 'disconnected',
     timestamp: new Date().toISOString(),
   });
 });

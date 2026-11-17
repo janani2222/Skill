@@ -4,12 +4,12 @@
 
 Team dashboards are available at `/projects/:id/team` to project owners and accepted members. Team APIs are under `/api/team`. Admin console is `/admin`; every admin API is protected by backend role middleware.
 
-Set `ADMIN_EMAILS` before registering administrator accounts. Each listed address receives the administrator role at registration; there is no public role-promotion API.
+The production administrator is seeded from `ADMIN_USERNAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` after MongoDB connects. There is no public role-promotion API.
 
 ## Production setup
 
 1. Provision MongoDB Atlas (or another MongoDB service) and configure `MONGODB_URI` from `server/.env.example`.
-2. Set a long random `JWT_SECRET`, `NODE_ENV=production`, exact frontend origin in `CLIENT_URL`, and administrator addresses in `ADMIN_EMAILS`. Do not commit real secrets.
+2. Set `MONGODB_URI`, a long random `JWT_SECRET`, `NODE_ENV=production`, the frontend origin in `CLIENT_URL`, and `ADMIN_USERNAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD`. In Vercel, add these under Project Settings → Environment Variables; a local `.env` file is not deployed. Do not commit real secrets.
 3. Deploy the API from `server/` with `npm install` and `npm start`. Until object storage is configured, mount persistent writable storage at `server/uploads`. Back up the volume.
 4. Configure the frontend's `VITE_API_URL` from `client/.env.example` to the API URL ending in `/api`. Run `npm install` and `npm run build` in `client/`, then publish `dist/` on a static host.
 5. Configure frontend SPA route fallbacks and proxy `/uploads` to the API (or use a public media host). Restrict database network access to the API host and require TLS.

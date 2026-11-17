@@ -15,6 +15,9 @@ async function seedAdmin() {
     console.warn('[SkillBridge] Admin seed skipped: configure ADMIN_EMAIL and ADMIN_PASSWORD in server/.env.');
     return null;
   }
+  if (process.env.NODE_ENV === 'production' && !isConnected()) {
+    throw new Error('MongoDB must be connected before seeding the production admin account.');
+  }
   const hash = await bcrypt.hash(password, 12);
   if (isConnected()) {
     const existing = await User.findOne({ $or: [{ email }, { username }] }).select('+password');

@@ -20,8 +20,12 @@ const connectDB = async () => {
     isMongoConnected = false;
     console.log(`-----------------------------------------------`);
     console.log(`[SkillBridge] MongoDB notice: ${error.message}`);
-    console.log(`[SkillBridge] Running with automatic local persistent storage in server/data/`);
-    console.log(`[SkillBridge] To connect MongoDB directly, run: net start MongoDB`);
+    if (process.env.VERCEL) {
+      console.log('[SkillBridge] Vercel local storage is temporary; configure MONGODB_URI for persistent data.');
+    } else {
+      console.log(`[SkillBridge] Running with automatic local persistent storage in server/data/`);
+      console.log(`[SkillBridge] To connect MongoDB directly, run: net start MongoDB`);
+    }
     console.log(`-----------------------------------------------`);
   }
 };
