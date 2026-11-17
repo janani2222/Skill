@@ -35,7 +35,8 @@ exports.listProjects = async (req, res, next) => {
     const filter = {};
     if (req.query.status) filter.status = req.query.status;
     if (req.query.category) filter.category = req.query.category;
-    if (req.query.studentId) filter.owner = req.query.studentId;
+    if (req.query.mine === 'true') filter.owner = ownerId(req);
+    else if (req.query.studentId) filter.owner = req.query.studentId;
     if (query) filter.$or = [{ title: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }, { category: { $regex: query, $options: 'i' } }, { technologies: { $regex: query, $options: 'i' } }];
     if (isConnected()) {
       const projects = await Project.find(filter).populate('owner', 'name department year').sort({ createdAt: -1 });
