@@ -23,12 +23,13 @@ const LoginPage = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [loginMode, setLoginMode] = useState('student');
 
-  const { login } = useAuth();
+  const { login, loginAsAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || '/dashboard';
+  const from = location.state?.from?.pathname || (loginMode === 'admin' ? '/admin' : '/discover');
   const fromState = location.state?.from?.state;
 
   const handleChange = (e) => {
@@ -46,21 +47,23 @@ const LoginPage = () => {
     setSuccessMsg('');
 
     if (!formData.email.trim() || !formData.password) {
-      setErrorMsg('Please enter both your college email and password.');
+      setErrorMsg(`Please enter your ${loginMode === 'admin' ? 'username/email' : 'college email'} and password.`);
       return;
     }
 
     setSubmitting(true);
 
     try {
-      await login({
-        email: formData.email,
+      const authenticate = loginMode === 'admin' ? loginAsAdmin : login;
+      const data = await authenticate({
+        ...(loginMode === 'admin' ? { identifier: formData.email } : { email: formData.email }),
         password: formData.password,
       });
 
-      setSuccessMsg('Authentication successful! Loading dashboard...');
+      const destination = data.user?.role === 'admin' ? '/admin' : from;
+      setSuccessMsg(`Authentication successful! Loading ${data.user?.role === 'admin' ? 'admin dashboard' : 'Discover Students'}...`);
       setTimeout(() => {
-        navigate(from, { replace: true, state: fromState });
+        navigate(destination, { replace: true, state: fromState });
       }, 1000);
     } catch (err) {
       setErrorMsg(
@@ -140,6 +143,11 @@ const LoginPage = () => {
               </p>
             </div>
 
+            <div className="login-mode-switch" role="tablist" aria-label="Choose account type">
+              <button type="button" className={loginMode === 'student' ? 'active' : ''} onClick={() => { setLoginMode('student'); setErrorMsg(''); }}>Student Login</button>
+              <button type="button" className={loginMode === 'admin' ? 'active' : ''} onClick={() => { setLoginMode('admin'); setErrorMsg(''); }}>Admin Login</button>
+            </div>
+
             {errorMsg && (
               <div className="auth-alert auth-alert-error">
                 <AlertCircle size={18} />
@@ -157,15 +165,15 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit} className="auth-form">
               {/* Email */}
               <div className="form-group">
-                <label className="form-label">College Email Address</label>
+                <label className="form-label">{loginMode === 'admin' ? 'Username or Email' : 'College Email Address'}</label>
                 <div className="form-input-wrapper">
                   <Mail size={18} className="input-icon" />
                   <input
-                    type="email"
+                    type={loginMode === 'admin' ? 'text' : 'email'}
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="student@college.edu"
+                    placeholder={loginMode === 'admin' ? 'admin or admin email' : 'student@college.edu'}
                     className="form-input"
                     required
                   />

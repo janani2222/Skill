@@ -97,12 +97,12 @@ const Navbar = () => {
                     </div>
                     <div className="ud-divider" />
                     <Link
-                      to="/dashboard"
+                      to="/discover"
                       className="ud-item"
                       onClick={() => setDropdownOpen(false)}
                     >
                       <LayoutDashboard size={16} />
-                      Dashboard
+                      Discover Students
                     </Link>
                     <Link
                       to="/profile"
@@ -173,11 +173,11 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <Link
-                  to="/dashboard"
+                  to="/discover"
                   className="mobile-link"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Student Dashboard
+                  Discover Students
                 </Link>
                 <Link
                   to="/profile"

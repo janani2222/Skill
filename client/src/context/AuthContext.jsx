@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   loginStudent,
+  loginAdmin,
   registerStudent,
   logoutStudent,
   getMe,
@@ -70,6 +71,18 @@ export const AuthProvider = ({ children }) => {
     throw new Error(data.message || 'Login failed');
   };
 
+  const loginAsAdmin = async (credentials) => {
+    const data = await loginAdmin(credentials);
+    if (data.success && data.user?.role === 'admin') {
+      setUser(data.user);
+      const expiry = Number(data.expiresAt) || Date.now() + 24 * 60 * 60 * 1000;
+      localStorage.setItem('skillbridge_session_expires_at', String(expiry)); setExpiresAt(expiry);
+      await checkAuth();
+      return data;
+    }
+    throw new Error(data.message || 'Administrator login failed');
+  };
+
   const register = async (userData) => {
     const data = await registerStudent(userData);
     if (data.success && data.user) {
@@ -117,6 +130,7 @@ export const AuthProvider = ({ children }) => {
         expiresAt,
         isAuthenticated: !!user,
         login,
+        loginAsAdmin,
         register,
         logout,
         refreshUser,

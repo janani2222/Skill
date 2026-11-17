@@ -42,6 +42,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+html[data-theme='dark'] { --bg-cream:#101c2b; --white:#182b40; --main-text:#f4f1e8; --secondary-text:#b8c2cf; --border-light:#30445a; --border-card:#30445a; --card-shadow:0 4px 20px rgba(0,0,0,.25); }
+html[data-theme='dark'] body, html[data-theme='dark'] .dashboard-topnav { background-color:var(--bg-cream); color:var(--main-text); }
+html[data-theme='dark'] .phase2-card, html[data-theme='dark'] .settings-card, html[data-theme='dark'] .topnav-search-box, html[data-theme='dark'] .topnav-profile-pill { background:var(--white); color:var(--main-text); }
+html[data-theme='dark'] h1, html[data-theme='dark'] h2, html[data-theme='dark'] h3, html[data-theme='dark'] .profile-pill-name { color:var(--main-text); }
+@media (prefers-color-scheme: dark) {
+  html[data-theme='system'] { --bg-cream:#101c2b; --white:#182b40; --main-text:#f4f1e8; --secondary-text:#b8c2cf; --border-light:#30445a; --border-card:#30445a; --card-shadow:0 4px 20px rgba(0,0,0,.25); }
+  html[data-theme='system'] body, html[data-theme='system'] .dashboard-topnav { background-color:var(--bg-cream); color:var(--main-text); }
+  html[data-theme='system'] .phase2-card, html[data-theme='system'] .settings-card, html[data-theme='system'] .topnav-search-box, html[data-theme='system'] .topnav-profile-pill { background:var(--white); color:var(--main-text); }
+  html[data-theme='system'] h1, html[data-theme='system'] h2, html[data-theme='system'] h3, html[data-theme='system'] .profile-pill-name { color:var(--main-text); }
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
   color: var(--main-text);

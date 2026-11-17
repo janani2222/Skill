@@ -332,3 +332,4 @@
   }
 }
 
+.login-mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 22px;padding:4px;background:#f6f1e5;border-radius:8px}.login-mode-switch button{padding:11px;border:0;border-radius:6px;background:transparent;color:#536273;font-weight:700;cursor:pointer}.login-mode-switch button.active{background:#10263D;color:#fff;box-shadow:0 2px 8px rgba(16,38,61,.18)}

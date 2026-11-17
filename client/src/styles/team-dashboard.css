@@ -1,0 +1,1392 @@
+/* SkillBridge - Project Team Dashboard Exact Re-creation Styles */
+
+.team-dashboard-shell {
+  min-height: 100vh;
+  background-color: #FAF8F5;
+  color: #10243E;
+  font-family: 'Lato', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   Top Navigation Bar
+   ========================================================================== */
+.team-dashboard-navbar {
+  height: 56px;
+  background-color: #102943;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 44px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(11, 34, 57, 0.12);
+}
+
+.team-dashboard-logo {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.3px;
+}
+
+.team-dashboard-logo .logo-skill {
+  color: #FFFFFF;
+}
+
+.team-dashboard-logo .logo-bridge {
+  color: #C99A32;
+}
+
+.team-dashboard-navbar nav {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.team-dashboard-navbar nav a {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.team-dashboard-navbar nav a:hover {
+  color: #E5BB63;
+}
+
+.team-dashboard-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.team-nav-bell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: #FFFFFF;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.team-nav-bell:hover {
+  color: #E5BB63;
+}
+
+.team-nav-bell-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #C99A32;
+  border: 1px solid #102943;
+}
+
+.team-nav-profile-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.team-dashboard-nav-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1.5px solid #E5BB63;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #182F4B;
+}
+
+.team-dashboard-nav-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-nav-chevron {
+  color: #FFFFFF;
+  transition: transform 0.2s ease;
+}
+
+/* ==========================================================================
+   Page Container & Back Link
+   ========================================================================== */
+.team-dashboard-page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 16px 20px 60px 20px;
+}
+
+.team-dashboard-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #10243E;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  transition: color 0.2s ease;
+}
+
+.team-dashboard-back:hover {
+  color: #C99A32;
+}
+
+/* Notice banners */
+.team-notice {
+  padding: 11px 16px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FAF3E0;
+  border: 1px solid #E2D3B3;
+  color: #10243E;
+}
+
+.team-notice.success {
+  background: #E8F4EC;
+  border-color: #BDE0C8;
+  color: #1E6638;
+}
+
+.team-notice.error {
+  background: #FDF0ED;
+  border-color: #F7C6BC;
+  color: #B42318;
+}
+
+.team-notice-close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.team-notice-close:hover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Project Hero Banner
+   ========================================================================== */
+.team-dashboard-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: #0B2239;
+  background-image:
+    linear-gradient(90deg, #0B2239 0%, #0B2239 42%, rgba(11, 34, 57, 0.94) 58%, rgba(11, 34, 57, 0.72) 78%, rgba(11, 34, 57, 0.22) 100%),
+    url('/college-building.png');
+  background-position: right center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 156px;
+  box-shadow: 0 4px 18px rgba(11, 34, 57, 0.16);
+}
+
+/* Elegant gold wave curves along bottom */
+.team-hero-waves {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 60%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.team-dashboard-hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px;
+  gap: 20px;
+}
+
+.team-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+}
+
+.team-dashboard-project-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  background: #133454;
+  border: 1px solid rgba(229, 187, 99, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #E5BB63;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.team-dashboard-hero-copy {
+  min-width: 0;
+}
+
+.team-dashboard-eyebrow {
+  display: block;
+  color: #E5BB63;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.team-dashboard-hero h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 3px 0;
+  line-height: 1.2;
+  text-transform: capitalize;
+}
+
+.team-dashboard-hero p {
+  font-size: 13.5px;
+  color: #CBD7E3;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.team-dashboard-meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 12px;
+  color: #FFFFFF;
+  flex-wrap: wrap;
+}
+
+.team-dashboard-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #E2ECF5;
+}
+
+.team-dashboard-status {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.team-dashboard-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.team-dashboard-edit-button {
+  background: rgba(16, 41, 67, 0.55);
+  border: 1px solid #E5BB63;
+  color: #FFFFFF;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.team-dashboard-edit-button:hover {
+  background: rgba(229, 187, 99, 0.18);
+  border-color: #F0CF86;
+}
+
+.team-dashboard-invite-button {
+  background: #C99A32;
+  border: 1px solid #C99A32;
+  color: #FFFFFF;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(201, 154, 50, 0.3);
+}
+
+.team-dashboard-invite-button:hover {
+  background: #B38626;
+  border-color: #B38626;
+}
+
+/* ==========================================================================
+   5-Section Project Statistics Overview Card
+   ========================================================================== */
+.team-dashboard-statistics {
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #E6DED2;
+  box-shadow: 0 4px 16px rgba(16, 36, 62, 0.05);
+  margin: 18px 0;
+  display: grid;
+  grid-template-columns: 1.45fr 1fr 1fr 1fr 1.15fr;
+  align-items: center;
+  padding: 16px 20px;
+}
+
+.team-stat-progress {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-right: 18px;
+  border-right: 1px solid #E6DED2;
+}
+
+.team-progress-ring {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  position: relative;
+  background: conic-gradient(#C99A32 var(--progress, 0deg), #EFECE6 0deg);
+  flex-shrink: 0;
+}
+
+.team-progress-ring::after {
+  content: "";
+  position: absolute;
+  inset: 5.5px;
+  background: #FFFFFF;
+  border-radius: 50%;
+}
+
+.team-progress-ring span {
+  position: relative;
+  z-index: 1;
+  font-weight: 800;
+  font-size: 14px;
+  color: #10243E;
+}
+
+.team-stat-progress-text {
+  min-width: 0;
+}
+
+.team-stat-progress-text strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #10243E;
+  margin-bottom: 2px;
+}
+
+.team-stat-progress-text small {
+  display: block;
+  font-size: 11.5px;
+  color: #53677F;
+  margin-bottom: 5px;
+}
+
+.team-stat-bar {
+  width: 130px;
+  height: 5px;
+  background: #EFECE6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.team-stat-bar span {
+  display: block;
+  height: 100%;
+  background: #C99A32;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.team-stat-col {
+  text-align: center;
+  padding: 0 14px;
+  border-right: 1px solid #E6DED2;
+}
+
+.team-stat-col:last-child {
+  border-right: none;
+  padding-right: 0;
+  padding-left: 14px;
+}
+
+.team-stat-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #10243E;
+  font-size: 13.5px;
+  font-weight: 700;
+  justify-content: center;
+}
+
+.team-stat-header svg {
+  color: #C99A32;
+  flex-shrink: 0;
+}
+
+.team-stat-number {
+  font-size: 24px;
+  font-weight: 800;
+  color: #10243E;
+  line-height: 1.1;
+  margin: 3px 0 2px 0;
+}
+
+.team-stat-subtext {
+  font-size: 11px;
+  color: #53677F;
+}
+
+/* Project Status Dropdown */
+.team-stat-status-select {
+  margin-top: 6px;
+  border: 1px solid #D8D2C7;
+  border-radius: 6px;
+  padding: 6px 28px 6px 12px;
+  background-color: #FAF8F5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2353677F' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #10243E;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+  max-width: 136px;
+}
+
+.team-stat-status-select:focus {
+  border-color: #C99A32;
+}
+
+/* ==========================================================================
+   Two-Column Grid Layout
+   ========================================================================== */
+.team-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+  align-items: start;
+}
+
+.team-grid-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.team-section-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #E6DED2;
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(16, 36, 62, 0.05);
+}
+
+.team-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.team-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.team-card-header-left svg {
+  color: #C99A32;
+  flex-shrink: 0;
+}
+
+.team-card-header-left h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #10243E;
+  margin: 0;
+}
+
+.team-card-header-right {
+  font-size: 12px;
+  color: #53677F;
+  font-weight: 500;
+}
+
+.btn-card-add-member {
+  background: #FAF8F5;
+  border: 1px solid #C99A32;
+  color: #C99A32;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 5px 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-card-add-member:hover {
+  background: #F4ECE0;
+}
+
+/* --------------------------------------------------------------------------
+   Team Members Card Content
+   -------------------------------------------------------------------------- */
+.team-member-item {
+  background: #F8F3EB;
+  border: 1px solid #EFE8DC;
+  border-radius: 8px;
+  padding: 11px 14px;
+  margin-bottom: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: border-color 0.2s ease;
+}
+
+.team-member-item:last-child {
+  margin-bottom: 0;
+}
+
+.team-member-item:hover {
+  border-color: #E2D7C5;
+}
+
+.team-member-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.team-member-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #EAE3D5;
+  border: 1px solid #E2D9CC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: #10243E;
+}
+
+.team-member-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-member-details {
+  min-width: 0;
+}
+
+.team-member-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.team-member-name {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #10243E;
+  text-decoration: none;
+  text-transform: capitalize;
+}
+
+.team-member-name:hover {
+  color: #C99A32;
+}
+
+.team-owner-badge {
+  background: #C99A32;
+  color: #FFFFFF;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1.5px 6.5px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.team-member-role {
+  font-size: 12px;
+  color: #53677F;
+  margin-top: 1.5px;
+}
+
+.team-member-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.btn-member-action {
+  border: 1px solid #E0D7CB;
+  background: #FFFFFF;
+  border-radius: 6px;
+  padding: 6px 9px;
+  color: #53677F;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-member-action:hover {
+  background: #F4ECE0;
+  color: #10243E;
+  border-color: #C99A32;
+}
+
+/* Member Action Popup Menu */
+.team-member-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #FFFFFF;
+  border: 1px solid #E6DED2;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(16, 36, 62, 0.12);
+  min-width: 140px;
+  z-index: 50;
+  overflow: hidden;
+  padding: 4px 0;
+}
+
+.team-member-menu-item {
+  width: 100%;
+  text-align: left;
+  padding: 7px 12px;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #10243E;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.team-member-menu-item:hover {
+  background: #FAF8F5;
+  color: #C99A32;
+}
+
+.team-member-menu-item.danger {
+  color: #B42318;
+}
+
+.team-member-menu-item.danger:hover {
+  background: #FDF0ED;
+  color: #B42318;
+}
+
+/* --------------------------------------------------------------------------
+   Project Timeline Card Content
+   -------------------------------------------------------------------------- */
+.team-timeline-list {
+  position: relative;
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.team-timeline-line {
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  bottom: 8px;
+  width: 2px;
+  background: #C99A32;
+}
+
+.timeline-entry {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.timeline-entry:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -20px;
+  top: 3.5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #C99A32;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 0 1px #C99A32;
+}
+
+.timeline-entry-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #10243E;
+  line-height: 1.3;
+}
+
+.timeline-entry-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: #53677F;
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+.timeline-entry-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.timeline-entry-time {
+  margin-left: auto;
+  color: #7E90A3;
+}
+
+.timeline-entry-desc {
+  font-size: 11.5px;
+  color: #53677F;
+  margin-top: 1px;
+}
+
+/* Quick update input below timeline */
+.timeline-quick-post {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #EFE8DC;
+  display: flex;
+  gap: 8px;
+}
+
+.timeline-quick-post input {
+  flex: 1;
+  border: 1px solid #D8D2C7;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: #FAF8F5;
+  outline: none;
+}
+
+.timeline-quick-post input:focus {
+  border-color: #C99A32;
+  background: #FFFFFF;
+}
+
+.timeline-quick-post button {
+  background: #C99A32;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.timeline-quick-post button:hover {
+  background: #B38626;
+}
+
+/* --------------------------------------------------------------------------
+   My Tasks & Team Tasks Card Content
+   -------------------------------------------------------------------------- */
+.team-task-item {
+  background: #F8F3EB;
+  border: 1px solid #EFE8DC;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: border-color 0.2s ease;
+}
+
+.team-task-item:last-child {
+  margin-bottom: 0;
+}
+
+.team-task-item:hover {
+  border-color: #E2D7C5;
+}
+
+.team-task-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.team-task-checkbox {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #A39686;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+.team-task-checkbox.completed {
+  color: #C99A32;
+}
+
+.team-task-checkbox:hover {
+  color: #C99A32;
+}
+
+.team-task-details {
+  min-width: 0;
+}
+
+.team-task-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #10243E;
+  margin: 0;
+  line-height: 1.3;
+  text-transform: capitalize;
+}
+
+.team-task-title.completed {
+  text-decoration: line-through;
+  color: #7E90A3;
+}
+
+.team-task-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 11.5px;
+  color: #53677F;
+  margin-top: 3px;
+  flex-wrap: wrap;
+}
+
+.team-task-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.team-task-right {
+  flex-shrink: 0;
+}
+
+.team-task-status-select {
+  border: 1px solid #D8D2C7;
+  border-radius: 6px;
+  padding: 4px 24px 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #FFFFFF;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2353677F' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  color: #10243E;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  transition: border-color 0.2s ease;
+}
+
+.team-task-status-select:focus {
+  border-color: #C99A32;
+}
+
+.btn-add-task {
+  background: #C99A32;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  transition: background 0.2s ease;
+  box-shadow: 0 2px 6px rgba(201, 154, 50, 0.25);
+}
+
+.btn-add-task:hover {
+  background: #B38626;
+}
+
+/* --------------------------------------------------------------------------
+   Milestones Card Content
+   -------------------------------------------------------------------------- */
+.milestones-empty-state {
+  text-align: center;
+  padding: 16px 0 6px 0;
+}
+
+.milestone-empty-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #F8F3EB;
+  border: 1px solid #EFE8DC;
+  margin: 0 auto 10px auto;
+  display: grid;
+  place-items: center;
+  color: #C99A32;
+}
+
+.milestones-empty-state p {
+  font-size: 12.5px;
+  color: #53677F;
+  margin: 0 0 14px 0;
+}
+
+.btn-add-milestone {
+  background: #C99A32;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s ease;
+  box-shadow: 0 2px 6px rgba(201, 154, 50, 0.25);
+}
+
+.btn-add-milestone:hover {
+  background: #B38626;
+}
+
+/* Milestones active list */
+.team-milestone-item {
+  background: #F8F3EB;
+  border: 1px solid #EFE8DC;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.team-milestone-item:last-child {
+  margin-bottom: 12px;
+}
+
+.team-milestone-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.team-milestone-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #C99A32;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.team-milestone-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #10243E;
+  margin: 0;
+}
+
+.team-milestone-title.completed {
+  text-decoration: line-through;
+  color: #7E90A3;
+}
+
+.team-milestone-due {
+  font-size: 11.5px;
+  color: #53677F;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   Modals (Edit Project, Invite Member, Add Task, Add Milestone)
+   ========================================================================== */
+.team-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 34, 57, 0.65);
+  backdrop-filter: blur(3px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.team-modal-dialog {
+  background: #FFFFFF;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 12px 36px rgba(11, 34, 57, 0.28);
+  border: 1px solid #E6DED2;
+  overflow: hidden;
+  animation: teamModalFadeIn 0.2s ease-out;
+}
+
+@keyframes teamModalFadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.team-modal-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid #EFE8DC;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FAF8F5;
+  flex-shrink: 0;
+}
+
+.team-modal-header h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #10243E;
+  margin: 0;
+}
+
+.team-modal-close {
+  background: none;
+  border: none;
+  color: #53677F;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.team-modal-close:hover {
+  color: #10243E;
+  background: #ECE5D8;
+}
+
+.team-modal-body {
+  padding: 20px 22px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.team-modal-footer {
+  padding: 14px 22px;
+  border-top: 1px solid #EFE8DC;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #FAF8F5;
+  flex-shrink: 0;
+}
+
+.team-form-group {
+  margin-bottom: 14px;
+}
+
+.team-form-group:last-child {
+  margin-bottom: 0;
+}
+
+.team-form-group label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #10243E;
+  margin-bottom: 5px;
+}
+
+.team-form-group input,
+.team-form-group textarea,
+.team-form-group select {
+  width: 100%;
+  border: 1px solid #D8D2C7;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #10243E;
+  background: #FFFFFF;
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.team-form-group input:focus,
+.team-form-group textarea:focus,
+.team-form-group select:focus {
+  border-color: #C99A32;
+  box-shadow: 0 0 0 2px rgba(201, 154, 50, 0.15);
+}
+
+.team-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn-modal-cancel {
+  background: #FFFFFF;
+  border: 1px solid #D8D2C7;
+  color: #10243E;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-modal-cancel:hover {
+  background: #F4ECE0;
+}
+
+.btn-modal-submit {
+  background: #C99A32;
+  border: 1px solid #C99A32;
+  color: #FFFFFF;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-modal-submit:hover {
+  background: #B38626;
+  border-color: #B38626;
+}
+
+/* Pending requests in invite modal */
+.pending-requests-section {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #EFE8DC;
+}
+
+.pending-requests-section h4 {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #10243E;
+  margin: 0 0 10px 0;
+}
+
+.pending-request-item {
+  background: #FAF8F5;
+  border: 1px solid #EFE8DC;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pending-request-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-req-accept {
+  background: #C99A32;
+  border: none;
+  color: #FFFFFF;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-req-reject {
+  background: none;
+  border: 1px solid #E2D9CC;
+  color: #B42318;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+@media (max-width: 992px) {
+  .team-dashboard-navbar {
+    padding: 0 20px;
+  }
+  .team-dashboard-navbar nav {
+    gap: 20px;
+  }
+  .team-dashboard-statistics {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+  .team-stat-progress {
+    grid-column: 1 / -1;
+    border-right: none;
+    border-bottom: 1px solid #E6DED2;
+    padding-bottom: 14px;
+    padding-right: 0;
+  }
+  .team-stat-col:nth-child(3) {
+    border-right: none;
+  }
+  .team-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .team-dashboard-navbar {
+    height: auto;
+    padding: 10px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .team-dashboard-navbar nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .team-dashboard-navbar nav a {
+    font-size: 12.5px;
+  }
+  .team-dashboard-page {
+    padding: 12px 14px 40px 14px;
+  }
+  .team-dashboard-hero-content {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 16px;
+  }
+  .team-hero-left {
+    width: 100%;
+  }
+  .team-dashboard-hero-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .team-dashboard-statistics {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .team-stat-col {
+    border-right: none;
+    border-bottom: 1px solid #E6DED2;
+    padding-bottom: 10px;
+  }
+  .team-stat-col:last-child {
+    border-bottom: none;
+    padding-left: 0;
+  }
+}

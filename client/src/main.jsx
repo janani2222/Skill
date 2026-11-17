@@ -13,6 +13,9 @@ import './styles/phase2-fixes.css';
 import './styles/phase2-notices.css';
 import './styles/phase3.css';
 import './styles/profile-reference.css';
+import './styles/public-profile.css';
+import './styles/team-dashboard.css';
+import './styles/admin.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

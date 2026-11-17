@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard,
   User,
   FolderGit2,
   Bell,
@@ -50,18 +49,6 @@ const Sidebar = ({ isOpen, onClose }) => {
           <span className="sidebar-category">MAIN MENU</span>
 
           <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              `sidebar-link ${isActive ? 'active' : ''}`
-            }
-            onClick={onClose}
-          >
-            <LayoutDashboard size={20} />
-            <span>Dashboard</span>
-            <div className="gold-active-bar" />
-          </NavLink>
-
-          <NavLink
             to="/discover"
             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
             onClick={onClose}
@@ -103,8 +90,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           <span className="sidebar-category">PREFERENCES</span>
 
           <NavLink
-            to="/profile"
-            state={{ openEdit: true }}
+            to="/settings"
             className="sidebar-link"
             onClick={onClose}
           >
@@ -122,6 +108,8 @@ const Sidebar = ({ isOpen, onClose }) => {
             <span>View Landing Site</span>
           </a>
         </div>
+
+        <div className="sidebar-campus-image" aria-hidden="true" />
 
         {/* Sidebar Footer with Student Snippet & Logout */}
         <div className="sidebar-footer">

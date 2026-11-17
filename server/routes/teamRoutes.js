@@ -9,6 +9,8 @@ router.post('/projects/:id/tasks', c.createTask);
 router.patch('/tasks/:taskId', c.updateTask);
 router.post('/tasks/:taskId/attachments', upload.uploadTaskAttachment.single('file'), c.uploadTaskAttachment);
 router.delete('/projects/:id/members/:studentId', c.removeMember);
+router.post('/projects/:id/members', c.addMember);
+router.patch('/projects/:id/members/:studentId/role', c.updateMemberRole);
 router.post('/projects/:id/milestones', c.createMilestone);
 router.patch('/milestones/:milestoneId', c.updateMilestone);
 router.post('/projects/:id/updates', c.createUpdate);

@@ -184,7 +184,8 @@ exports.createRequest = (req, res, next) => {
     if (!project) return res.status(404).json({ success: false, message: 'Project not found' });
     if (String(project.owner) === me) return res.status(400).json({ success: false, message: 'You cannot join your own project.' });
     const members = db.projectmembers.filter((m) => String(m.project) === String(project._id));
-    if (members.length >= Number(project.maxMembers || 5)) return res.status(400).json({ success: false, message: 'This team is full.' });
+    if (members.length + 1 >= Number(project.maxMembers || 5)) return res.status(400).json({ success: false, message: 'This team is full.' });
+    if (members.some((m) => String(m.student) === me)) return res.status(409).json({ success: false, message: 'You are already a member of this project.' });
     if (db.joinrequests.some((r) => String(r.project) === String(project._id) && String(r.applicant) === me && r.status === 'Pending')) return res.status(409).json({ success: false, message: 'You already have a pending request.' });
     const request = { _id: generateId(), project: project._id, applicant: me, message: String(req.body.message || '').trim(), skills: String(req.body.skills || '').trim(), experience: String(req.body.experience || '').trim(), portfolioUrl: String(req.body.portfolioUrl || '').trim(), status: 'Pending', createdAt: new Date().toISOString() };
     db.joinrequests.push(request);
@@ -199,9 +200,11 @@ exports.updateRequest = (req, res, next) => {
     const db = readDb(); const request = db.joinrequests.find((r) => r._id === req.params.requestId); const project = db.projects.find((p) => p._id === request?.project);
     if (!request || !project || String(project.owner) !== currentId(req)) return res.status(403).json({ success: false, message: 'You cannot manage this request.' });
     if (request.status !== 'Pending') return res.status(400).json({ success: false, message: 'This request has already been handled.' });
+    if (!['Accepted', 'Rejected'].includes(req.body.status)) return res.status(400).json({ success: false, message: 'Request status must be Accepted or Rejected.' });
     if (req.body.status === 'Accepted') {
       const members = db.projectmembers.filter((m) => String(m.project) === String(project._id));
-      if (members.length >= Number(project.maxMembers || 5)) return res.status(400).json({ success: false, message: 'This team is full.' });
+      if (members.length + 1 >= Number(project.maxMembers || 5)) return res.status(400).json({ success: false, message: 'This team is full.' });
+      if (members.some((m) => String(m.student) === String(request.applicant))) return res.status(409).json({ success: false, message: 'This student is already a team member.' });
       request.status = 'Accepted'; db.projectmembers.push({ _id: generateId(), project: project._id, student: request.applicant, role: req.body.role || project.role || 'Contributor', joinedAt: new Date().toISOString() });
       let room = db.chatrooms.find((item) => String(item.project) === String(project._id));
       if (!room) room = { _id: generateId(), project: project._id, name: `${project.title} Group Chat`, members: [project.owner, request.applicant], createdAt: new Date().toISOString() };
@@ -209,7 +212,7 @@ exports.updateRequest = (req, res, next) => {
       if (!db.chatrooms.some((item) => item._id === room._id)) db.chatrooms.push(room);
       db.notifications.push({ _id: generateId(), recipient: request.applicant, sender: currentId(req), project: project._id, message: `Congratulations! Your request to join ${project.title} has been accepted by the project owner.`, type: 'request_accepted', isRead: false, createdAt: new Date().toISOString() });
     } else { request.status = 'Rejected'; db.notifications.push({ _id: generateId(), recipient: request.applicant, sender: currentId(req), project: project._id, message: `Your request to join ${project.title} was not accepted.`, type: 'request_rejected', isRead: false, createdAt: new Date().toISOString() }); }
-    project.currentMembers = db.projectmembers.filter((m) => String(m.project) === String(project._id)).length; writeDb(db); res.json({ success: true, request });
+    project.currentMembers = db.projectmembers.filter((m) => String(m.project) === String(project._id)).length + 1; writeDb(db); res.json({ success: true, request, currentMembers: project.currentMembers });
   } catch (error) { next(error); }
 };
 
@@ -218,7 +221,10 @@ exports.listNotifications = (req, res, next) => {
     (db.projecttasks || []).filter((t) => String(t.assignee) === me && t.deadline && new Date(t.deadline).getTime() >= Date.now() && new Date(t.deadline).getTime() <= soon).forEach((task) => {
       if (!(db.notifications || []).some((n) => String(n.recipient) === me && n.task === task._id && n.type === 'task_deadline')) db.notifications.push({ _id: generateId(), recipient: me, project: task.project, task: task._id, message: `Task deadline approaching: ${task.title}`, type: 'task_deadline', isRead: false, createdAt: new Date().toISOString() });
     });
-    writeDb(db); const notifications = (db.notifications || []).filter((n) => String(n.recipient) === me).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((n) => ({ ...n, sender: userView(db, n.sender), projectTitle: db.projects.find((p) => String(p._id) === String(n.project))?.title || '' })); res.json({ success: true, notifications }); } catch (error) { next(error); }
+    writeDb(db);
+    const prefs = req.user.preferences?.notifications || {};
+    const categoryFor = (type) => ['task_assigned', 'task_status', 'task_completed', 'task_file', 'task_deadline'].includes(type) ? 'task' : ['chat', 'direct_message', 'join_request', 'request_accepted', 'request_rejected', 'membership_removed'].includes(type) ? 'community' : type === 'workshop' ? 'workshop' : 'project';
+    const notifications = (db.notifications || []).filter((n) => String(n.recipient) === me && prefs[categoryFor(n.type)] !== false).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((n) => ({ ...n, sender: userView(db, n.sender), projectTitle: db.projects.find((p) => String(p._id) === String(n.project))?.title || '' })); res.json({ success: true, notifications }); } catch (error) { next(error); }
 };
 exports.markNotificationsRead = (req, res, next) => {
   try { const db = readDb(); db.notifications.filter((n) => String(n.recipient) === currentId(req)).forEach((n) => { n.isRead = true; }); writeDb(db); res.json({ success: true }); } catch (error) { next(error); }

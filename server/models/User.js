@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
         'Please enter a valid email address',
       ],
     },
+    username: { type: String, unique: true, sparse: true, trim: true },
     password: {
       type: String,
       required: [true, 'Please provide a password'],
@@ -50,6 +51,20 @@ const userSchema = new mongoose.Schema(
       default: 'student',
     },
     active: { type: Boolean, default: true },
+    preferences: {
+      notifications: {
+        project: { type: Boolean, default: true },
+        task: { type: Boolean, default: true },
+        workshop: { type: Boolean, default: true },
+        community: { type: Boolean, default: true },
+      },
+      appearance: { type: String, enum: ['light', 'dark', 'system'], default: 'system' },
+      privacy: {
+        profileVisibility: { type: String, enum: ['public', 'students', 'private'], default: 'students' },
+        showEmail: { type: Boolean, default: false },
+        allowMessages: { type: Boolean, default: true },
+      },
+    },
   },
   {
     timestamps: true,

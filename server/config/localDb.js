@@ -41,6 +41,7 @@ const readDb = () => {
     if (!parsed.projectmembers) parsed.projectmembers = [];
     if (!parsed.joinrequests) parsed.joinrequests = [];
     if (!parsed.notifications) parsed.notifications = [];
+    if (!parsed.users) parsed.users = [];
     if (!parsed.chatrooms) parsed.chatrooms = [];
     if (!parsed.chatmessages) parsed.chatmessages = [];
     ['projecttasks', 'projectmilestones', 'progressupdates', 'adminlogs'].forEach((key) => { if (!parsed[key]) parsed[key] = []; });

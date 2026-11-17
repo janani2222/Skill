@@ -5,12 +5,14 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorMiddleware');
+const seedAdmin = require('./scripts/seedAdmin');
 
 // Load environment variables
+dotenv.config({ path: path.join(__dirname, '.env') });
 dotenv.config();
 
 // Connect to local MongoDB
-connectDB();
+connectDB().then(() => seedAdmin()).catch((error) => console.error(`[SkillBridge] Admin seed failed: ${error.message}`));
 
 const app = express();
 
@@ -34,6 +36,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Mount routes
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/settings', require('./routes/settingsRoutes'));
 app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
 app.use('/api/collaboration', require('./routes/collaborationRoutes'));

@@ -17,6 +17,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { getPlatformStatistics } from '../services/studentService';
+import { useAuth } from '../context/AuthContext';
 
 const LandingPage = () => {
   const [stats, setStats] = useState({
@@ -26,6 +27,7 @@ const LandingPage = () => {
     departmentsConnected: 0,
   });
   const [loadingStats, setLoadingStats] = useState(true);
+  const { isAuthenticated, user } = useAuth();
   const [sessionExpiredMessage] = useState(() => {
     const message = sessionStorage.getItem('skillbridge_session_expired_message');
     if (message) sessionStorage.removeItem('skillbridge_session_expired_message');
@@ -69,7 +71,7 @@ const LandingPage = () => {
             teammates, and build groundbreaking academic and technical projects.
           </p>
           <div className="hero-buttons">
-            <Link to="/dashboard" className="btn-gold">
+            <Link to={isAuthenticated ? (user?.role === 'admin' ? '/admin' : '/discover') : '/login'} className="btn-gold">
               Get Started <ArrowRight size={18} />
             </Link>
             <a href="#how-it-works" className="btn-hero-learn">

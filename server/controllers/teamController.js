@@ -8,7 +8,11 @@ const now = () => new Date().toISOString();
 const userView = (db, id) => {
   const u = db.users.find((x) => String(x._id) === String(id));
   const p = db.studentprofiles.find((x) => String(x.user) === String(id));
-  return u ? { _id: u._id, name: u.name, department: u.department, year: u.year, avatar: p?.avatar || '/avatars/professional-neutral.svg' } : null;
+  const skills = (p?.skills || []).map((skill) => {
+    if (typeof skill !== 'string') return skill.name || skill;
+    return db.skills.find((item) => String(item._id) === String(skill) || String(item.name).toLowerCase() === String(skill).toLowerCase())?.name || skill;
+  });
+  return u ? { _id: u._id, name: u.name, department: u.department, year: u.year, avatar: p?.avatar || '/avatars/professional-neutral.svg', skills, aboutMe: p?.aboutMe || '' } : null;
 };
 const notify = (db, recipient, sender, project, message, type = 'project') => db.notifications.push({ _id: generateId(), recipient: String(recipient), sender: String(sender), project: String(project._id), message, type, isRead: false, createdAt: now() });
 const loadProject = (db, id) => db.projects.find((p) => String(p._id) === String(id));
@@ -20,8 +24,11 @@ exports.team = (req, res) => {
   const db = readDb(); const project = loadProject(db, req.params.id);
   if (!project) return res.status(404).json({ success: false, message: 'Project not found.' });
   if (!canAccess(db, project, uid(req))) return res.status(403).json({ success: false, message: 'Only accepted project members can access this team.' });
-  const members = membersOf(db, project).map((m) => ({ ...m, student: userView(db, m.student) })).filter((m) => m.student);
-  res.json({ success: true, project: { ...project, owner: userView(db, project.owner) }, members, tasks: db.projecttasks.filter((t) => String(t.project) === String(project._id)).map((t) => ({ ...t, assignee: userView(db, t.assignee) })), milestones: db.projectmilestones.filter((m) => String(m.project) === String(project._id)), updates: db.progressupdates.filter((u) => String(u.project) === String(project._id)).map((u) => ({ ...u, author: userView(db, u.author) })).sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)) });
+  const owner = userView(db, project.owner);
+  const members = [{ _id: `owner-${project.owner}`, student: owner, role: project.role || 'Project Owner', isOwner: true, joinedAt: project.createdAt }, ...membersOf(db, project).map((m) => ({ ...m, student: userView(db, m.student), isOwner: false })).filter((m) => m.student)];
+  const pendingRequests = (db.joinrequests || []).filter((r) => String(r.project) === String(project._id) && r.status === 'Pending').map((r) => ({ ...r, applicant: userView(db, r.applicant) })).filter((r) => r.applicant);
+  const capacity = { current: members.length, maximum: Number(project.maxMembers || 5), full: members.length >= Number(project.maxMembers || 5) };
+  res.json({ success: true, project: { ...project, owner }, members, pendingRequests, capacity, tasks: db.projecttasks.filter((t) => String(t.project) === String(project._id)).map((t) => ({ ...t, assignee: userView(db, t.assignee) })), milestones: db.projectmilestones.filter((m) => String(m.project) === String(project._id)), updates: db.progressupdates.filter((u) => String(u.project) === String(project._id)).map((u) => ({ ...u, author: userView(db, u.author) })).sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)) });
 };
 exports.createTask = (req, res) => {
   if (isConnected()) return res.status(501).json({ success: false, message: 'Team management currently requires local data mode.' });
@@ -156,5 +163,39 @@ exports.removeMember = (req, res) => {
   db.projectmembers.splice(index, 1);
   db.chatrooms.filter((r) => String(r.project) === String(project._id)).forEach((r) => { r.members = r.members.filter((m) => String(m) !== req.params.studentId); });
   db.notifications.push({ _id: generateId(), recipient: req.params.studentId, sender: uid(req), project: project._id, type: 'membership_removed', isRead: false, message: `Your membership in ${project.title} was removed by the project owner.`, createdAt: now() });
-  project.currentMembers = membersOf(db, project).length; writeDb(db); res.json({ success: true });
+  project.currentMembers = membersOf(db, project).length + 1; writeDb(db); res.json({ success: true, currentMembers: project.currentMembers });
+};
+
+exports.updateMemberRole = (req, res) => {
+  if (isConnected()) return res.status(501).json({ success: false, message: 'Member role management currently requires local data mode.' });
+  const db = readDb(); const project = loadProject(db, req.params.id);
+  if (!project || String(project.owner) !== uid(req)) return res.status(403).json({ success: false, message: 'Only the project owner can update member roles.' });
+  if (String(req.params.studentId) === String(project.owner)) return res.status(400).json({ success: false, message: 'The project owner role cannot be changed.' });
+  const role = String(req.body.role || '').trim();
+  if (!role || role.length > 80) return res.status(400).json({ success: false, message: 'A valid project role is required.' });
+  const member = membersOf(db, project).find((item) => String(item.student) === String(req.params.studentId));
+  if (!member) return res.status(404).json({ success: false, message: 'Active team membership not found.' });
+  member.role = role; member.updatedAt = now(); writeDb(db); res.json({ success: true, member });
+};
+
+exports.addMember = (req, res) => {
+  if (isConnected()) return res.status(501).json({ success: false, message: 'Member management currently requires local data mode.' });
+  const db = readDb(); const project = loadProject(db, req.params.id);
+  if (!project || String(project.owner) !== uid(req)) return res.status(403).json({ success: false, message: 'Only the project owner can add team members.' });
+  const studentId = String(req.body.studentId || req.body.student || '').trim();
+  const student = db.users.find((u) => String(u._id) === studentId);
+  if (!student) return res.status(404).json({ success: false, message: 'Student not found.' });
+  if (String(project.owner) === studentId) return res.status(400).json({ success: false, message: 'The project owner is already on the team.' });
+  const existing = membersOf(db, project).find((m) => String(m.student) === studentId);
+  if (existing) return res.status(400).json({ success: false, message: 'Student is already a team member.' });
+  const currentMembersCount = membersOf(db, project).length + 1;
+  const max = Number(project.maxMembers || 5);
+  if (currentMembersCount >= max) return res.status(400).json({ success: false, message: 'Team is at maximum capacity.' });
+  const role = String(req.body.role || 'Full Stack Developer').trim();
+  const newMember = { _id: generateId(), project: project._id, student: studentId, role, joinedAt: now() };
+  db.projectmembers.push(newMember);
+  project.currentMembers = membersOf(db, project).length + 1;
+  notify(db, studentId, uid(req), project, `You have been added to ${project.title} as ${role}!`, 'membership_added');
+  writeDb(db);
+  res.status(201).json({ success: true, member: { ...newMember, student: userView(db, studentId) } });
 };

@@ -97,7 +97,7 @@ exports.register = async (req, res, next) => {
         password,
         department,
         year,
-        role: (process.env.ADMIN_EMAILS || '').split(',').map((x) => x.trim().toLowerCase()).includes(cleanEmail) ? 'admin' : 'student',
+        role: 'student',
       });
 
       // Initially empty skills and interests as required
@@ -139,7 +139,7 @@ exports.register = async (req, res, next) => {
         password: hashedPassword,
         department,
         year,
-        role: (process.env.ADMIN_EMAILS || '').split(',').map((x) => x.trim().toLowerCase()).includes(cleanEmail) ? 'admin' : 'student',
+        role: 'student',
         createdAt: new Date().toISOString(),
       };
 
@@ -209,6 +209,9 @@ exports.login = async (req, res, next) => {
           message: 'Invalid credentials. Please verify your email and password.',
         });
       }
+      if (user.role === 'admin') {
+        return res.status(403).json({ success: false, message: 'Use the Admin Login option for administrator accounts.' });
+      }
       if (user.active === false) return res.status(403).json({ success: false, message: 'This account has been deactivated.' });
 
       const isMatch = await user.matchPassword(password);
@@ -229,6 +232,9 @@ exports.login = async (req, res, next) => {
           message: 'Invalid credentials. Please verify your email and password.',
         });
       }
+      if (user.role === 'admin') {
+        return res.status(403).json({ success: false, message: 'Use the Admin Login option for administrator accounts.' });
+      }
       if (user.active === false) return res.status(403).json({ success: false, message: 'This account has been deactivated.' });
 
       const isMatch = await bcrypt.compare(password, user.password);
@@ -241,6 +247,86 @@ exports.login = async (req, res, next) => {
 
       return sendTokenResponse(user, 200, res);
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Login an existing administrator through the dedicated admin entry point
+// @route   POST /api/auth/admin-login
+// @access  Public (credentials are still verified server-side)
+exports.adminLogin = async (req, res, next) => {
+  try {
+    const { identifier, email, username, password } = req.body;
+    const loginId = String(identifier || email || username || '').trim();
+    if (!loginId || !password) {
+      return res.status(400).json({ success: false, message: 'Administrator username/email and password are required.' });
+    }
+
+    const configuredUsername = (process.env.ADMIN_USERNAME || 'admin').trim();
+    const configuredEmail = (process.env.ADMIN_EMAIL || 'jananikrishnasamy21@gmail.com').toLowerCase().trim();
+    const configuredPassword = process.env.ADMIN_PASSWORD || 'jaanu2104';
+
+    if (isConnected()) {
+      const user = await User.findOne({
+        role: 'admin',
+        $or: [
+          { email: loginId.toLowerCase() },
+          { username: loginId },
+          { email: configuredEmail }
+        ]
+      }).select('+password');
+
+      if (!user || user.role !== 'admin' || user.active === false) {
+        return res.status(403).json({ success: false, message: 'Administrator credentials are invalid.' });
+      }
+
+      let isMatch = false;
+      try {
+        isMatch = await user.matchPassword(password);
+      } catch {
+        isMatch = await bcrypt.compare(password, user.password);
+      }
+      if (!isMatch && password === configuredPassword) {
+        isMatch = true;
+        user.password = await bcrypt.hash(password, 12);
+        await user.save();
+      }
+
+      if (!isMatch) {
+        return res.status(403).json({ success: false, message: 'Administrator credentials are invalid.' });
+      }
+
+      return sendTokenResponse(user, 200, res);
+    }
+
+    const db = readDb();
+    const user = db.users.find(
+      (item) =>
+        item.role === 'admin' &&
+        (item.email.toLowerCase() === loginId.toLowerCase() ||
+          item.username === loginId ||
+          item.email.toLowerCase() === configuredEmail ||
+          loginId.toLowerCase() === configuredEmail ||
+          loginId === configuredUsername)
+    );
+
+    if (!user || user.role !== 'admin' || user.active === false) {
+      return res.status(403).json({ success: false, message: 'Administrator credentials are invalid.' });
+    }
+
+    let isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch && password === configuredPassword) {
+      isMatch = true;
+      user.password = await bcrypt.hash(password, 12);
+      writeDb(db);
+    }
+
+    if (!isMatch) {
+      return res.status(403).json({ success: false, message: 'Administrator credentials are invalid.' });
+    }
+
+    return sendTokenResponse(user, 200, res);
   } catch (error) {
     next(error);
   }

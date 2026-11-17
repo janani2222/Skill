@@ -104,7 +104,7 @@ const RegisterPage = () => {
 
       setSuccessMsg('Registration successful! Redirecting to student dashboard...');
       setTimeout(() => {
-          navigate(location.state?.from?.pathname || '/dashboard', { state: location.state?.from?.state, replace: true });
+          navigate(location.state?.from?.pathname || '/discover', { state: location.state?.from?.state, replace: true });
       }, 1500);
     } catch (err) {
       setErrorMsg(err.message || 'Registration failed. Please try again.');

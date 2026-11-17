@@ -140,6 +140,8 @@
   background: #0B192A;
 }
 
+.sidebar-campus-image { height: 78px; margin: 0 16px; background: linear-gradient(180deg, transparent, rgba(11,25,42,.18)), url('/college-building.png') center/cover; border-radius: 6px 6px 0 0; opacity: .82; }
+
 .sidebar-user-card {
   display: flex;
   align-items: center;

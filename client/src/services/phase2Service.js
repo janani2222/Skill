@@ -44,3 +44,5 @@ export const removeProjectAsAdmin = (id) => api.delete(`/admin/projects/${id}`).
 export const getMyTasks = () => api.get('/team/tasks/my').then((res) => res.data);
 export const uploadTeamTaskAttachment = (id, formData) => api.post(`/team/tasks/${id}/attachments`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => res.data);
 export const removeTeamMember = (projectId, studentId) => api.delete(`/team/projects/${projectId}/members/${studentId}`).then((res) => res.data);
+export const addTeamMember = (projectId, payload) => api.post(`/team/projects/${projectId}/members`, payload).then((res) => res.data);
+export const updateTeamMemberRole = (projectId, studentId, role) => api.patch(`/team/projects/${projectId}/members/${studentId}/role`, { role }).then((res) => res.data);

@@ -153,6 +153,11 @@ exports.updateProfile = async (req, res, next) => {
       degree,
       graduationYear,
       location,
+      hobbies,
+      cgpa,
+      currentSemester,
+      academicAchievements,
+      internships,
       aboutMe,
       skills,
       interests,
@@ -178,6 +183,11 @@ exports.updateProfile = async (req, res, next) => {
       if (degree !== undefined) profile.degree = degree;
       if (graduationYear !== undefined) profile.graduationYear = graduationYear;
       if (location !== undefined) profile.location = location;
+      if (Array.isArray(hobbies)) profile.hobbies = hobbies;
+      if (cgpa !== undefined) profile.cgpa = cgpa === '' ? null : Number(cgpa);
+      if (currentSemester !== undefined) profile.currentSemester = currentSemester;
+      if (Array.isArray(academicAchievements)) profile.academicAchievements = academicAchievements;
+      if (Array.isArray(internships)) profile.internships = internships;
       if (aboutMe !== undefined) profile.aboutMe = aboutMe;
       if (Array.isArray(interests)) profile.interests = interests;
 
@@ -259,6 +269,11 @@ exports.updateProfile = async (req, res, next) => {
       if (degree !== undefined) profile.degree = degree;
       if (graduationYear !== undefined) profile.graduationYear = graduationYear;
       if (location !== undefined) profile.location = location;
+      if (Array.isArray(hobbies)) profile.hobbies = hobbies;
+      if (cgpa !== undefined) profile.cgpa = cgpa === '' ? null : Number(cgpa);
+      if (currentSemester !== undefined) profile.currentSemester = currentSemester;
+      if (Array.isArray(academicAchievements)) profile.academicAchievements = academicAchievements;
+      if (Array.isArray(internships)) profile.internships = internships;
       if (aboutMe !== undefined) profile.aboutMe = aboutMe;
       if (Array.isArray(interests)) profile.interests = interests;
 
