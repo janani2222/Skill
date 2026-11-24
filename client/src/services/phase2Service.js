@@ -4,8 +4,24 @@ export const discoverStudents = (params = {}) => api.get('/students', { params }
 export const getPublicStudent = (id) => api.get(`/students/${id}`).then((res) => res.data);
 export const getProjects = (params = {}) => api.get('/projects', { params }).then((res) => res.data);
 export const getProject = (id) => api.get(`/projects/${id}`).then((res) => res.data);
-export const createProject = (payload) => api.post('/projects', payload).then((res) => res.data);
-export const updateProject = (id, payload) => api.put(`/projects/${id}`, payload).then((res) => res.data);
+const projectFormData = (payload, coverFile) => {
+  const formData = new FormData();
+  Object.entries(payload).forEach(([key, value]) => {
+    formData.append(key, Array.isArray(value) ? value.join(', ') : value ?? '');
+  });
+  formData.append('cover', coverFile);
+  return formData;
+};
+export const createProject = (payload, coverFile) => api.post(
+  '/projects',
+  coverFile ? projectFormData(payload, coverFile) : payload,
+  coverFile ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined
+).then((res) => res.data);
+export const updateProject = (id, payload, coverFile) => api.put(
+  `/projects/${id}`,
+  coverFile ? projectFormData(payload, coverFile) : payload,
+  coverFile ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined
+).then((res) => res.data);
 export const deleteProject = (id) => api.delete(`/projects/${id}`).then((res) => res.data);
 export const uploadProjectMedia = (id, formData) => api.post(`/projects/${id}/media`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => res.data);
 export const deleteProjectMedia = (id, mediaId) => api.delete(`/projects/${id}/media/${mediaId}`).then((res) => res.data);
@@ -44,5 +60,7 @@ export const removeProjectAsAdmin = (id) => api.delete(`/admin/projects/${id}`).
 export const getMyTasks = () => api.get('/team/tasks/my').then((res) => res.data);
 export const uploadTeamTaskAttachment = (id, formData) => api.post(`/team/tasks/${id}/attachments`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => res.data);
 export const removeTeamMember = (projectId, studentId) => api.delete(`/team/projects/${projectId}/members/${studentId}`).then((res) => res.data);
-export const addTeamMember = (projectId, payload) => api.post(`/team/projects/${projectId}/members`, payload).then((res) => res.data);
+export const inviteTeamMember = (projectId, payload) => api.post(`/team/projects/${projectId}/members`, payload).then((res) => res.data);
+export const addTeamMember = inviteTeamMember;
+export const respondToTeamInvitation = (invitationId, status) => api.post(`/team/invitations/${invitationId}/respond`, { status }).then((res) => res.data);
 export const updateTeamMemberRole = (projectId, studentId, role) => api.patch(`/team/projects/${projectId}/members/${studentId}/role`, { role }).then((res) => res.data);

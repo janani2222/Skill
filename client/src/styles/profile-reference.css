@@ -122,6 +122,45 @@
 .profile-crop-controls input{width:100%;accent-color:#bd963d}
 .profile-remove-avatar{align-self:flex-start;padding:2px 0;border:0;background:transparent;color:#9f4545;font-size:.75rem;text-decoration:underline;cursor:pointer}
 .profile-avatar-error{margin:0 24px 12px}
+.profile-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.profile-info-item{min-width:0;min-height:54px;padding:9px 10px;display:grid;grid-template-columns:24px minmax(0,1fr);grid-template-rows:auto auto;column-gap:8px;align-content:center;border-bottom:1px solid #eee8dc}
+.profile-info-item:nth-child(odd){padding-left:0;border-right:1px solid #eee8dc}
+.profile-info-item:nth-child(even){padding-right:0;padding-left:13px}
+.profile-info-item:nth-last-child(-n+2){border-bottom:0}
+.profile-info-icon{grid-row:1/3;align-self:center;display:flex;color:#bd963d}
+.profile-info-item strong{color:#19344f;font-size:.74rem;line-height:1.35}
+.profile-info-item>span:last-child{min-width:0;color:#45586b;font-size:.72rem;line-height:1.4;overflow-wrap:anywhere}
+.profile-info-item>span.profile-info-empty,.profile-empty-value{color:#89929b;font-size:.71rem;font-style:italic;font-weight:400}
+.profile-experience-list{display:grid;gap:12px}
+.profile-experience-group{min-width:0}
+.profile-experience-group>h3{margin:0 0 7px;display:flex;align-items:center;gap:8px;color:#19344f;font-size:.78rem;font-weight:700}
+.profile-experience-group>h3>span{display:flex;color:#bd963d}
+.profile-experience-content{display:grid;gap:7px}
+.profile-experience-record{min-width:0;padding:7px 9px;border-left:2px solid #d5b75f;background:#fbfaf7}
+.profile-experience-record strong,.profile-experience-record>span{display:block;color:#233c55;font-size:.73rem;line-height:1.4;overflow-wrap:anywhere}
+.profile-experience-record strong{font-weight:700}
+.profile-experience-record>span{color:#687687}
+.profile-experience-record p{margin:4px 0 0;color:#596879;font-size:.71rem;line-height:1.45;white-space:pre-line;overflow-wrap:anywhere}
+.profile-experience-record.compact{padding:5px 9px}
+.student-profile-experience{display:grid;gap:12px;padding-top:4px}
+.student-profile-experience>section>h3{margin:0 0 6px;display:flex;align-items:center;gap:7px;color:#203a55;font-size:.76rem;font-weight:700}
+.student-profile-experience>section>h3 svg{flex:none;color:#c8941f}
+.student-profile-experience-record{display:grid;gap:3px;padding:7px 8px;border-left:2px solid #d5b75f;background:#fbf6ed}
+.student-profile-experience-record+.student-profile-experience-record{margin-top:5px}
+.student-profile-experience-record strong,.student-profile-experience-record span{color:#27384b;font-size:.7rem;line-height:1.4;overflow-wrap:anywhere}
+.student-profile-experience-record strong{font-weight:700}
+.student-profile-experience-record>span{color:#647283}
+.student-profile-experience-record p{margin:2px 0 0;color:#526172;font-size:.68rem;line-height:1.4;overflow-wrap:anywhere}
+.student-profile-experience-record.compact{padding:5px 8px}
+.profile-repeatable-heading{margin:5px 0 10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.profile-repeatable-heading h4{margin:0;color:#19344f;font:700 .88rem var(--font-serif)}
+.profile-repeatable-heading button{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border:1px solid #dfcfaa;border-radius:7px;background:#fbf8ef;color:#85651f;font-size:.72rem;font-weight:700;cursor:pointer}
+.profile-repeatable-heading button:hover{border-color:#bd963d;background:#f8f1df}
+.profile-repeatable-editor{margin:0 0 11px;padding:11px 12px;border:1px solid #ece5d8;border-radius:9px;background:#fbfaf7}
+.profile-repeatable-editor-heading{margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;color:#19344f;font-size:.76rem}
+.profile-repeatable-editor-heading button{width:26px;height:26px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:#8b6670;cursor:pointer}
+.profile-repeatable-editor-heading button:hover{background:#f8eaea;color:#a33}
+@media(max-width:420px){.profile-info-item{padding:8px 6px;grid-template-columns:21px minmax(0,1fr);column-gap:5px}.profile-info-item:nth-child(even){padding-left:8px}.profile-info-item strong{font-size:.69rem}.profile-info-item>span:last-child{font-size:.68rem}}
 .sidebar-footer{position:relative;isolation:isolate;overflow:hidden;background-color:#0b192a;background-image:linear-gradient(180deg,rgba(10,27,44,.83),rgba(10,27,44,.94)),url('/college-building.png');background-position:center,center 63%;background-size:cover;background-repeat:no-repeat}
 .sidebar-user-avatar{overflow:hidden;flex:none;border:1px solid rgba(255,255,255,.5)}
 .sidebar-user-avatar img,.profile-pill-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}

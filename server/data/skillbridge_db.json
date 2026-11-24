@@ -21,16 +21,6 @@
       "createdAt": "2026-11-12T06:00:14.202Z"
     },
     {
-      "_id": "6af55bcbb70370c86dd06486",
-      "name": "Kavya S",
-      "email": "kavya@skct.edu.in",
-      "password": "$2a$10$pAc9XPGuew6Jg5AN/Casp.oEaQ21tGlcH8Sp2IxggTukJCsZrlfD.",
-      "department": "Computer Science and Engineering",
-      "year": "Second Year",
-      "role": "student",
-      "createdAt": "2026-11-12T06:25:15.702Z"
-    },
-    {
       "_id": "6af57f13b70370c86dd06490",
       "name": "Jai Krishna",
       "email": "727824tucs135@skct.edu.in",
@@ -38,7 +28,21 @@
       "department": "Computer Science and Engineering",
       "year": "Third Year",
       "role": "student",
-      "createdAt": "2026-11-12T08:55:47.419Z"
+      "createdAt": "2026-11-12T08:55:47.419Z",
+      "preferences": {
+        "notifications": {
+          "project": true,
+          "task": true,
+          "workshop": true,
+          "community": true
+        },
+        "appearance": "light",
+        "privacy": {
+          "profileVisibility": "students",
+          "showEmail": false,
+          "allowMessages": true
+        }
+      }
     },
     {
       "_id": "6af58dbba698b3923e46f2a9",
@@ -159,6 +163,18 @@
       "year": "Third Year",
       "role": "student",
       "createdAt": "2026-11-13T04:58:14.480Z"
+    },
+    {
+      "_id": "6afa990f531b05702e66f4b0",
+      "name": "SkillBridge Administrator",
+      "email": "jananikrishnasamy21@gmail.com",
+      "username": "admin",
+      "department": "Other",
+      "year": "Fourth Year",
+      "role": "admin",
+      "createdAt": "2026-11-16T05:47:59.964Z",
+      "password": "$2a$12$vpcQtuQkVqhIC1CExh0iGOKMqo3C8jDrP9EXijRtpiAV/Ls7ziF1q",
+      "active": true
     }
   ],
   "studentprofiles": [
@@ -204,30 +220,6 @@
       },
       "completionPercentage": 80,
       "createdAt": "2026-11-12T06:00:14.202Z"
-    },
-    {
-      "_id": "6af55bcbb70370c86dd06487",
-      "user": "6af55bcbb70370c86dd06486",
-      "collegeName": "SKCT Coimbatore",
-      "degree": "B.Tech Computer Science",
-      "graduationYear": "2028",
-      "location": "Coimbatore, Tamil Nadu",
-      "aboutMe": "Passionate full-stack student developer building college projects.",
-      "avatar": "",
-      "skills": [
-        "6af55bf2b70370c86dd0648a"
-      ],
-      "interests": [
-        "Web Development",
-        "Cloud Computing"
-      ],
-      "socialLinks": {
-        "github": "https://github.com/kavya",
-        "linkedin": "https://linkedin.com/in/kavya",
-        "portfolio": "https://kavya.dev"
-      },
-      "completionPercentage": 90,
-      "createdAt": "2026-11-12T06:25:15.703Z"
     },
     {
       "_id": "6af57f13b70370c86dd06491",
@@ -537,6 +529,25 @@
       },
       "completionPercentage": 70,
       "createdAt": "2026-11-13T04:58:14.480Z"
+    },
+    {
+      "_id": "6afa99ecfd1e6bbc33d1c077",
+      "user": "6afa990f531b05702e66f4b0",
+      "collegeName": "College Institute of Engineering & Technology",
+      "degree": "Bachelor of Technology (B.Tech)",
+      "graduationYear": "2027",
+      "location": "Campus / Hostel",
+      "aboutMe": "",
+      "avatar": "",
+      "skills": [],
+      "interests": [],
+      "socialLinks": {
+        "github": "",
+        "linkedin": "",
+        "portfolio": ""
+      },
+      "completionPercentage": 25,
+      "createdAt": "2026-11-16T05:51:40.588Z"
     }
   ],
   "skills": [
@@ -1032,7 +1043,7 @@
       "startDate": "2026-11-12",
       "completionDate": "2026-11-30",
       "status": "Planning",
-      "thumbnail": "",
+      "thumbnail": "/projects/job-portal.jpg",
       "githubUrl": "https://github.com/jaikrishnaa-135",
       "liveDemoUrl": "https://github.com/jaikrishnaa-135/JOBPORTAL.git",
       "media": [
@@ -1053,18 +1064,18 @@
   ],
   "projectmembers": [
     {
-      "_id": "6af5d7b402f0ac4776ee2df1",
-      "project": "6af59039635f8cd7be7acc5e",
-      "student": "6af555ee6bee38b376464481",
-      "role": "Full Stack Developer",
-      "joinedAt": "2026-11-12T15:13:56.362Z"
-    },
-    {
       "_id": "6af5e03ce4d93964ab18db22",
       "project": "6af59039635f8cd7be7acc5e",
       "student": "6af555ee6bee38b376464481",
       "role": "Full Stack Developer",
       "joinedAt": "2026-11-12T15:50:20.869Z"
+    },
+    {
+      "_id": "6b03ed546ecfc7e7ea3f2fd8",
+      "project": "6b03e70df1e8c604818e3009",
+      "student": "6b03e7c7f1e8c604818e309e",
+      "role": "Full Stack Developer",
+      "joinedAt": "2026-11-23T07:37:56.878Z"
     }
   ],
   "joinrequests": [
@@ -1089,6 +1100,17 @@
       "portfolioUrl": "",
       "status": "Accepted",
       "createdAt": "2026-11-12T15:49:54.873Z"
+    },
+    {
+      "_id": "6b03e810f1e8c604818e319f",
+      "project": "6b03e70df1e8c604818e3009",
+      "applicant": "6b03e7c7f1e8c604818e309e",
+      "message": "im a full stack developer too  i will help u with developing the project",
+      "skills": "",
+      "experience": "",
+      "portfolioUrl": "",
+      "status": "Accepted",
+      "createdAt": "2026-11-23T07:15:28.287Z"
     }
   ],
   "notifications": [
@@ -1247,6 +1269,80 @@
       "type": "direct_message",
       "isRead": false,
       "createdAt": "2026-11-13T10:09:42.286Z"
+    },
+    {
+      "_id": "6afa9c50638e5ed16ea34aec",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": null,
+      "conversation": "6afa9c4c638e5ed16ea34aea",
+      "message": "Jai Krishna sent you a message.",
+      "type": "direct_message",
+      "isRead": false,
+      "createdAt": "2026-11-16T06:01:52.657Z"
+    },
+    {
+      "_id": "6afaa573191022f9e8133f25",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": "6af59039635f8cd7be7acc5e",
+      "type": "membership_removed",
+      "isRead": false,
+      "message": "Your membership in job portal was removed by the project owner.",
+      "createdAt": "2026-11-16T06:40:51.643Z"
+    },
+    {
+      "_id": "6afac168b03159c6210b442b",
+      "recipient": "6af555ee6bee38b376464481",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": "6af59039635f8cd7be7acc5e",
+      "message": "Milestone completed: profile page",
+      "type": "milestone",
+      "isRead": false,
+      "createdAt": "2026-11-16T08:40:08.742Z"
+    },
+    {
+      "_id": "6afac22eb03159c6210b442e",
+      "recipient": "6af55bcbb70370c86dd06486",
+      "sender": "6af57f13b70370c86dd06490",
+      "project": null,
+      "conversation": "6afac1fdb03159c6210b442c",
+      "message": "Jai Krishna sent you a message.",
+      "type": "direct_message",
+      "isRead": false,
+      "createdAt": "2026-11-16T08:43:26.263Z"
+    },
+    {
+      "_id": "6b03ed556ecfc7e7ea3f2fd9",
+      "recipient": "6b03e7c7f1e8c604818e309e",
+      "sender": "6b03e624f1e8c604818e2f99",
+      "project": "6b03e70df1e8c604818e3009",
+      "message": "Congratulations! Your request to join Food delivery App has been accepted by the project owner.",
+      "type": "request_accepted",
+      "isRead": false,
+      "createdAt": "2026-11-23T07:37:57.349Z",
+      "event": "6b03e810f1e8c604818e319f"
+    },
+    {
+      "_id": "6b03eed56ecfc7e7ea3f30fe",
+      "recipient": "(Engineering · Student)",
+      "sender": "6b03e624f1e8c604818e2f99",
+      "project": "6b03e70df1e8c604818e3009",
+      "message": "You have been added to Food delivery App as Full Stack Developer!",
+      "type": "membership_added",
+      "isRead": false,
+      "createdAt": "2026-11-23T07:44:21.518Z"
+    },
+    {
+      "_id": "6b04102f905457d0fadba019",
+      "recipient": "6b03e7c7f1e8c604818e309e",
+      "sender": "6b03e624f1e8c604818e2f99",
+      "project": "6b03e70df1e8c604818e3009",
+      "conversation": "6b041021905457d0fadb9fe3",
+      "message": "Bloom sent you a message in Food delivery App.",
+      "type": "chat",
+      "isRead": false,
+      "createdAt": "2026-11-23T10:06:39.273Z"
     }
   ],
   "chatrooms": [
@@ -1285,6 +1381,41 @@
       ],
       "createdAt": "2026-11-13T10:09:38.235Z",
       "updatedAt": "2026-11-13T10:09:42.286Z"
+    },
+    {
+      "_id": "6afa9c4c638e5ed16ea34aea",
+      "type": "direct",
+      "project": null,
+      "name": "Jai Krishna and Jasiya",
+      "members": [
+        "6af555ee6bee38b376464481",
+        "6af57f13b70370c86dd06490"
+      ],
+      "createdAt": "2026-11-16T06:01:48.440Z",
+      "updatedAt": "2026-11-16T06:01:52.657Z"
+    },
+    {
+      "_id": "6afac1fdb03159c6210b442c",
+      "type": "direct",
+      "project": null,
+      "name": "Jai Krishna and Kavya S",
+      "members": [
+        "6af55bcbb70370c86dd06486",
+        "6af57f13b70370c86dd06490"
+      ],
+      "createdAt": "2026-11-16T08:42:37.705Z",
+      "updatedAt": "2026-11-16T08:43:26.263Z"
+    },
+    {
+      "_id": "6afacea0d344a2f5432c47be",
+      "type": "direct",
+      "project": null,
+      "name": "SkillBridge Administrator and Jai Krishna",
+      "members": [
+        "6af57f13b70370c86dd06490",
+        "6afa990f531b05702e66f4b0"
+      ],
+      "createdAt": "2026-11-16T09:36:32.080Z"
     }
   ],
   "chatmessages": [
@@ -1367,6 +1498,42 @@
       ],
       "deliveredAt": "2026-11-13T10:09:42.286Z",
       "createdAt": "2026-11-13T10:09:42.286Z"
+    },
+    {
+      "_id": "6afa9c50638e5ed16ea34aeb",
+      "room": "6afa9c4c638e5ed16ea34aea",
+      "sender": "6af57f13b70370c86dd06490",
+      "message": "hiee",
+      "attachment": null,
+      "readBy": [
+        "6af57f13b70370c86dd06490"
+      ],
+      "deliveredAt": "2026-11-16T06:01:52.657Z",
+      "createdAt": "2026-11-16T06:01:52.657Z"
+    },
+    {
+      "_id": "6afac22eb03159c6210b442d",
+      "room": "6afac1fdb03159c6210b442c",
+      "sender": "6af57f13b70370c86dd06490",
+      "message": "thevidiyaaaaa",
+      "attachment": null,
+      "readBy": [
+        "6af57f13b70370c86dd06490"
+      ],
+      "deliveredAt": "2026-11-16T08:43:26.263Z",
+      "createdAt": "2026-11-16T08:43:26.263Z"
+    },
+    {
+      "_id": "6b04102f905457d0fadba015",
+      "room": "6b041021905457d0fadb9fe3",
+      "sender": "6b03e624f1e8c604818e2f99",
+      "message": "hi",
+      "attachment": null,
+      "readBy": [
+        "6b03e624f1e8c604818e2f99"
+      ],
+      "deliveredAt": "2026-11-23T10:06:39.273Z",
+      "createdAt": "2026-11-23T10:06:39.273Z"
     }
   ],
   "projecttasks": [
@@ -1380,10 +1547,21 @@
       "deadline": "2026-11-25",
       "status": "Not Started",
       "createdAt": "2026-11-13T05:20:31.877Z",
-      "updatedAt": "2026-11-13T05:21:40.854Z"
+      "updatedAt": "2026-11-16T08:40:31.573Z"
     }
   ],
-  "projectmilestones": [],
+  "projectmilestones": [
+    {
+      "_id": "6afac165b03159c6210b442a",
+      "project": "6af59039635f8cd7be7acc5e",
+      "title": "profile page",
+      "dueDate": "2026-11-17",
+      "completed": false,
+      "createdBy": "6af57f13b70370c86dd06490",
+      "createdAt": "2026-11-16T08:40:05.249Z",
+      "completedAt": null
+    }
+  ],
   "progressupdates": [
     {
       "_id": "6af69e4f16a0a63a4840fb89",
@@ -1393,5 +1571,186 @@
       "createdAt": "2026-11-13T05:21:19.808Z"
     }
   ],
-  "adminlogs": []
+  "adminlogs": [
+    {
+      "_id": "6afad157d344a2f5432c47bf",
+      "actor": "6afa990f531b05702e66f4b0",
+      "action": "Deleted student account",
+      "target": "Kavya S",
+      "createdAt": "2026-11-16T09:48:07.557Z"
+    },
+    {
+      "_id": "6aface07d344a2f5432c47bd",
+      "actor": "6afa990f531b05702e66f4b0",
+      "action": "Created platform announcement",
+      "target": "project timeline",
+      "createdAt": "2026-11-16T09:33:59.689Z"
+    },
+    {
+      "_id": "6afacdaed344a2f5432c47bb",
+      "actor": "6afa990f531b05702e66f4b0",
+      "action": "Created workshop",
+      "target": "AI workshop",
+      "createdAt": "2026-11-16T09:32:30.526Z"
+    }
+  ],
+  "workshops": [
+    {
+      "_id": "6afacdaed344a2f5432c47ba",
+      "title": "AI workshop",
+      "subtitle": "AI applications",
+      "description": "",
+      "category": "Artificial Intelligence",
+      "date": "2026-11-20",
+      "startTime": "10:00 AM",
+      "endTime": "1:00 PM",
+      "mode": "Offline",
+      "venue": "Seminar Hall",
+      "capacity": 150,
+      "registeredCount": 0,
+      "status": "Open",
+      "coverImage": "/college-building.png",
+      "createdAt": "2026-11-16T09:32:30.525Z"
+    },
+    {
+      "_id": "ws-ai-01",
+      "title": "AI in Real World",
+      "subtitle": "Hands-on AI applications",
+      "description": "Explore neural networks, computer vision, and real-world deployment of machine learning models.",
+      "category": "Artificial Intelligence",
+      "date": "2026-11-20",
+      "startTime": "10:00 AM",
+      "endTime": "1:00 PM",
+      "mode": "Offline",
+      "venue": "Seminar Hall",
+      "capacity": 150,
+      "registeredCount": 128,
+      "status": "Open",
+      "coverImage": "/college-building.png",
+      "createdAt": "2026-11-10T09:00:00.000Z"
+    },
+    {
+      "_id": "ws-fs-02",
+      "title": "Full Stack Development",
+      "subtitle": "Build end-to-end web apps",
+      "description": "Comprehensive walkthrough of MERN stack development, responsive design, and REST APIs.",
+      "category": "Web Development",
+      "date": "2026-11-28",
+      "startTime": "2:00 PM",
+      "endTime": "5:00 PM",
+      "mode": "Offline",
+      "venue": "Lab - Block B",
+      "capacity": 100,
+      "registeredCount": 92,
+      "status": "Open",
+      "coverImage": "/college-building.png",
+      "createdAt": "2026-11-11T10:30:00.000Z"
+    },
+    {
+      "_id": "ws-git-03",
+      "title": "Git & GitHub Essentials",
+      "subtitle": "Version control basics",
+      "description": "Master branching, pull requests, resolving merge conflicts, and team collaboration workflows.",
+      "category": "DevOps & Tools",
+      "date": "2026-12-05",
+      "startTime": "10:00 AM",
+      "endTime": "12:00 PM",
+      "mode": "Online",
+      "venue": "Online (Google Meet)",
+      "capacity": 200,
+      "registeredCount": 210,
+      "status": "Closed",
+      "coverImage": "/college-building.png",
+      "createdAt": "2026-11-09T08:00:00.000Z"
+    }
+  ],
+  "communities": [
+    {
+      "_id": "comm-web-01",
+      "name": "Web & Mobile Developers",
+      "description": "Collaborate on modern React, Node.js, and mobile applications across departments.",
+      "category": "Web Development",
+      "creator": "SkillBridge Admin",
+      "membersCount": 42,
+      "status": "Active",
+      "coverImage": "/college-building.png",
+      "createdAt": "2026-11-01T08:00:00.000Z"
+    },
+    {
+      "_id": "comm-ai-02",
+      "name": "AI & Data Science Hub",
+      "description": "Explore generative AI, PyTorch, predictive analytics, and Kaggle competitions.",
+      "category": "Artificial Intelligence",
+      "creator": "SkillBridge Admin",
+      "membersCount": 38,
+      "status": "Active",
+      "coverImage": "/college-building.png",
+      "createdAt": "2026-11-02T09:30:00.000Z"
+    },
+    {
+      "_id": "comm-cloud-03",
+      "name": "Cloud & DevOps Guild",
+      "description": "Learn containerization, CI/CD pipelines, Docker, Kubernetes, and cloud security.",
+      "category": "Cloud Computing",
+      "creator": "SkillBridge Admin",
+      "membersCount": 26,
+      "status": "Active",
+      "coverImage": "/college-building.png",
+      "createdAt": "2026-11-03T11:00:00.000Z"
+    },
+    {
+      "_id": "comm-robotics-04",
+      "name": "Robotics & Embedded Systems",
+      "description": "Practical IoT hardware, microcontrollers, Arduino, and embedded programming.",
+      "category": "Hardware & IoT",
+      "creator": "SkillBridge Admin",
+      "membersCount": 19,
+      "status": "Active",
+      "coverImage": "/college-building.png",
+      "createdAt": "2026-11-04T14:15:00.000Z"
+    }
+  ],
+  "announcements": [
+    {
+      "_id": "6aface07d344a2f5432c47bc",
+      "title": "project timeline",
+      "description": "the timeline has been updated and postponed for 5 days",
+      "category": "Projects",
+      "targetAudience": "All Students",
+      "publishDate": "2026-11-16",
+      "status": "Published",
+      "createdAt": "2026-11-16T09:33:59.689Z"
+    },
+    {
+      "_id": "ann-01",
+      "title": "Workshop: AI in Real World",
+      "description": "Registrations are open for the upcoming AI workshop on Nov 20, 2026. Limited seats available in Seminar Hall.",
+      "category": "Workshops",
+      "targetAudience": "All Students",
+      "publishDate": "2026-11-12",
+      "status": "Published",
+      "createdAt": "2026-11-12T10:00:00.000Z"
+    },
+    {
+      "_id": "ann-02",
+      "title": "Project Expo - Registrations",
+      "description": "Register your team for the Project Expo 2026 before Nov 25. Showcase your technical projects to industry mentors.",
+      "category": "Projects",
+      "targetAudience": "All Students",
+      "publishDate": "2026-11-10",
+      "status": "Published",
+      "createdAt": "2026-11-10T11:30:00.000Z"
+    },
+    {
+      "_id": "ann-03",
+      "title": "Platform Maintenance",
+      "description": "The platform will be under maintenance on Nov 15, 2026 (12 AM - 4 AM). All services will resume immediately after.",
+      "category": "General",
+      "targetAudience": "All Students",
+      "publishDate": "2026-11-08",
+      "status": "Scheduled",
+      "createdAt": "2026-11-08T09:15:00.000Z"
+    }
+  ],
+  "teaminvitations": []
 }

@@ -8,6 +8,7 @@ const { isConnected } = require('./config/db');
 const errorHandler = require('./middleware/errorMiddleware');
 const uploadMiddleware = require('./middleware/uploadMiddleware');
 const seedAdmin = require('./scripts/seedAdmin');
+const syncDataToMongo = require('./services/syncData');
 
 // Load environment variables
 dotenv.config({ path: path.join(__dirname, '.env') });
@@ -16,7 +17,8 @@ dotenv.config();
 // Connect to local MongoDB
 const databaseReady = connectDB()
   .then(() => seedAdmin())
-  .catch((error) => console.error(`[SkillBridge] Admin seed failed: ${error.message}`));
+  .then(() => syncDataToMongo())
+  .catch((error) => console.error(`[SkillBridge] Startup sync failed: ${error.message}`));
 
 const app = express();
 

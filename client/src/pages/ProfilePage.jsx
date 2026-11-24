@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  AlertCircle, ArrowUpRight, CalendarDays, Camera, Check, CheckCircle2,
+  AlertCircle, ArrowUpRight, Award, BriefcaseBusiness, CalendarDays, Camera, Check, CheckCircle2,
   Code2, ExternalLink, Github, Globe, GraduationCap, MapPin, Pencil,
-  Plus, Save, Sparkles, UserRound, X, Building2, Linkedin,
+  Heart, Languages, Plus, Save, Sparkles, Trophy, UserRound, X, Building2, Linkedin,
 } from 'lucide-react';
 import {
   siAndroid, siAngular, siArduino, siApachekafka, siBootstrap, siC, siCplusplus,
@@ -81,6 +81,9 @@ export default function ProfilePage() {
   const [editData, setEditData] = useState(null);
   const [skillInput, setSkillInput] = useState('');
   const [interestInput, setInterestInput] = useState('');
+  const [hobbyInput, setHobbyInput] = useState('');
+  const [languageInput, setLanguageInput] = useState('');
+  const [achievementInput, setAchievementInput] = useState('');
   const [knownSkills, setKnownSkills] = useState([]);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState('');
@@ -118,6 +121,23 @@ export default function ProfilePage() {
     aboutMe: profile?.aboutMe || '',
     skills: cleanSkills(profile?.skills),
     interests: [...(profile?.interests || [])],
+    cgpa: profile?.cgpa === null || profile?.cgpa === undefined ? '' : String(profile.cgpa),
+    projectsCompleted: profile?.projectsCompleted === null || profile?.projectsCompleted === undefined ? '' : String(profile.projectsCompleted),
+    hobbies: [...(profile?.hobbies || [])],
+    languagesKnown: [...(profile?.languagesKnown || [])],
+    internships: (profile?.internships || []).map((item) => ({
+      ...item,
+      companyName: item.companyName || '',
+      role: item.role || '',
+      duration: item.duration || '',
+      description: item.description || '',
+    })),
+    academicAchievements: [...(profile?.academicAchievements || [])],
+    certifications: (profile?.certifications || []).map((item) => ({
+      name: item.name || '',
+      issuingOrganization: item.issuingOrganization || '',
+      year: item.year || '',
+    })),
     github: profile?.socialLinks?.github || '',
     linkedin: profile?.socialLinks?.linkedin || '',
     portfolio: profile?.socialLinks?.portfolio || '',
@@ -152,7 +172,7 @@ export default function ProfilePage() {
 
   const openEditor = (section = 'all') => {
     setEditData(buildForm(profileData, user));
-    setSkillInput(''); setInterestInput(''); setFormError(''); setEditorSection(section);
+    setSkillInput(''); setInterestInput(''); setHobbyInput(''); setLanguageInput(''); setAchievementInput(''); setFormError(''); setEditorSection(section);
   };
   const closeEditor = () => { setEditorSection(''); setFormError(''); };
   const changeField = (key, value) => setEditData((current) => ({ ...current, [key]: value }));
@@ -180,6 +200,21 @@ export default function ProfilePage() {
     if (!value || editData.interests.some((item) => item.toLowerCase() === value.toLowerCase())) return;
     setEditData((current) => ({ ...current, interests: [...current.interests, value] })); setInterestInput('');
   };
+  const addListItem = (field, value) => {
+    const item = value.trim();
+    if (!item) return;
+    setEditData((current) => current[field].some((existing) => existing.toLowerCase() === item.toLowerCase())
+      ? current
+      : { ...current, [field]: [...current[field], item] });
+  };
+  const changeEntry = (field, index, key, value) => setEditData((current) => ({
+    ...current,
+    [field]: current[field].map((item, itemIndex) => itemIndex === index ? { ...item, [key]: value } : item),
+  }));
+  const removeEntry = (field, index) => setEditData((current) => ({
+    ...current,
+    [field]: current[field].filter((_, itemIndex) => itemIndex !== index),
+  }));
 
   const validateEdit = () => {
     const errors = [];
@@ -193,6 +228,17 @@ export default function ProfilePage() {
       if (editData.graduationYear && (!/^\d{4}$/.test(editData.graduationYear) || Number(editData.graduationYear) < 2000 || Number(editData.graduationYear) > 2040)) errors.push('Enter a graduation year between 2000 and 2040.');
     }
     if (visibleSections('about') && editData.aboutMe.length > 1000) errors.push('About Me must be 1,000 characters or fewer.');
+    if (visibleSections('additional')) {
+      if (editData.cgpa !== '' && (!Number.isFinite(Number(editData.cgpa)) || Number(editData.cgpa) < 0 || Number(editData.cgpa) > 10)) errors.push('CGPA must be between 0 and 10.');
+      if (editData.projectsCompleted !== '' && (!Number.isInteger(Number(editData.projectsCompleted)) || Number(editData.projectsCompleted) < 0)) errors.push('Projects completed must be a non-negative whole number.');
+      if (editData.hobbies.length > 30 || editData.hobbies.some((item) => item.length > 60)) errors.push('Add up to 30 hobbies, each 60 characters or fewer.');
+      if (editData.languagesKnown.length > 30 || editData.languagesKnown.some((item) => item.length > 60)) errors.push('Add up to 30 languages, each 60 characters or fewer.');
+    }
+    if (visibleSections('experience')) {
+      if (editData.academicAchievements.length > 30 || editData.academicAchievements.some((item) => item.length > 300)) errors.push('Add up to 30 achievements, each 300 characters or fewer.');
+      if (editData.internships.some((item) => !item.companyName.trim() || !item.role.trim() || item.companyName.length > 140 || item.role.length > 100 || item.duration.length > 80 || item.description.length > 1000)) errors.push('Each internship needs a company and role; duration must be 80 characters or fewer and description 1,000 characters or fewer.');
+      if (editData.certifications.some((item) => !item.name.trim() || !item.issuingOrganization.trim() || item.name.length > 140 || item.issuingOrganization.length > 140 || (item.year && !/^\d{4}$/.test(item.year)))) errors.push('Each certification needs a name and issuing organisation; enter the year as four digits.');
+    }
     if (visibleSections('social')) {
       for (const [label, raw] of [['GitHub', editData.github], ['LinkedIn', editData.linkedin], ['Portfolio', editData.portfolio]]) {
         if (raw && !isValidWebUrl(raw)) errors.push(`${label} must be a valid http or https URL.`);
@@ -210,6 +256,17 @@ export default function ProfilePage() {
     if (visibleSections('about')) payload.aboutMe = editData.aboutMe.trim();
     if (visibleSections('skills')) payload.skills = editData.skills.map(({ name, category }) => ({ name, category }));
     if (visibleSections('interests')) payload.interests = editData.interests;
+    if (visibleSections('additional')) Object.assign(payload, {
+      cgpa: editData.cgpa === '' ? null : Number(editData.cgpa),
+      projectsCompleted: editData.projectsCompleted === '' ? null : Number(editData.projectsCompleted),
+      hobbies: editData.hobbies,
+      languagesKnown: editData.languagesKnown,
+    });
+    if (visibleSections('experience')) Object.assign(payload, {
+      internships: editData.internships,
+      academicAchievements: editData.academicAchievements,
+      certifications: editData.certifications,
+    });
     if (visibleSections('social')) payload.socialLinks = { github: editData.github.trim(), linkedin: editData.linkedin.trim(), portfolio: editData.portfolio.trim() };
     setSaving(true); setFormError('');
     try {
@@ -285,6 +342,11 @@ export default function ProfilePage() {
   const currentUser = profileData?.user || user || {};
   const currentSkills = cleanSkills(profileData?.skills);
   const currentInterests = profileData?.interests || [];
+  const currentHobbies = profileData?.hobbies || [];
+  const currentLanguages = profileData?.languagesKnown || [];
+  const currentInternships = profileData?.internships || [];
+  const currentAchievements = profileData?.academicAchievements || [];
+  const currentCertifications = profileData?.certifications || [];
   const avatar = profileData?.avatar || DEFAULT_AVATAR;
 
   return <div className="dashboard-layout">
@@ -332,6 +394,15 @@ export default function ProfilePage() {
                 <SectionHeading icon={<Code2 size={21}/>} title="Technical Skills" onEdit={() => openEditor('skills')} extra={currentSkills.length ? `${currentSkills.length} ${currentSkills.length === 1 ? 'skill' : 'skills'}` : ''}/>
                 {currentSkills.length ? <div className="profile-tech-grid">{currentSkills.map((skill, index) => <div className="profile-tech-card" key={skill._id || skill.name || index}><TechnologyLogo name={skill.name} size={24}/><span>{skill.name}</span></div>)}</div> : <p className="profile-empty-state">Add technologies you work with to help classmates find you.</p>}
               </section>
+              <section className="profile-section-card">
+                <SectionHeading icon={<Award size={21}/>} title="Additional Information" onEdit={() => openEditor('additional')}/>
+                <div className="profile-info-grid">
+                  <ProfileInfoItem icon={<GraduationCap size={19}/>} label="CGPA" value={profileData.cgpa !== null && profileData.cgpa !== undefined && profileData.cgpa !== '' ? `${profileData.cgpa} / 10` : ''}/>
+                  <ProfileInfoItem icon={<Heart size={19}/>} label="Hobbies" value={currentHobbies.filter(Boolean).join(', ')}/>
+                  <ProfileInfoItem icon={<Languages size={19}/>} label="Languages Known" value={currentLanguages.filter(Boolean).join(', ')}/>
+                  <ProfileInfoItem icon={<Trophy size={19}/>} label="Projects Completed" value={profileData.projectsCompleted !== null && profileData.projectsCompleted !== undefined && profileData.projectsCompleted !== '' ? `${profileData.projectsCompleted} ${Number(profileData.projectsCompleted) === 1 ? 'project' : 'projects'}` : ''}/>
+                </div>
+              </section>
             </div>
             <div className="profile-column-right">
               <section className="profile-section-card">
@@ -344,6 +415,29 @@ export default function ProfilePage() {
                   <SocialLink icon={<Github size={19}/>} label="GitHub" value={profileData.socialLinks?.github}/>
                   <SocialLink icon={<Linkedin size={19}/>} label="LinkedIn" value={profileData.socialLinks?.linkedin}/>
                   <SocialLink icon={<Globe size={19}/>} label="Portfolio" value={profileData.socialLinks?.portfolio}/>
+                </div>
+              </section>
+              <section className="profile-section-card">
+                <SectionHeading icon={<BriefcaseBusiness size={21}/>} title="Experience & Achievements" onEdit={() => openEditor('experience')}/>
+                <div className="profile-experience-list">
+                  <ExperienceGroup icon={<BriefcaseBusiness size={18}/>} title="Internships">
+                    {currentInternships.length ? currentInternships.map((item, index) => <div className="profile-experience-record" key={`${item.companyName}-${index}`}>
+                      <strong>{item.companyName || <EmptyValue/>}</strong>
+                      <span>Role: {item.role || <EmptyValue/>}</span>
+                      <span>Duration: {item.duration || <EmptyValue/>}</span>
+                      <p>{item.description || <EmptyValue/>}</p>
+                    </div>) : <EmptyValue/>}
+                  </ExperienceGroup>
+                  <ExperienceGroup icon={<Trophy size={18}/>} title="Achievements">
+                    {currentAchievements.length ? currentAchievements.map((item, index) => <div className="profile-experience-record compact" key={`${item}-${index}`}><span>{item || <EmptyValue/>}</span></div>) : <EmptyValue/>}
+                  </ExperienceGroup>
+                  <ExperienceGroup icon={<Award size={18}/>} title="Certifications">
+                    {currentCertifications.length ? currentCertifications.map((item, index) => <div className="profile-experience-record" key={`${item.name}-${index}`}>
+                      <strong>{item.name || <EmptyValue/>}</strong>
+                      <span>Issuing organisation: {item.issuingOrganization || <EmptyValue/>}</span>
+                      <span>Year: {item.year || <EmptyValue/>}</span>
+                    </div>) : <EmptyValue/>}
+                  </ExperienceGroup>
                 </div>
               </section>
             </div>
@@ -382,6 +476,42 @@ export default function ProfilePage() {
               <Field label="Add an interest"><div className="profile-skill-search"><input value={interestInput} maxLength={60} onChange={(event) => setInterestInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); addInterest(); } }} placeholder="For example, Cloud Computing"/><button type="button" onClick={addInterest} aria-label="Add interest"><Plus size={18}/></button></div></Field>
               <div className="profile-selected-skills">{editData.interests.map((item) => <span className="profile-selected-skill interest" key={item}>{item}<button type="button" onClick={() => changeField('interests', editData.interests.filter((value) => value !== item))} aria-label={`Remove ${item}`}><X size={14}/></button></span>)}{!editData.interests.length && <p className="profile-empty-state">Add the subjects you would like to explore.</p>}</div>
             </EditorSection>}
+            {visibleSections('additional') && <EditorSection title="Additional information">
+              <div className="profile-form-grid">
+                <Field label="CGPA (out of 10)"><input type="number" min="0" max="10" step="0.01" value={editData.cgpa} onChange={(event) => changeField('cgpa', event.target.value)}/></Field>
+                <Field label="Number of projects completed"><input type="number" min="0" step="1" value={editData.projectsCompleted} onChange={(event) => changeField('projectsCompleted', event.target.value)}/></Field>
+              </div>
+              <Field label="Hobbies"><div className="profile-skill-search"><input value={hobbyInput} maxLength={60} onChange={(event) => setHobbyInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); addListItem('hobbies', hobbyInput); setHobbyInput(''); } }} placeholder="Add a hobby"/><button type="button" onClick={() => { addListItem('hobbies', hobbyInput); setHobbyInput(''); }} aria-label="Add hobby"><Plus size={18}/></button></div></Field>
+              <div className="profile-selected-skills">{editData.hobbies.map((item, index) => <span className="profile-selected-skill interest" key={`${item}-${index}`}>{item}<button type="button" onClick={() => removeEntry('hobbies', index)} aria-label={`Remove ${item}`}><X size={14}/></button></span>)}{!editData.hobbies.length && <p className="profile-empty-state">Add hobbies you would like to share.</p>}</div>
+              <Field label="Languages known"><div className="profile-skill-search"><input value={languageInput} maxLength={60} onChange={(event) => setLanguageInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); addListItem('languagesKnown', languageInput); setLanguageInput(''); } }} placeholder="Add a language"/><button type="button" onClick={() => { addListItem('languagesKnown', languageInput); setLanguageInput(''); }} aria-label="Add language"><Plus size={18}/></button></div></Field>
+              <div className="profile-selected-skills">{editData.languagesKnown.map((item, index) => <span className="profile-selected-skill interest" key={`${item}-${index}`}>{item}<button type="button" onClick={() => removeEntry('languagesKnown', index)} aria-label={`Remove ${item}`}><X size={14}/></button></span>)}{!editData.languagesKnown.length && <p className="profile-empty-state">Add languages you know.</p>}</div>
+            </EditorSection>}
+            {visibleSections('experience') && <EditorSection title="Experience and achievements">
+              <div className="profile-repeatable-heading"><h4>Internships</h4><button type="button" onClick={() => changeField('internships', [...editData.internships, { companyName: '', role: '', duration: '', description: '' }])}><Plus size={15}/> Add internship</button></div>
+              {editData.internships.map((item, index) => <div className="profile-repeatable-editor" key={`internship-${index}`}>
+                <div className="profile-repeatable-editor-heading"><strong>Internship {index + 1}</strong><button type="button" onClick={() => removeEntry('internships', index)} aria-label={`Remove internship ${index + 1}`}><X size={15}/></button></div>
+                <div className="profile-form-grid">
+                  <Field label="Company name"><input maxLength={140} value={item.companyName} onChange={(event) => changeEntry('internships', index, 'companyName', event.target.value)}/></Field>
+                  <Field label="Role"><input maxLength={100} value={item.role} onChange={(event) => changeEntry('internships', index, 'role', event.target.value)}/></Field>
+                  <Field label="Duration"><input maxLength={80} value={item.duration} onChange={(event) => changeEntry('internships', index, 'duration', event.target.value)} placeholder="e.g. 3 months"/></Field>
+                </div>
+                <Field label="Description"><textarea rows={2} maxLength={1000} value={item.description} onChange={(event) => changeEntry('internships', index, 'description', event.target.value)}/></Field>
+              </div>)}
+
+              <div className="profile-repeatable-heading"><h4>Achievements</h4></div>
+              <Field label="Add an award, hackathon, or competition"><div className="profile-skill-search"><input value={achievementInput} maxLength={300} onChange={(event) => setAchievementInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); addListItem('academicAchievements', achievementInput); setAchievementInput(''); } }} placeholder="Add an achievement"/><button type="button" onClick={() => { addListItem('academicAchievements', achievementInput); setAchievementInput(''); }} aria-label="Add achievement"><Plus size={18}/></button></div></Field>
+              <div className="profile-selected-skills">{editData.academicAchievements.map((item, index) => <span className="profile-selected-skill interest" key={`${item}-${index}`}>{item}<button type="button" onClick={() => removeEntry('academicAchievements', index)} aria-label={`Remove ${item}`}><X size={14}/></button></span>)}{!editData.academicAchievements.length && <p className="profile-empty-state">Add awards, hackathons, or competitions.</p>}</div>
+
+              <div className="profile-repeatable-heading"><h4>Certifications</h4><button type="button" onClick={() => changeField('certifications', [...editData.certifications, { name: '', issuingOrganization: '', year: '' }])}><Plus size={15}/> Add certification</button></div>
+              {editData.certifications.map((item, index) => <div className="profile-repeatable-editor" key={`certification-${index}`}>
+                <div className="profile-repeatable-editor-heading"><strong>Certification {index + 1}</strong><button type="button" onClick={() => removeEntry('certifications', index)} aria-label={`Remove certification ${index + 1}`}><X size={15}/></button></div>
+                <div className="profile-form-grid">
+                  <Field label="Certification name"><input maxLength={140} value={item.name} onChange={(event) => changeEntry('certifications', index, 'name', event.target.value)}/></Field>
+                  <Field label="Issuing organisation"><input maxLength={140} value={item.issuingOrganization} onChange={(event) => changeEntry('certifications', index, 'issuingOrganization', event.target.value)}/></Field>
+                  <Field label="Year"><input inputMode="numeric" maxLength={4} value={item.year} onChange={(event) => changeEntry('certifications', index, 'year', event.target.value.replace(/\D/g, ''))}/></Field>
+                </div>
+              </div>)}
+            </EditorSection>}
             {visibleSections('social') && <EditorSection title="Social and portfolio links">
               <Field label="GitHub"><input type="url" value={editData.github} onChange={(event) => changeField('github', event.target.value)} placeholder="https://github.com/username"/></Field>
               <Field label="LinkedIn"><input type="url" value={editData.linkedin} onChange={(event) => changeField('linkedin', event.target.value)} placeholder="https://linkedin.com/in/username"/></Field>
@@ -417,8 +547,11 @@ export default function ProfilePage() {
 function isValidWebUrl(value) {
   try { const url = new URL(value.startsWith('http') ? value : `https://${value}`); return ['http:', 'https:'].includes(url.protocol) && !!url.hostname.includes('.'); } catch { return false; }
 }
-function sectionTitle(section) { return ({ basic: 'Student Details', education: 'Education', about: 'About Me', skills: 'Technical Skills', interests: 'Academic Interests', social: 'Social & Portfolios' })[section] || 'Profile'; }
+function sectionTitle(section) { return ({ basic: 'Student Details', education: 'Education', about: 'About Me', skills: 'Technical Skills', interests: 'Academic Interests', additional: 'Additional Information', experience: 'Experience & Achievements', social: 'Social & Portfolios' })[section] || 'Profile'; }
 function SectionHeading({ icon, title, onEdit, extra }) { return <div className="profile-section-header"><h2 className="profile-section-title"><span className="profile-section-icon">{icon}</span>{title}</h2><div className="profile-section-actions">{extra && <span className="profile-section-count">{extra}</span>}<PencilButton label={title} onClick={onEdit}/></div></div>; }
 function SocialLink({ icon, label, value }) { return value ? <a href={profileUrl(value)} target="_blank" rel="noreferrer" className="social-link-item"><span className="social-icon-wrapper">{icon}</span><strong>{label}</strong><span className="social-url-text">{value}</span><ExternalLink size={15}/></a> : <div className="social-link-item unlinked"><span className="social-icon-wrapper">{icon}</span><strong>{label}</strong><span className="social-url-text">Not linked</span></div>; }
+function ProfileInfoItem({ icon, label, value }) { return <div className="profile-info-item"><span className="profile-info-icon">{icon}</span><strong>{label}</strong><span className={value ? '' : 'profile-info-empty'}>{value || 'Not added yet'}</span></div>; }
+function ExperienceGroup({ icon, title, children }) { return <div className="profile-experience-group"><h3><span>{icon}</span>{title}</h3><div className="profile-experience-content">{children}</div></div>; }
+function EmptyValue() { return <span className="profile-empty-value">Not added yet</span>; }
 function EditorSection({ title, children }) { return <section className="profile-editor-section"><h3>{title}</h3>{children}</section>; }
 function Field({ label, children }) { return <label className="profile-edit-field"><span>{label}</span>{children}</label>; }

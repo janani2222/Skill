@@ -66,6 +66,19 @@ const projectFilter = (req, file, cb) => {
   }
 };
 
+const coverImageTypes = new Map([
+  ['.jpg', 'image/jpeg'],
+  ['.jpeg', 'image/jpeg'],
+  ['.png', 'image/png'],
+  ['.webp', 'image/webp'],
+  ['.gif', 'image/gif'],
+]);
+const coverImageFilter = (req, file, cb) => {
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (coverImageTypes.get(ext) === file.mimetype) return cb(null, true);
+  cb(new Error('Project covers must be JPG, PNG, WEBP, or GIF images.'));
+};
+
 const safeAttachmentTypes = new Map([
   ['.jpg', ['image/jpeg']], ['.jpeg', ['image/jpeg']], ['.png', ['image/png']], ['.webp', ['image/webp']], ['.gif', ['image/gif']],
   ['.pdf', ['application/pdf']], ['.doc', ['application/msword', 'application/octet-stream']], ['.docx', ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/octet-stream']],
@@ -94,8 +107,15 @@ const uploadProjectMedia = multer({
   fileFilter: projectFilter,
 });
 
+const uploadProjectCover = multer({
+  storage: projectStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: coverImageFilter,
+});
+
 module.exports = upload;
 module.exports.uploadDirectory = uploadDir;
 module.exports.uploadProjectMedia = uploadProjectMedia;
+module.exports.uploadProjectCover = uploadProjectCover;
 module.exports.uploadTaskAttachment = createAttachmentUpload(taskUploadDir, 'task');
 module.exports.uploadChatAttachment = createAttachmentUpload(chatUploadDir, 'chat');

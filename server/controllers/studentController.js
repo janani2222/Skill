@@ -28,6 +28,19 @@ const profileUpdateError = (body = {}) => {
   if (body.aboutMe !== undefined && (typeof body.aboutMe !== 'string' || body.aboutMe.length > 1000)) return 'About Me must be 1,000 characters or fewer.';
   if (body.skills !== undefined && (!Array.isArray(body.skills) || body.skills.length > 50 || body.skills.some((item) => typeof item !== 'string' && (typeof item?.name !== 'string' || item.name.length > 60)))) return 'Skills must be a list of up to 50 names, each 60 characters or fewer.';
   if (body.interests !== undefined && (!Array.isArray(body.interests) || body.interests.length > 30 || body.interests.some((item) => typeof item !== 'string' || item.length > 60))) return 'Academic interests must be a list of up to 30 items, each 60 characters or fewer.';
+  for (const [field, label, maxItems, maxLength] of [
+    ['hobbies', 'Hobbies', 30, 60],
+    ['languagesKnown', 'Languages', 30, 60],
+    ['academicAchievements', 'Achievements', 30, 300],
+  ]) {
+    if (body[field] !== undefined && (!Array.isArray(body[field]) || body[field].length > maxItems || body[field].some((item) => typeof item !== 'string' || !item.trim() || item.length > maxLength))) {
+      return `${label} must be a list of up to ${maxItems} non-empty items, each ${maxLength} characters or fewer.`;
+    }
+  }
+  if (body.cgpa !== undefined && body.cgpa !== null && body.cgpa !== '' && (typeof body.cgpa !== 'number' && typeof body.cgpa !== 'string' || !Number.isFinite(Number(body.cgpa)) || Number(body.cgpa) < 0 || Number(body.cgpa) > 10)) return 'CGPA must be a number between 0 and 10.';
+  if (body.projectsCompleted !== undefined && body.projectsCompleted !== null && body.projectsCompleted !== '' && (typeof body.projectsCompleted !== 'number' && typeof body.projectsCompleted !== 'string' || !Number.isInteger(Number(body.projectsCompleted)) || Number(body.projectsCompleted) < 0)) return 'Projects completed must be a non-negative whole number.';
+  if (body.internships !== undefined && (!Array.isArray(body.internships) || body.internships.length > 20 || body.internships.some((item) => !item || typeof item !== 'object' || Array.isArray(item) || typeof item.companyName !== 'string' || !item.companyName.trim() || item.companyName.length > 140 || typeof item.role !== 'string' || !item.role.trim() || item.role.length > 100 || typeof (item.duration || '') !== 'string' || item.duration.length > 80 || typeof (item.description || '') !== 'string' || item.description.length > 1000))) return 'Each internship needs a company and role; duration must be 80 characters or fewer and description 1,000 characters or fewer.';
+  if (body.certifications !== undefined && (!Array.isArray(body.certifications) || body.certifications.length > 30 || body.certifications.some((item) => !item || typeof item !== 'object' || Array.isArray(item) || typeof item.name !== 'string' || !item.name.trim() || item.name.length > 140 || typeof item.issuingOrganization !== 'string' || !item.issuingOrganization.trim() || item.issuingOrganization.length > 140 || typeof (item.year || '') !== 'string' || (item.year && !/^\d{4}$/.test(item.year))))) return 'Each certification needs a name and issuing organisation; enter the year as four digits.';
   if (body.socialLinks !== undefined) {
     if (!body.socialLinks || typeof body.socialLinks !== 'object' || Array.isArray(body.socialLinks)) return 'Social links must be an object.';
     for (const key of ['github', 'linkedin', 'portfolio']) {
@@ -154,10 +167,13 @@ exports.updateProfile = async (req, res, next) => {
       graduationYear,
       location,
       hobbies,
+      languagesKnown,
       cgpa,
+      projectsCompleted,
       currentSemester,
       academicAchievements,
       internships,
+      certifications,
       aboutMe,
       skills,
       interests,
@@ -184,10 +200,13 @@ exports.updateProfile = async (req, res, next) => {
       if (graduationYear !== undefined) profile.graduationYear = graduationYear;
       if (location !== undefined) profile.location = location;
       if (Array.isArray(hobbies)) profile.hobbies = hobbies;
-      if (cgpa !== undefined) profile.cgpa = cgpa === '' ? null : Number(cgpa);
+      if (Array.isArray(languagesKnown)) profile.languagesKnown = languagesKnown;
+      if (cgpa !== undefined) profile.cgpa = cgpa === '' || cgpa === null ? null : Number(cgpa);
+      if (projectsCompleted !== undefined) profile.projectsCompleted = projectsCompleted === '' || projectsCompleted === null ? null : Number(projectsCompleted);
       if (currentSemester !== undefined) profile.currentSemester = currentSemester;
       if (Array.isArray(academicAchievements)) profile.academicAchievements = academicAchievements;
       if (Array.isArray(internships)) profile.internships = internships;
+      if (Array.isArray(certifications)) profile.certifications = certifications;
       if (aboutMe !== undefined) profile.aboutMe = aboutMe;
       if (Array.isArray(interests)) profile.interests = interests;
 
@@ -270,10 +289,13 @@ exports.updateProfile = async (req, res, next) => {
       if (graduationYear !== undefined) profile.graduationYear = graduationYear;
       if (location !== undefined) profile.location = location;
       if (Array.isArray(hobbies)) profile.hobbies = hobbies;
-      if (cgpa !== undefined) profile.cgpa = cgpa === '' ? null : Number(cgpa);
+      if (Array.isArray(languagesKnown)) profile.languagesKnown = languagesKnown;
+      if (cgpa !== undefined) profile.cgpa = cgpa === '' || cgpa === null ? null : Number(cgpa);
+      if (projectsCompleted !== undefined) profile.projectsCompleted = projectsCompleted === '' || projectsCompleted === null ? null : Number(projectsCompleted);
       if (currentSemester !== undefined) profile.currentSemester = currentSemester;
       if (Array.isArray(academicAchievements)) profile.academicAchievements = academicAchievements;
       if (Array.isArray(internships)) profile.internships = internships;
+      if (Array.isArray(certifications)) profile.certifications = certifications;
       if (aboutMe !== undefined) profile.aboutMe = aboutMe;
       if (Array.isArray(interests)) profile.interests = interests;
 

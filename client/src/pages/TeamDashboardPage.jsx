@@ -27,7 +27,7 @@ import {
   X
 } from 'lucide-react';
 import {
-  addTeamMember,
+  inviteTeamMember,
   createProgressUpdate,
   createTeamMilestone,
   createTeamTask,
@@ -104,6 +104,9 @@ export default function TeamDashboardPage() {
   const [isAddMilestoneOpen, setIsAddMilestoneOpen] = useState(false);
   const [isChangeRoleOpen, setIsChangeRoleOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [inviteSearch, setInviteSearch] = useState('');
+  const [inviteesLoading, setInviteesLoading] = useState(false);
+  const [inviteesError, setInviteesError] = useState('');
 
   // Active member menu (3-dot popup)
   const [activeMenuMemberId, setActiveMenuMemberId] = useState(null);
@@ -187,12 +190,17 @@ export default function TeamDashboardPage() {
 
   // Load student list for member invite
   useEffect(() => {
+    setInviteesLoading(true);
     discoverStudents()
       .then((res) => {
         const list = res.students || res.users || [];
-        setAllStudents(list);
+        setAllStudents(list.map((item) => item.user
+          ? { ...item.user, profile: item.profile || {} }
+          : { ...item, profile: item.profile || {} }).filter((student) => student._id));
+        setInviteesError('');
       })
-      .catch(() => {});
+      .catch((err) => setInviteesError(err.message || 'Unable to load registered students.'))
+      .finally(() => setInviteesLoading(false));
   }, []);
 
   const showNotification = (text, type = 'success') => {
@@ -242,6 +250,7 @@ export default function TeamDashboardPage() {
     project,
     members = [],
     pendingRequests = [],
+    pendingInvitations = [],
     capacity = { current: members.length, maximum: project.maxMembers || 5, full: false },
     tasks = [],
     milestones = [],
@@ -344,18 +353,19 @@ export default function TeamDashboardPage() {
     }
   };
 
-  // Add team member directly
+  // Send an invitation to a registered student
   const handleAddMember = async (e) => {
     e.preventDefault();
     if (!addMemberForm.studentId) return;
     try {
-      await addTeamMember(id, {
+      await inviteTeamMember(id, {
         studentId: addMemberForm.studentId,
         role: addMemberForm.role
       });
-      showNotification('Team member added successfully.');
+      showNotification('Invitation sent. The student can accept or reject it from Notifications.');
       setIsInviteMemberOpen(false);
       setAddMemberForm({ studentId: '', role: 'Full Stack Developer' });
+      setInviteSearch('');
       await loadData();
     } catch (err) {
       showNotification(err.response?.data?.message || err.message || 'Failed to add team member.', 'error');
@@ -430,10 +440,16 @@ export default function TeamDashboardPage() {
     }
   };
 
-  // Filter out students who are already team members for the invite dropdown
-  const memberStudentIds = new Set(members.map((m) => String(m.student?._id)));
-  if (project.owner?._id) memberStudentIds.add(String(project.owner._id));
-  const availableInvitees = allStudents.filter((s) => !memberStudentIds.has(String(s._id)));
+  const memberStudentIds = new Set(members.map((member) => String(member.student?._id || member.student)));
+  memberStudentIds.add(String(project.owner?._id || project.owner));
+  const invitedStudentIds = new Set(pendingInvitations.map((invitation) => String(invitation.invitee?._id || invitation.invitee)));
+  const inviteQuery = inviteSearch.trim().toLowerCase();
+  const availableInvitees = allStudents.filter((student) => {
+    if (memberStudentIds.has(String(student._id)) || invitedStudentIds.has(String(student._id))) return false;
+    if (!inviteQuery) return true;
+    const skills = (student.profile?.skills || []).map((skill) => skill.name || skill).join(' ');
+    return `${student.name} ${student.department} ${student.year} ${skills}`.toLowerCase().includes(inviteQuery);
+  });
 
   return (
     <div className="team-dashboard-shell">
@@ -643,7 +659,11 @@ export default function TeamDashboardPage() {
                 {isOwner && (
                   <button
                     className="btn-card-add-member"
-                    onClick={() => setIsInviteMemberOpen(true)}
+                    onClick={() => {
+                      setAddMemberForm({ studentId: '', role: 'Full Stack Developer' });
+                      setInviteSearch('');
+                      setIsInviteMemberOpen(true);
+                    }}
                   >
                     <Plus size={14} /> Add Member
                   </button>
@@ -1097,7 +1117,7 @@ export default function TeamDashboardPage() {
         <div className="team-modal-backdrop" onClick={() => setIsInviteMemberOpen(false)}>
           <div className="team-modal-dialog" onClick={(e) => e.stopPropagation()}>
             <div className="team-modal-header">
-              <h3>Invite / Add Team Member</h3>
+              <h3>Invite a Registered Student</h3>
               <button
                 className="team-modal-close"
                 onClick={() => setIsInviteMemberOpen(false)}
@@ -1108,22 +1128,46 @@ export default function TeamDashboardPage() {
             <form onSubmit={handleAddMember}>
               <div className="team-modal-body">
                 <div className="team-form-group">
-                  <label>Select Student *</label>
-                  <select
-                    required
-                    value={addMemberForm.studentId}
-                    onChange={(e) =>
-                      setAddMemberForm({ ...addMemberForm, studentId: e.target.value })
-                    }
-                  >
-                    <option value="">-- Choose a student to add --</option>
-                    {availableInvitees.map((s) => (
-                      <option key={s._id} value={s._id}>
-                        {s.name} ({s.department || 'Engineering'} · {s.year || 'Student'})
-                      </option>
-                    ))}
-                  </select>
+                  <label htmlFor="invite-student-search">Select a registered student *</label>
+                  <input
+                    id="invite-student-search"
+                    type="search"
+                    placeholder="Search by name, department, year, or skill"
+                    value={inviteSearch}
+                    onChange={(e) => setInviteSearch(e.target.value)}
+                  />
                 </div>
+
+                {inviteesError && <p className="invitees-error" role="alert">{inviteesError}</p>}
+                {inviteesLoading ? <p className="invitees-empty">Loading registered students…</p> : availableInvitees.length ? (
+                  <div className="invitee-list" role="radiogroup" aria-label="Registered students">
+                    {availableInvitees.map((student) => {
+                      const skills = (student.profile?.skills || []).map((skill) => skill.name || skill).filter(Boolean);
+                      return <article className={`invitee-card ${addMemberForm.studentId === String(student._id) ? 'selected' : ''}`} key={student._id}>
+                        <button
+                          type="button"
+                          className="invitee-select-card"
+                          role="radio"
+                          aria-checked={addMemberForm.studentId === String(student._id)}
+                          onClick={() => setAddMemberForm({ ...addMemberForm, studentId: String(student._id) })}
+                        >
+                          <span className="invitee-avatar">
+                            {student.profile?.avatar ? <img src={student.profile.avatar} alt=""/> : (student.name || 'S').charAt(0).toUpperCase()}
+                          </span>
+                          <span className="invitee-details">
+                            <strong>{student.name || 'Student'}</strong>
+                            <small>{student.department || 'Department not added'} · {student.year || 'Year not added'}</small>
+                            {skills.length > 0 && <span className="invitee-skills">{skills.slice(0, 3).join(' · ')}</span>}
+                          </span>
+                          <span className="invitee-radio" aria-hidden="true"/>
+                        </button>
+                        <Link className="invitee-profile-link" to={`/students/${student._id}`} target="_blank" rel="noreferrer">
+                          View profile <ExternalLink size={13}/>
+                        </Link>
+                      </article>;
+                    })}
+                  </div>
+                ) : <p className="invitees-empty">No registered students are available to invite.</p>}
 
                 <div className="team-form-group">
                   <label>Assigned Role *</label>
@@ -1182,8 +1226,8 @@ export default function TeamDashboardPage() {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn-modal-submit">
-                  Add Member
+                <button type="submit" className="btn-modal-submit" disabled={!addMemberForm.studentId}>
+                  Send Invitation
                 </button>
               </div>
             </form>

@@ -20,6 +20,7 @@ const initialDb = {
   skills: [],
   projects: [],
   projectmembers: [],
+  teaminvitations: [],
   joinrequests: [],
   notifications: [],
   chatrooms: [],
@@ -42,6 +43,7 @@ const readDb = () => {
     const parsed = JSON.parse(data);
     if (!parsed.projects) parsed.projects = [];
     if (!parsed.projectmembers) parsed.projectmembers = [];
+    if (!parsed.teaminvitations) parsed.teaminvitations = [];
     if (!parsed.joinrequests) parsed.joinrequests = [];
     if (!parsed.notifications) parsed.notifications = [];
     if (!parsed.users) parsed.users = [];
@@ -59,6 +61,7 @@ const writeDb = (db) => {
   try {
     if (!db.projects) db.projects = [];
     if (!db.projectmembers) db.projectmembers = [];
+    if (!db.teaminvitations) db.teaminvitations = [];
     if (!db.joinrequests) db.joinrequests = [];
     if (!db.notifications) db.notifications = [];
     if (!db.chatrooms) db.chatrooms = [];

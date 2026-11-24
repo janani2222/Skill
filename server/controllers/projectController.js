@@ -33,41 +33,187 @@ exports.listProjects = async (req, res, next) => {
   try {
     const query = String(req.query.search || '').trim();
     const filter = {};
-    if (req.query.status) filter.status = req.query.status;
-    if (req.query.category) filter.category = req.query.category;
-    if (req.query.mine === 'true') filter.owner = ownerId(req);
-    else if (req.query.studentId) filter.owner = req.query.studentId;
-    if (query) filter.$or = [{ title: { $regex: query, $options: 'i' } }, { description: { $regex: query, $options: 'i' } }, { category: { $regex: query, $options: 'i' } }, { technologies: { $regex: query, $options: 'i' } }];
+    if (req.query.status && req.query.status !== 'All Projects') filter.status = req.query.status;
+    if (req.query.category && req.query.category !== 'All Categories') filter.category = req.query.category;
+
+    if (req.query.mine === 'true') {
+      const me = ownerId(req);
+      if (isConnected()) {
+        const meObjectId = mongoose.Types.ObjectId.isValid(me) ? new mongoose.Types.ObjectId(me) : null;
+        const memberDocs = await mongoose.connection.db.collection('projectmembers').find({
+          $or: [
+            { student: me },
+            ...(meObjectId ? [{ student: meObjectId }] : [])
+          ]
+        }).toArray();
+        const joinedProjectIds = memberDocs.map((m) => m.project).filter(Boolean);
+        filter.$or = [
+          { owner: me },
+          ...(meObjectId ? [{ owner: meObjectId }] : []),
+          { _id: { $in: joinedProjectIds } },
+          ...(joinedProjectIds.filter((id) => mongoose.Types.ObjectId.isValid(id)).map((id) => ({ _id: new mongoose.Types.ObjectId(id) })))
+        ];
+      }
+    } else if (req.query.studentId) {
+      filter.owner = req.query.studentId;
+    }
+
+    if (query) {
+      const searchConditions = [
+        { title: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } },
+        { category: { $regex: query, $options: 'i' } },
+        { technologies: { $regex: query, $options: 'i' } }
+      ];
+      if (filter.$or) {
+        filter.$and = [{ $or: filter.$or }, { $or: searchConditions }];
+        delete filter.$or;
+      } else {
+        filter.$or = searchConditions;
+      }
+    }
+
     if (isConnected()) {
       const projects = await Project.find(filter).populate('owner', 'name department year').sort({ createdAt: -1 });
       return res.json({ success: true, projects });
     }
+
     const db = readDb();
     let projects = db.projects || [];
-    if (req.query.mine === 'true') projects = projects.filter((project) => String(project.owner) === ownerId(req));
-    if (req.query.studentId) projects = projects.filter((project) => String(project.owner) === String(req.query.studentId));
-    if (req.query.status) projects = projects.filter((project) => project.status === req.query.status);
-    if (req.query.category) projects = projects.filter((project) => project.category === req.query.category);
-    if (query) projects = projects.filter((project) => `${project.title} ${project.description} ${project.category} ${(project.technologies || []).join(' ')}`.toLowerCase().includes(query.toLowerCase()));
+    if (req.query.mine === 'true') {
+      const me = ownerId(req);
+      const joinedIds = new Set((db.projectmembers || []).filter((m) => String(m.student) === me).map((m) => String(m.project)));
+      projects = projects.filter((project) => String(project.owner) === me || joinedIds.has(String(project._id)));
+    } else if (req.query.studentId) {
+      projects = projects.filter((project) => String(project.owner) === String(req.query.studentId));
+    }
+
+    if (req.query.status && req.query.status !== 'All Projects') {
+      projects = projects.filter((project) => project.status === req.query.status);
+    }
+    if (req.query.category && req.query.category !== 'All Categories') {
+      projects = projects.filter((project) => project.category === req.query.category);
+    }
+    if (query) {
+      projects = projects.filter((project) => `${project.title} ${project.description} ${project.category} ${(project.technologies || []).join(' ')}`.toLowerCase().includes(query.toLowerCase()));
+    }
     return res.json({ success: true, projects: projects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((project) => withOwner(project, db)) });
   } catch (error) { next(error); }
 };
 
 exports.getProject = async (req, res, next) => {
   try {
+    const pId = String(req.params.id);
     if (isConnected()) {
-      const project = await Project.findById(req.params.id).populate('owner', 'name department year');
+      let project = null;
+      try {
+        if (mongoose.Types.ObjectId.isValid(pId)) {
+          project = await Project.findById(pId).populate('owner', 'name email department year');
+        }
+      } catch {}
+      if (!project) {
+        project = await Project.findOne({ _id: pId }).populate('owner', 'name email department year');
+      }
       if (!project) return res.status(404).json({ success: false, message: 'Project not found' });
-      const me = ownerId(req); const isOwner = String(project.owner?._id || project.owner) === me;
-      const membership = await mongoose.connection.collection('projectmembers').findOne({ project: new mongoose.Types.ObjectId(req.params.id), student: new mongoose.Types.ObjectId(me) });
-      const result = project.toObject(); if (!isOwner && !membership) result.media = [];
+
+      const me = ownerId(req);
+      const isOwner = String(project.owner?._id || project.owner) === me;
+
+      const memberQuery = {
+        $or: [
+          { project: pId },
+          ...(mongoose.Types.ObjectId.isValid(pId) ? [{ project: new mongoose.Types.ObjectId(pId) }] : [])
+        ]
+      };
+      const allMembers = await mongoose.connection.db.collection('projectmembers').find(memberQuery).toArray();
+
+      const result = project.toObject();
+      result.currentMembers = allMembers.length + 1;
+
+      // Populate owner avatar and profile info
+      if (result.owner?._id) {
+        const ownerProfile = await require('../models/StudentProfile').findOne({ user: result.owner._id }).lean();
+        result.owner.avatar = ownerProfile?.avatar || '/avatars/professional-neutral.svg';
+        result.owner.year = result.owner.year || ownerProfile?.graduationYear || 'Third Year';
+        result.owner.department = result.owner.department || ownerProfile?.department || 'Computer Science';
+      }
+
+      // Populate members with student info
+      result.members = await Promise.all(
+        allMembers.map(async (m) => {
+          const sId = String(m.student);
+          let sUser = null;
+          try {
+            if (mongoose.Types.ObjectId.isValid(sId)) {
+              sUser = await User.findById(sId).select('name email department year').lean();
+            }
+          } catch {}
+          if (!sUser) sUser = await User.findOne({ _id: sId }).select('name email department year').lean();
+          const sProfile = sUser ? await require('../models/StudentProfile').findOne({ user: sUser._id }).lean() : null;
+          return {
+            _id: String(m._id),
+            role: m.role || 'Contributor',
+            joinedAt: m.joinedAt,
+            student: sUser
+              ? {
+                  _id: String(sUser._id),
+                  name: sUser.name,
+                  email: sUser.email,
+                  department: sUser.department,
+                  year: sUser.year,
+                  avatar: sProfile?.avatar || '/avatars/professional-neutral.svg',
+                }
+              : { _id: sId, name: 'Student', avatar: '/avatars/professional-neutral.svg' },
+          };
+        })
+      );
+
       return res.json({ success: true, project: result });
     }
+
     const db = readDb();
-    const project = (db.projects || []).find((item) => item._id === req.params.id);
-    if (!project) return res.status(404).json({ success: false, message: 'Project not found' });
-    const isMember = String(project.owner) === ownerId(req) || (db.projectmembers || []).some((m) => String(m.project) === String(project._id) && String(m.student) === ownerId(req));
-    return res.json({ success: true, project: { ...withOwner(project, db), media: isMember ? (project.media || []) : [] } });
+    const project = (db.projects || []).find((item) => String(item._id) === pId);
+    if (!project) return res.status(404).json({ success: false, message: 'Project not found.' });
+
+    const pMembers = (db.projectmembers || []).filter((m) => String(m.project) === pId);
+    const ownerUser = (db.users || []).find((u) => String(u._id) === String(project.owner));
+    const ownerProf = (db.studentprofiles || []).find((p) => String(p.user) === String(project.owner));
+
+    const enrichedProject = {
+      ...project,
+      currentMembers: pMembers.length + 1,
+      owner: ownerUser
+        ? {
+            _id: String(ownerUser._id),
+            name: ownerUser.name,
+            email: ownerUser.email,
+            department: ownerUser.department,
+            year: ownerUser.year,
+            avatar: ownerProf?.avatar || '/avatars/professional-neutral.svg',
+          }
+        : project.owner,
+      members: pMembers.map((m) => {
+        const s = (db.users || []).find((u) => String(u._id) === String(m.student));
+        const sp = (db.studentprofiles || []).find((p) => String(p.user) === String(m.student));
+        return {
+          _id: String(m._id),
+          role: m.role || 'Contributor',
+          joinedAt: m.joinedAt,
+          student: s
+            ? {
+                _id: String(s._id),
+                name: s.name,
+                email: s.email,
+                department: s.department,
+                year: s.year,
+                avatar: sp?.avatar || '/avatars/professional-neutral.svg',
+              }
+            : { _id: String(m.student), name: 'Student', avatar: '/avatars/professional-neutral.svg' },
+        };
+      }),
+    };
+
+    return res.json({ success: true, project: enrichedProject });
   } catch (error) { next(error); }
 };
 
@@ -105,6 +251,7 @@ exports.getPublicProject = async (req, res, next) => {
 exports.createProject = async (req, res, next) => {
   try {
     const payload = projectPayload(req.body);
+    if (req.file) payload.thumbnail = `/uploads/projects/${req.file.filename}`;
     if (!payload.title || !payload.description) return res.status(400).json({ success: false, message: 'Project title and description are required' });
     if (isConnected()) return res.status(201).json({ success: true, project: await Project.create({ ...payload, owner: ownerId(req) }) });
     const db = readDb();
@@ -121,12 +268,18 @@ exports.updateProject = async (req, res, next) => {
     if (isConnected()) {
       const project = await Project.findOne({ _id: req.params.id, owner: ownerId(req) });
       if (!project) return res.status(404).json({ success: false, message: 'Project not found or access denied' });
-      const previousStatus = project.status; Object.assign(project, projectPayload(req.body)); await project.save();
+      const previousStatus = project.status;
+      const payload = projectPayload(req.body);
+      if (req.file) payload.thumbnail = `/uploads/projects/${req.file.filename}`;
+      Object.assign(project, payload); await project.save();
       return res.json({ success: true, project });
     }
     const db = readDb(); const project = (db.projects || []).find((item) => item._id === req.params.id && String(item.owner) === ownerId(req));
     if (!project) return res.status(404).json({ success: false, message: 'Project not found or access denied' });
-    const previousStatus = project.status; Object.assign(project, projectPayload(req.body), { updatedAt: new Date().toISOString() });
+    const previousStatus = project.status;
+    const payload = projectPayload(req.body);
+    if (req.file) payload.thumbnail = `/uploads/projects/${req.file.filename}`;
+    Object.assign(project, payload, { updatedAt: new Date().toISOString() });
     if (previousStatus !== project.status) (db.projectmembers || []).filter((m) => String(m.project) === String(project._id) && String(m.student) !== ownerId(req)).forEach((m) => db.notifications.push({ _id: generateId(), recipient: String(m.student), sender: ownerId(req), project: project._id, type: 'status', isRead: false, message: `Project status changed to ${project.status}.`, createdAt: new Date().toISOString() }));
     writeDb(db);
     return res.json({ success: true, project: withOwner(project, db) });
